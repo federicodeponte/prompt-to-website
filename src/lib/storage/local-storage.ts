@@ -35,7 +35,14 @@ export const websiteStorage = {
   getById(id: string): Website | null {
     try {
       const websites = this.getAll();
-      return websites.find((w) => w.id === id) || null;
+      const website = websites.find((w) => w.id === id) || null;
+
+      // Normalize config to ensure blocks is always an array (defensive programming)
+      if (website && website.config) {
+        website.config.blocks = website.config.blocks || [];
+      }
+
+      return website;
     } catch (error) {
       console.error('Error getting website by ID:', error);
       return null;
