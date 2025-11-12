@@ -33,7 +33,13 @@ interface EditorLayoutProps {
  * - Composition: Child components handle specific functionality
  */
 export function EditorLayout({ initialConfig, websiteId }: EditorLayoutProps) {
-  const [config, setConfig] = useState<WebsiteConfig>(initialConfig);
+  // Normalize config to ensure blocks is always an array (defensive programming)
+  const normalizedConfig: WebsiteConfig = {
+    ...initialConfig,
+    blocks: initialConfig.blocks || [],
+  };
+
+  const [config, setConfig] = useState<WebsiteConfig>(normalizedConfig);
   const [activeMode, setActiveMode] = useState<'ai' | 'manual'>('ai');
   const [lastSaved, setLastSaved] = useState<Date>(new Date());
   const [isSaving, setIsSaving] = useState(false);

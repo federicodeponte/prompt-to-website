@@ -46,7 +46,8 @@ interface WebsiteRendererProps {
  * - Dependency Inversion: Depends on Block abstractions, not concrete implementations
  */
 export function WebsiteRenderer({ config }: WebsiteRendererProps) {
-  const { theme, blocks } = config;
+  const { theme } = config;
+  const blocks = config.blocks || [];
 
   /**
    * Render a single block based on its type

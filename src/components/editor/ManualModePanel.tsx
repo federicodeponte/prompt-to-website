@@ -34,6 +34,9 @@ export function ManualModePanel({ config, onConfigUpdate }: ManualModePanelProps
   const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
   const [expandedBlocks, setExpandedBlocks] = useState<Set<string>>(new Set());
 
+  // Ensure blocks is always an array (safety check for race conditions)
+  const blocks = config.blocks || [];
+
   /**
    * Toggle block expansion for editing
    */
@@ -66,7 +69,7 @@ export function ManualModePanel({ config, onConfigUpdate }: ManualModePanelProps
 
     const newConfig: WebsiteConfig = {
       ...config,
-      blocks: [...config.blocks, newBlock],
+      blocks: [...blocks, newBlock],
     };
 
     onConfigUpdate(newConfig);
@@ -80,7 +83,7 @@ export function ManualModePanel({ config, onConfigUpdate }: ManualModePanelProps
   const handleRemoveBlock = (blockId: string) => {
     const newConfig: WebsiteConfig = {
       ...config,
-      blocks: config.blocks.filter((b) => b.id !== blockId),
+      blocks: blocks.filter((b) => b.id !== blockId),
     };
 
     onConfigUpdate(newConfig);
@@ -95,7 +98,7 @@ export function ManualModePanel({ config, onConfigUpdate }: ManualModePanelProps
   const handleMoveBlockUp = (index: number) => {
     if (index === 0) return;
 
-    const newBlocks = [...config.blocks];
+    const newBlocks = [...blocks];
     [newBlocks[index - 1], newBlocks[index]] = [newBlocks[index], newBlocks[index - 1]];
 
     const newConfig: WebsiteConfig = {
@@ -110,9 +113,9 @@ export function ManualModePanel({ config, onConfigUpdate }: ManualModePanelProps
    * Move block down in the order
    */
   const handleMoveBlockDown = (index: number) => {
-    if (index === config.blocks.length - 1) return;
+    if (index === blocks.length - 1) return;
 
-    const newBlocks = [...config.blocks];
+    const newBlocks = [...blocks];
     [newBlocks[index], newBlocks[index + 1]] = [newBlocks[index + 1], newBlocks[index]];
 
     const newConfig: WebsiteConfig = {
@@ -131,13 +134,13 @@ export function ManualModePanel({ config, onConfigUpdate }: ManualModePanelProps
           <div>
             <h3 className="text-sm font-semibold">Manual Editor</h3>
             <p className="text-xs text-muted-foreground">
-              {config.blocks.length} blocks • {config.template} template
+              {blocks.length} blocks • {config.template} template
             </p>
           </div>
           <Button size="sm" variant="outline" onClick={() => {
             // Cycle through available block types
             const blockTypes: BlockType[] = ['hero', 'features', 'pricing', 'testimonials', 'cta', 'footer'];
-            const nextType = blockTypes[config.blocks.length % blockTypes.length];
+            const nextType = blockTypes[blocks.length % blockTypes.length];
             handleAddBlock(nextType);
           }}>
             <Plus className="mr-1 h-4 w-4" />
@@ -149,7 +152,7 @@ export function ManualModePanel({ config, onConfigUpdate }: ManualModePanelProps
       {/* Blocks list */}
       <ScrollArea className="flex-1">
         <div className="space-y-2 p-4">
-          {config.blocks.length === 0 ? (
+          {blocks.length === 0 ? (
             <Card>
               <CardContent className="flex flex-col items-center justify-center py-12">
                 <p className="mb-4 text-sm text-muted-foreground">
@@ -162,7 +165,7 @@ export function ManualModePanel({ config, onConfigUpdate }: ManualModePanelProps
               </CardContent>
             </Card>
           ) : (
-            config.blocks.map((block, index) => (
+            blocks.map((block, index) => (
               <Card
                 key={block.id}
                 className={cn(
@@ -226,7 +229,7 @@ export function ManualModePanel({ config, onConfigUpdate }: ManualModePanelProps
                         size="sm"
                         variant="outline"
                         onClick={() => handleMoveBlockDown(index)}
-                        disabled={index === config.blocks.length - 1}
+                        disabled={index === blocks.length - 1}
                         className="flex-1"
                       >
                         Move Down

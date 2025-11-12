@@ -91,10 +91,11 @@ export function AIModePanel({ config, onConfigUpdate }: AIModePanelProps) {
           onConfigUpdate(data.config);
 
           // Add success message
+          const blocksCount = data.config.blocks?.length || 0;
           const assistantMessage: Message = {
             id: (Date.now() + 1).toString(),
             role: 'assistant',
-            content: `I've generated a ${data.config.template} website with ${data.config.blocks.length} blocks based on your request. Check the preview on the right!`,
+            content: `I've generated a ${data.config.template} website with ${blocksCount} blocks based on your request. Check the preview on the right!`,
             timestamp: new Date(),
           };
           setMessages((prev) => [...prev, assistantMessage]);

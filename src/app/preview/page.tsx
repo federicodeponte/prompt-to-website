@@ -4,6 +4,7 @@
 import { WebsiteRenderer } from '@/components/renderer';
 import { getTemplateById } from '@/lib/templates';
 import { notFound } from 'next/navigation';
+import { PreviewHeader } from './preview-header';
 
 interface PreviewPageProps {
   searchParams: Promise<{
@@ -31,27 +32,7 @@ export default async function PreviewPage({ searchParams }: PreviewPageProps) {
 
   return (
     <div className="min-h-screen">
-      {/* Preview header */}
-      <div className="sticky top-0 z-50 border-b bg-white/95 backdrop-blur">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-          <div>
-            <h1 className="text-lg font-semibold">Template Preview</h1>
-            <p className="text-sm text-muted-foreground capitalize">
-              {config.template.replace('-', ' ')}
-            </p>
-          </div>
-          <div className="flex gap-2">
-            <button
-              onClick={() => window.close()}
-              className="rounded-lg border px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-50"
-            >
-              Close
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* Template content */}
+      <PreviewHeader templateName={config.template.replace('-', ' ')} />
       <WebsiteRenderer config={config} />
     </div>
   );

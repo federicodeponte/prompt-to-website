@@ -35,6 +35,9 @@ export function PreviewPane({ config }: PreviewPaneProps) {
   const [key, setKey] = useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
 
+  // Ensure blocks is always an array (safety check for race conditions)
+  const blocks = config.blocks || [];
+
   /**
    * Force refresh of preview
    */
@@ -64,7 +67,7 @@ export function PreviewPane({ config }: PreviewPaneProps) {
         <div className="flex items-center gap-2">
           <h3 className="text-sm font-semibold">Live Preview</h3>
           <span className="text-xs text-muted-foreground">
-            {config.blocks.length} blocks • {config.template}
+            {blocks.length} blocks • {config.template}
           </span>
         </div>
 
