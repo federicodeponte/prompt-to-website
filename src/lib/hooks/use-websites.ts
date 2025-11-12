@@ -1,59 +1,44 @@
 // ABOUTME: React Query hooks for website CRUD operations
-// ABOUTME: Provides type-safe hooks for API interactions with caching and optimistic updates
+// ABOUTME: Uses localStorage for MVP (no backend required)
 
 'use client';
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Website, WebsiteConfig } from '@/lib/types/website-config';
+import { websiteStorage } from '@/lib/storage/local-storage';
 
 /**
- * Fetch all websites
+ * Fetch all websites from localStorage
  */
 async function fetchWebsites(): Promise<Website[]> {
-  const response = await fetch('/api/websites');
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.error || 'Failed to fetch websites');
-  }
-  return response.json();
+  // Simulate async for React Query compatibility
+  return Promise.resolve(websiteStorage.getAll());
 }
 
 /**
- * Fetch a single website by ID
+ * Fetch a single website by ID from localStorage
  */
 async function fetchWebsite(id: string): Promise<Website> {
-  const response = await fetch(`/api/websites/${id}`);
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.error || 'Failed to fetch website');
+  const website = websiteStorage.getById(id);
+  if (!website) {
+    throw new Error('Website not found');
   }
-  return response.json();
+  return Promise.resolve(website);
 }
 
 /**
- * Create a new website
+ * Create a new website in localStorage
  */
 async function createWebsite(data: {
   label: string;
   config: WebsiteConfig;
-  user_id?: string;
 }): Promise<Website> {
-  const response = await fetch('/api/websites', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data),
-  });
-
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.error || 'Failed to create website');
-  }
-
-  return response.json();
+  const website = websiteStorage.create(data.label, data.config);
+  return Promise.resolve(website);
 }
 
 /**
- * Update a website
+ * Update a website in localStorage
  */
 async function updateWebsite(data: {
   id: string;
@@ -62,36 +47,29 @@ async function updateWebsite(data: {
   prompt_history?: string[];
 }): Promise<Website> {
   const { id, ...updates } = data;
-  const response = await fetch(`/api/websites/${id}`, {
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(updates),
-  });
+  const website = websiteStorage.update(id, updates);
 
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.error || 'Failed to update website');
+  if (!website) {
+    throw new Error('Website not found');
   }
 
-  return response.json();
+  return Promise.resolve(website);
 }
 
 /**
- * Delete a website
+ * Delete a website from localStorage
  */
 async function deleteWebsite(id: string): Promise<void> {
-  const response = await fetch(`/api/websites/${id}`, {
-    method: 'DELETE',
-  });
-
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.error || 'Failed to delete website');
+  const success = websiteStorage.delete(id);
+  if (!success) {
+    throw new Error('Website not found');
   }
+  return Promise.resolve();
 }
 
 /**
  * Generate website from AI prompt
+ * NOTE: Still uses API endpoint for Gemini AI generation
  */
 async function generateWebsite(data: {
   prompt: string;

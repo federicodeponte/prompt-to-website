@@ -1,67 +1,40 @@
 // ABOUTME: Dynamic editor page for editing websites by ID
-// ABOUTME: Loads website config from database and renders EditorLayout
+// ABOUTME: Loads website config from localStorage and renders EditorLayout
 
-import { notFound } from 'next/navigation';
+'use client';
+
+import { useParams, notFound } from 'next/navigation';
 import { EditorLayout } from '@/components/editor';
-import { supabase } from '@/lib/supabase/client';
-import { Website } from '@/lib/types/website-config';
-
-interface EditorPageProps {
-  params: Promise<{
-    id: string;
-  }>;
-}
-
-/**
- * Fetch website from database
- * Direct database access from Server Component for optimal performance
- */
-async function fetchWebsite(id: string): Promise<Website | null> {
-  try {
-    const { data, error } = await supabase
-      .from('websites')
-      .select('*')
-      .eq('id', id)
-      .single();
-
-    if (error) {
-      if (error.code === 'PGRST116') {
-        // Not found
-        return null;
-      }
-      console.error('Error fetching website:', error);
-      return null;
-    }
-
-    return data as Website;
-  } catch (error) {
-    console.error('Unexpected error fetching website:', error);
-    return null;
-  }
-}
+import { useWebsite } from '@/lib/hooks/use-websites';
 
 /**
  * Editor page for a specific website
  *
  * Architecture:
- * - Server Component with direct database access
- * - Handles 404 errors gracefully with Next.js notFound()
- * - Passes real data to client-side EditorLayout
+ * - Client Component using React Query for data fetching
+ * - Loads website from localStorage via useWebsite hook
+ * - Handles loading and error states gracefully
  *
  * Principles:
- * - Single Responsibility: Data fetching and error handling only
- * - Fail Fast: Return 404 immediately if website doesn't exist
+ * - Single Responsibility: Data fetching and rendering coordination only
+ * - Fail Fast: Show 404 immediately if website doesn't exist
  * - Type Safety: Proper typing throughout the data flow
- * - Performance: Direct DB access instead of HTTP round-trip
+ * - Client-Side: Uses localStorage, no server database needed for MVP
  */
-export default async function EditorPage({ params }: EditorPageProps) {
-  const { id } = await params;
+export default function EditorPage() {
+  const params = useParams();
+  const id = params.id as string;
 
-  // Fetch website data from database
-  const website = await fetchWebsite(id);
+  // Fetch website from localStorage via React Query
+  const { data: website, isLoading, error } = useWebsite(id);
 
-  // Handle not found case
-  if (!website) {
+  // Handle loading state (uses loading.tsx in same directory)
+  if (isLoading) {
+    return null; // Next.js loading.tsx will be shown
+  }
+
+  // Handle error or not found case
+  if (error || !website) {
     notFound();
   }
 

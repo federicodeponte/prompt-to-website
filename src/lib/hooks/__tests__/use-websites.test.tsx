@@ -12,7 +12,37 @@ import {
 } from '../use-websites';
 import { Website, WebsiteConfig } from '@/lib/types/website-config';
 
-// Mock fetch
+// Mock localStorage
+const localStorageMock = (() => {
+  let store: Record<string, string> = {};
+
+  return {
+    getItem: vi.fn((key: string) => store[key] || null),
+    setItem: vi.fn((key: string, value: string) => {
+      store[key] = value;
+    }),
+    removeItem: vi.fn((key: string) => {
+      delete store[key];
+    }),
+    clear: vi.fn(() => {
+      store = {};
+    }),
+  };
+})();
+
+// @ts-expect-error - mocking localStorage
+global.localStorage = localStorageMock;
+
+// Mock crypto.randomUUID (using defineProperty because crypto is read-only)
+Object.defineProperty(global, 'crypto', {
+  value: {
+    ...global.crypto,
+    randomUUID: vi.fn(() => 'mock-uuid-123') as () => `${string}-${string}-${string}-${string}-${string}`,
+  },
+  writable: true,
+});
+
+// Mock fetch for generateWebsite (still uses API endpoint)
 const mockFetch = vi.fn();
 global.fetch = mockFetch as unknown as typeof fetch;
 
@@ -70,19 +100,18 @@ const mockConfig: WebsiteConfig = mockWebsite.config;
 
 describe('useWebsites', () => {
   beforeEach(() => {
-    mockFetch.mockClear();
+    localStorageMock.clear();
+    localStorageMock.getItem.mockClear();
+    localStorageMock.setItem.mockClear();
   });
 
   afterEach(() => {
     vi.clearAllMocks();
   });
 
-  it('should fetch websites successfully', async () => {
+  it('should fetch websites from localStorage successfully', async () => {
     const websites = [mockWebsite];
-    mockFetch.mockResolvedValueOnce({
-      ok: true,
-      json: async () => websites,
-    });
+    localStorageMock.getItem.mockReturnValueOnce(JSON.stringify(websites));
 
     const { result } = renderHook(() => useWebsites(), {
       wrapper: createWrapper(),
@@ -90,41 +119,37 @@ describe('useWebsites', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(mockFetch).toHaveBeenCalledWith('/api/websites');
+    expect(localStorageMock.getItem).toHaveBeenCalledWith('prompt-to-website:websites');
     expect(result.current.data).toEqual(websites);
   });
 
-  it('should handle fetch error', async () => {
-    mockFetch.mockResolvedValueOnce({
-      ok: false,
-      json: async () => ({ error: 'Failed to fetch' }),
-    });
+  it('should return empty array when localStorage is empty', async () => {
+    localStorageMock.getItem.mockReturnValueOnce(null);
 
     const { result } = renderHook(() => useWebsites(), {
       wrapper: createWrapper(),
     });
 
-    await waitFor(() => expect(result.current.isError).toBe(true));
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(result.current.error).toBeDefined();
-    expect(result.current.error?.message).toContain('Failed to fetch');
+    expect(result.current.data).toEqual([]);
   });
 });
 
 describe('useWebsite', () => {
   beforeEach(() => {
-    mockFetch.mockClear();
+    localStorageMock.clear();
+    localStorageMock.getItem.mockClear();
+    localStorageMock.setItem.mockClear();
   });
 
   afterEach(() => {
     vi.clearAllMocks();
   });
 
-  it('should fetch single website successfully', async () => {
-    mockFetch.mockResolvedValueOnce({
-      ok: true,
-      json: async () => mockWebsite,
-    });
+  it('should fetch single website from localStorage successfully', async () => {
+    const websites = [mockWebsite];
+    localStorageMock.getItem.mockReturnValue(JSON.stringify(websites));
 
     const { result } = renderHook(() => useWebsite('123'), {
       wrapper: createWrapper(),
@@ -132,7 +157,7 @@ describe('useWebsite', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(mockFetch).toHaveBeenCalledWith('/api/websites/123');
+    expect(localStorageMock.getItem).toHaveBeenCalledWith('prompt-to-website:websites');
     expect(result.current.data).toEqual(mockWebsite);
   });
 
@@ -141,15 +166,12 @@ describe('useWebsite', () => {
       wrapper: createWrapper(),
     });
 
-    expect(mockFetch).not.toHaveBeenCalled();
+    expect(localStorageMock.getItem).not.toHaveBeenCalled();
     expect(result.current.data).toBeUndefined();
   });
 
-  it('should handle fetch error', async () => {
-    mockFetch.mockResolvedValueOnce({
-      ok: false,
-      json: async () => ({ error: 'Website not found' }),
-    });
+  it('should handle website not found', async () => {
+    localStorageMock.getItem.mockReturnValue(JSON.stringify([]));
 
     const { result } = renderHook(() => useWebsite('999'), {
       wrapper: createWrapper(),
@@ -163,18 +185,17 @@ describe('useWebsite', () => {
 
 describe('useCreateWebsite', () => {
   beforeEach(() => {
-    mockFetch.mockClear();
+    localStorageMock.clear();
+    localStorageMock.getItem.mockClear();
+    localStorageMock.setItem.mockClear();
   });
 
   afterEach(() => {
     vi.clearAllMocks();
   });
 
-  it('should create website successfully', async () => {
-    mockFetch.mockResolvedValueOnce({
-      ok: true,
-      json: async () => mockWebsite,
-    });
+  it('should create website in localStorage successfully', async () => {
+    localStorageMock.getItem.mockReturnValue(JSON.stringify([]));
 
     const { result } = renderHook(() => useCreateWebsite(), {
       wrapper: createWrapper(),
@@ -187,53 +208,27 @@ describe('useCreateWebsite', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(mockFetch).toHaveBeenCalledWith('/api/websites', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        label: 'Test Website',
-        config: mockConfig,
-      }),
-    });
-    expect(result.current.data).toEqual(mockWebsite);
-  });
-
-  it('should handle create error', async () => {
-    mockFetch.mockResolvedValueOnce({
-      ok: false,
-      json: async () => ({ error: 'Failed to create website' }),
-    });
-
-    const { result } = renderHook(() => useCreateWebsite(), {
-      wrapper: createWrapper(),
-    });
-
-    result.current.mutate({
-      label: 'Test Website',
-      config: mockConfig,
-    });
-
-    await waitFor(() => expect(result.current.isError).toBe(true));
-
-    expect(result.current.error?.message).toContain('Failed to create website');
+    expect(localStorageMock.setItem).toHaveBeenCalled();
+    expect(result.current.data?.label).toBe('Test Website');
+    expect(result.current.data?.config).toEqual(mockConfig);
+    expect(result.current.data?.id).toBe('mock-uuid-123');
   });
 });
 
 describe('useUpdateWebsite', () => {
   beforeEach(() => {
-    mockFetch.mockClear();
+    localStorageMock.clear();
+    localStorageMock.getItem.mockClear();
+    localStorageMock.setItem.mockClear();
   });
 
   afterEach(() => {
     vi.clearAllMocks();
   });
 
-  it('should update website successfully', async () => {
-    const updatedWebsite = { ...mockWebsite, label: 'Updated Website' };
-    mockFetch.mockResolvedValueOnce({
-      ok: true,
-      json: async () => updatedWebsite,
-    });
+  it('should update website in localStorage successfully', async () => {
+    const websites = [mockWebsite];
+    localStorageMock.getItem.mockReturnValue(JSON.stringify(websites));
 
     const { result } = renderHook(() => useUpdateWebsite(), {
       wrapper: createWrapper(),
@@ -246,50 +241,42 @@ describe('useUpdateWebsite', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(mockFetch).toHaveBeenCalledWith('/api/websites/123', {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        label: 'Updated Website',
-      }),
-    });
-    expect(result.current.data).toEqual(updatedWebsite);
+    expect(localStorageMock.setItem).toHaveBeenCalled();
+    expect(result.current.data?.label).toBe('Updated Website');
   });
 
-  it('should handle update error', async () => {
-    mockFetch.mockResolvedValueOnce({
-      ok: false,
-      json: async () => ({ error: 'Failed to update website' }),
-    });
+  it('should handle update error when website not found', async () => {
+    localStorageMock.getItem.mockReturnValue(JSON.stringify([]));
 
     const { result } = renderHook(() => useUpdateWebsite(), {
       wrapper: createWrapper(),
     });
 
     result.current.mutate({
-      id: '123',
+      id: '999',
       label: 'Updated Website',
     });
 
     await waitFor(() => expect(result.current.isError).toBe(true));
 
-    expect(result.current.error?.message).toContain('Failed to update website');
+    expect(result.current.error?.message).toContain('Website not found');
   });
 });
 
 describe('useDeleteWebsite', () => {
   beforeEach(() => {
-    mockFetch.mockClear();
+    localStorageMock.clear();
+    localStorageMock.getItem.mockClear();
+    localStorageMock.setItem.mockClear();
   });
 
   afterEach(() => {
     vi.clearAllMocks();
   });
 
-  it('should delete website successfully', async () => {
-    mockFetch.mockResolvedValueOnce({
-      ok: true,
-    });
+  it('should delete website from localStorage successfully', async () => {
+    const websites = [mockWebsite];
+    localStorageMock.getItem.mockReturnValue(JSON.stringify(websites));
 
     const { result } = renderHook(() => useDeleteWebsite(), {
       wrapper: createWrapper(),
@@ -299,26 +286,23 @@ describe('useDeleteWebsite', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    expect(mockFetch).toHaveBeenCalledWith('/api/websites/123', {
-      method: 'DELETE',
-    });
+    expect(localStorageMock.setItem).toHaveBeenCalled();
+    const savedData = localStorageMock.setItem.mock.calls[0][1];
+    expect(JSON.parse(savedData)).toEqual([]);
   });
 
-  it('should handle delete error', async () => {
-    mockFetch.mockResolvedValueOnce({
-      ok: false,
-      json: async () => ({ error: 'Failed to delete website' }),
-    });
+  it('should handle delete error when website not found', async () => {
+    localStorageMock.getItem.mockReturnValue(JSON.stringify([]));
 
     const { result } = renderHook(() => useDeleteWebsite(), {
       wrapper: createWrapper(),
     });
 
-    result.current.mutate('123');
+    result.current.mutate('999');
 
     await waitFor(() => expect(result.current.isError).toBe(true));
 
-    expect(result.current.error?.message).toContain('Failed to delete website');
+    expect(result.current.error?.message).toContain('Website not found');
   });
 });
 

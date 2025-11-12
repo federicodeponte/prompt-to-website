@@ -39,8 +39,7 @@ export interface Block {
   id: string; // Unique identifier (e.g., "hero-01", "features-02")
   type: BlockType;
   variant?: BlockVariant;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  content: Record<string, any>; // Block-specific content (flexible for JSON storage)
+  content: Record<string, unknown>; // Block-specific content (validated with type guards at runtime)
   settings?: BlockSettings;
 }
 
@@ -104,8 +103,7 @@ export interface BlockMetadata {
   category: BlockType;
   description: string;
   preview?: string; // URL to preview image
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  defaultContent: Record<string, any>; // Flexible default content for block templates
+  defaultContent: Record<string, unknown>; // Flexible default content (validated with type guards)
   variants?: BlockVariant[];
 }
 
