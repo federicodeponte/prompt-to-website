@@ -36,8 +36,9 @@ export function FeaturesGrid({ content }: FeaturesGridProps) {
       </div>
 
       {/* Features Grid */}
-      <div className={cn('grid gap-6 sm:gap-8', gridColsClass[columns])}>
-        {features.map((feature, index) => (
+      {features && features.length > 0 && (
+        <div className={cn('grid gap-6 sm:gap-8', gridColsClass[columns])}>
+          {features.map((feature, index) => (
           <Card key={index} className="border-2 transition-shadow hover:shadow-lg">
             <CardContent className="p-6">
               {/* Icon */}
@@ -52,8 +53,9 @@ export function FeaturesGrid({ content }: FeaturesGridProps) {
               <p className="text-muted-foreground">{feature.description}</p>
             </CardContent>
           </Card>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

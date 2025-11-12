@@ -31,8 +31,9 @@ export function PricingSimple({ content, theme }: PricingSimpleProps) {
       </div>
 
       {/* Pricing Tiers */}
-      <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-        {tiers.map((tier, index) => (
+      {tiers && tiers.length > 0 && (
+        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+          {tiers.map((tier, index) => (
           <Card
             key={index}
             className={cn(
@@ -54,14 +55,16 @@ export function PricingSimple({ content, theme }: PricingSimpleProps) {
               <p className="mt-2 text-sm text-muted-foreground">{tier.description}</p>
             </CardHeader>
             <CardContent className="flex-1 space-y-6">
-              <ul className="space-y-3">
-                {tier.features.map((feature, featureIndex) => (
-                  <li key={featureIndex} className="flex items-start gap-2">
-                    <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-primary" aria-hidden="true" />
-                    <span className="text-sm">{feature}</span>
-                  </li>
-                ))}
-              </ul>
+              {tier.features && tier.features.length > 0 && (
+                <ul className="space-y-3">
+                  {tier.features.map((feature, featureIndex) => (
+                    <li key={featureIndex} className="flex items-start gap-2">
+                      <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-primary" aria-hidden="true" />
+                      <span className="text-sm">{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
               <Button
                 className="w-full"
                 variant={tier.highlighted ? 'default' : 'outline'}
@@ -76,8 +79,9 @@ export function PricingSimple({ content, theme }: PricingSimpleProps) {
               </Button>
             </CardContent>
           </Card>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

@@ -33,7 +33,7 @@ export function TestimonialsCards({ content }: TestimonialsCardsProps) {
 
       {/* Testimonials Grid */}
       <div className={cn('grid gap-6 sm:gap-8', gridColsClass[columns])}>
-        {testimonials.map((testimonial, index) => (
+        {testimonials && testimonials.length > 0 && testimonials.map((testimonial, index) => (
           <Card key={index}>
             <CardContent className="p-6 space-y-4">
               {/* Rating */}
