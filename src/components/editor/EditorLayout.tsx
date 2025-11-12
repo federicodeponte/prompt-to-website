@@ -1,0 +1,203 @@
+// ABOUTME: Main editor layout with resizable split-pane (editing panel + preview)
+// ABOUTME: Follows LeadForm-Builder pattern with dual-mode editing (AI + Manual)
+
+'use client';
+
+import React, { useState, useEffect, useRef } from 'react';
+import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Button } from '@/components/ui/button';
+import { WebsiteConfig } from '@/lib/types/website-config';
+import { AIModePanel } from './AIModePanel';
+import { ManualModePanel } from './ManualModePanel';
+import { PreviewPane } from './PreviewPane';
+import { useUpdateWebsite } from '@/lib/hooks/use-websites';
+import { Save, CheckCircle2 } from 'lucide-react';
+
+interface EditorLayoutProps {
+  initialConfig: WebsiteConfig;
+  websiteId: string;
+}
+
+/**
+ * EditorLayout provides a split-pane interface for website editing
+ *
+ * Architecture:
+ * - Left pane (40%): Editing modes (AI chat or Manual forms)
+ * - Right pane (60%): Live preview of website
+ * - Resizable divider between panes
+ *
+ * Principles:
+ * - Single Responsibility: Layout orchestration only
+ * - Open/Closed: Easy to add new editing modes via tabs
+ * - Composition: Child components handle specific functionality
+ */
+export function EditorLayout({ initialConfig, websiteId }: EditorLayoutProps) {
+  const [config, setConfig] = useState<WebsiteConfig>(initialConfig);
+  const [activeMode, setActiveMode] = useState<'ai' | 'manual'>('ai');
+  const [lastSaved, setLastSaved] = useState<Date>(new Date());
+  const [isSaving, setIsSaving] = useState(false);
+
+  // React Query mutation for updating website
+  const { mutate: updateWebsite, isPending: isUpdating } = useUpdateWebsite();
+
+  // Debounce timer ref
+  const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  /**
+   * Handle configuration updates from either AI or Manual mode
+   * Triggers auto-save with debouncing (3 seconds)
+   */
+  const handleConfigUpdate = (newConfig: WebsiteConfig) => {
+    setConfig(newConfig);
+
+    // Clear existing timeout
+    if (saveTimeoutRef.current) {
+      clearTimeout(saveTimeoutRef.current);
+    }
+
+    // Set new timeout for auto-save (3 second debounce)
+    saveTimeoutRef.current = setTimeout(() => {
+      handleSave(newConfig);
+    }, 3000);
+  };
+
+  /**
+   * Save configuration to database
+   */
+  const handleSave = (configToSave: WebsiteConfig = config) => {
+    setIsSaving(true);
+    updateWebsite(
+      {
+        id: websiteId,
+        config: configToSave,
+      },
+      {
+        onSuccess: () => {
+          setLastSaved(new Date());
+          setIsSaving(false);
+        },
+        onError: (error) => {
+          console.error('Failed to save:', error);
+          setIsSaving(false);
+        },
+      }
+    );
+  };
+
+  /**
+   * Manual save trigger
+   */
+  const handleManualSave = () => {
+    // Clear debounce timer
+    if (saveTimeoutRef.current) {
+      clearTimeout(saveTimeoutRef.current);
+    }
+    handleSave();
+  };
+
+  /**
+   * Cleanup timeout on unmount
+   */
+  useEffect(() => {
+    return () => {
+      if (saveTimeoutRef.current) {
+        clearTimeout(saveTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  return (
+    <div className="flex h-screen flex-col">
+      {/* Header */}
+      <header className="border-b bg-background px-6 py-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold">Website Editor</h1>
+            <p className="text-sm text-muted-foreground">
+              ID: {websiteId}
+            </p>
+          </div>
+          <div className="flex items-center gap-3">
+            {/* Save status indicator */}
+            {isSaving || isUpdating ? (
+              <span className="text-sm text-muted-foreground flex items-center gap-2">
+                <Save className="h-4 w-4 animate-spin" />
+                Saving...
+              </span>
+            ) : (
+              <span className="text-sm text-muted-foreground flex items-center gap-2">
+                <CheckCircle2 className="h-4 w-4 text-green-500" />
+                Saved {lastSaved.toLocaleTimeString()}
+              </span>
+            )}
+
+            {/* Manual save button */}
+            <Button
+              onClick={handleManualSave}
+              disabled={isSaving || isUpdating}
+              variant="outline"
+              size="sm"
+            >
+              <Save className="mr-2 h-4 w-4" />
+              Save Now
+            </Button>
+          </div>
+        </div>
+      </header>
+
+      {/* Split-pane layout */}
+      <PanelGroup direction="horizontal" className="flex-1">
+        {/* Left pane: Editing modes */}
+        <Panel defaultSize={40} minSize={30} maxSize={60}>
+          <div className="h-full overflow-hidden border-r bg-background">
+            <Tabs
+              value={activeMode}
+              onValueChange={(value) => setActiveMode(value as 'ai' | 'manual')}
+              className="flex h-full flex-col"
+            >
+              {/* Mode selector tabs */}
+              <div className="border-b px-4 pt-4">
+                <TabsList className="w-full">
+                  <TabsTrigger value="ai" className="flex-1">
+                    AI Mode
+                  </TabsTrigger>
+                  <TabsTrigger value="manual" className="flex-1">
+                    Manual Mode
+                  </TabsTrigger>
+                </TabsList>
+              </div>
+
+              {/* Tab content */}
+              <div className="flex-1 overflow-hidden">
+                <TabsContent value="ai" className="h-full m-0 p-0">
+                  {/* AI Mode Panel - Chat interface */}
+                  <AIModePanel
+                    config={config}
+                    onConfigUpdate={handleConfigUpdate}
+                  />
+                </TabsContent>
+
+                <TabsContent value="manual" className="h-full m-0 p-0">
+                  {/* Manual Mode Panel - Form editor */}
+                  <ManualModePanel
+                    config={config}
+                    onConfigUpdate={handleConfigUpdate}
+                  />
+                </TabsContent>
+              </div>
+            </Tabs>
+          </div>
+        </Panel>
+
+        {/* Resize handle */}
+        <PanelResizeHandle className="w-2 bg-border hover:bg-primary/20 transition-colors" />
+
+        {/* Right pane: Live preview */}
+        <Panel defaultSize={60} minSize={40}>
+          <PreviewPane config={config} />
+        </Panel>
+      </PanelGroup>
+    </div>
+  );
+}
