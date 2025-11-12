@@ -18,33 +18,35 @@ export function FooterMultiColumn({ content }: FooterMultiColumnProps) {
           {/* Logo & Tagline */}
           <div>
             <div className="mb-4 text-2xl font-bold">{logo}</div>
-            <p className="text-sm text-muted-foreground">{tagline}</p>
+            {tagline && <p className="text-sm text-muted-foreground">{tagline}</p>}
             {/* Social Links */}
-            <div className="mt-4 flex gap-4">
-              {social.twitter && (
-                <a href={social.twitter} className="text-muted-foreground hover:text-foreground" aria-label="Twitter">
-                  𝕏
-                </a>
-              )}
-              {social.linkedin && (
-                <a href={social.linkedin} className="text-muted-foreground hover:text-foreground" aria-label="LinkedIn">
-                  in
-                </a>
-              )}
-              {social.github && (
-                <a href={social.github} className="text-muted-foreground hover:text-foreground" aria-label="GitHub">
-                  GitHub
-                </a>
-              )}
-            </div>
+            {social && (
+              <div className="mt-4 flex gap-4">
+                {social.twitter && (
+                  <a href={social.twitter} className="text-muted-foreground hover:text-foreground" aria-label="Twitter">
+                    𝕏
+                  </a>
+                )}
+                {social.linkedin && (
+                  <a href={social.linkedin} className="text-muted-foreground hover:text-foreground" aria-label="LinkedIn">
+                    in
+                  </a>
+                )}
+                {social.github && (
+                  <a href={social.github} className="text-muted-foreground hover:text-foreground" aria-label="GitHub">
+                    GitHub
+                  </a>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Link Sections */}
-          {sections.map((section, index) => (
+          {sections && sections.length > 0 && sections.map((section, index) => (
             <div key={index}>
               <h3 className="mb-4 text-sm font-semibold uppercase tracking-wide">{section.title}</h3>
               <ul className="space-y-2">
-                {section.links.map((link, linkIndex) => (
+                {section.links && section.links.map((link, linkIndex) => (
                   <li key={linkIndex}>
                     <a
                       href={link.link}
@@ -60,9 +62,11 @@ export function FooterMultiColumn({ content }: FooterMultiColumnProps) {
         </div>
 
         {/* Copyright */}
-        <div className="mt-8 border-t pt-8 text-center">
-          <p className="text-sm text-muted-foreground">{copyright}</p>
-        </div>
+        {copyright && (
+          <div className="mt-8 border-t pt-8 text-center">
+            <p className="text-sm text-muted-foreground">{copyright}</p>
+          </div>
+        )}
       </div>
     </footer>
   );

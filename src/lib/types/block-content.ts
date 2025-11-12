@@ -211,29 +211,29 @@ export interface FooterSection {
 export interface FooterContentSimple extends BaseBlockContent {
   variant: 'simple';
   logo: string;
-  tagline: string;
-  links: FooterLink[];
-  social: {
+  tagline?: string;
+  links?: FooterLink[];
+  social?: {
     twitter?: string;
     linkedin?: string;
     github?: string;
     facebook?: string;
   };
-  copyright: string;
+  copyright?: string;
 }
 
 export interface FooterContentMultiColumn extends BaseBlockContent {
   variant: 'multi-column';
   logo: string;
-  tagline: string;
-  sections: FooterSection[];
-  social: {
+  tagline?: string;
+  sections?: FooterSection[];
+  social?: {
     twitter?: string;
     linkedin?: string;
     github?: string;
     facebook?: string;
   };
-  copyright: string;
+  copyright?: string;
 }
 
 export type FooterContent =
