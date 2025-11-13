@@ -39,13 +39,13 @@ export default function Home() {
             </p>
 
             <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
-              <Button size="lg" className="h-12 px-8 text-base" asChild>
+              <Button size="lg" className="h-12 px-8 text-base shadow-lg transition-all hover:shadow-xl hover:scale-105" asChild>
                 <a href="#templates">
                   Get Started Free
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </a>
               </Button>
-              <Button size="lg" variant="outline" className="h-12 px-8 text-base" asChild>
+              <Button size="lg" variant="outline" className="h-12 px-8 text-base transition-all hover:scale-105" asChild>
                 <Link href="/editor/demo">
                   Try Demo
                 </Link>
@@ -68,7 +68,7 @@ export default function Home() {
 
             <div className="grid gap-8 md:grid-cols-3">
               {/* Card 1 - PRIMARY */}
-              <Card className="border-2 transition-all hover:shadow-xl hover:scale-[1.02]">
+              <Card className="border-2 transition-all duration-300 hover:shadow-xl hover:scale-[1.02] animate-in fade-in slide-in-from-bottom-4" style={{ animationDelay: '100ms', animationFillMode: 'backwards' }}>
                 <CardHeader className="pb-8">
                   <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-xl bg-primary/10 ring-1 ring-primary/20">
                     <Sparkles className="h-7 w-7 text-primary" />
@@ -81,7 +81,7 @@ export default function Home() {
               </Card>
 
               {/* Card 2 - SECONDARY */}
-              <Card className="border-2 transition-all hover:shadow-xl hover:scale-[1.02]">
+              <Card className="border-2 transition-all duration-300 hover:shadow-xl hover:scale-[1.02] animate-in fade-in slide-in-from-bottom-4" style={{ animationDelay: '200ms', animationFillMode: 'backwards' }}>
                 <CardHeader className="pb-8">
                   <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-xl bg-secondary/10 ring-1 ring-secondary/20">
                     <Zap className="h-7 w-7 text-secondary-foreground" />
@@ -94,7 +94,7 @@ export default function Home() {
               </Card>
 
               {/* Card 3 - ACCENT */}
-              <Card className="border-2 transition-all hover:shadow-xl hover:scale-[1.02]">
+              <Card className="border-2 transition-all duration-300 hover:shadow-xl hover:scale-[1.02] animate-in fade-in slide-in-from-bottom-4" style={{ animationDelay: '300ms', animationFillMode: 'backwards' }}>
                 <CardHeader className="pb-8">
                   <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-xl bg-accent/50 ring-1 ring-accent">
                     <Palette className="h-7 w-7 text-accent-foreground" />

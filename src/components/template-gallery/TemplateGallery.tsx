@@ -7,8 +7,10 @@ import React, { useState } from 'react';
 import { templates, TemplateMetadata } from '@/lib/templates';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
 import { useCreateWebsite } from '@/lib/hooks/use-websites';
 import { useRouter } from 'next/navigation';
+import { Loader2 } from 'lucide-react';
 
 type CategoryFilter = 'all' | 'business' | 'product' | 'personal';
 
@@ -165,9 +167,14 @@ export function TemplateGallery() {
                 onClick={() => handleUseTemplate(template)}
                 disabled={isPending && creatingTemplateId === template.id}
               >
-                {isPending && creatingTemplateId === template.id
-                  ? 'Creating...'
-                  : 'Use Template'}
+                {isPending && creatingTemplateId === template.id ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Creating...
+                  </>
+                ) : (
+                  'Use Template'
+                )}
               </Button>
               <Button
                 variant="outline"
