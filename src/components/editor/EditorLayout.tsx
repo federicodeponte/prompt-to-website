@@ -12,7 +12,8 @@ import { AIModePanel } from './AIModePanel';
 import { ManualModePanel } from './ManualModePanel';
 import { PreviewPane } from './PreviewPane';
 import { useUpdateWebsite } from '@/lib/hooks/use-websites';
-import { Save, CheckCircle2 } from 'lucide-react';
+import { Save, CheckCircle2, Download } from 'lucide-react';
+import { exportToHTML, downloadHTML } from '@/lib/export/html-exporter';
 
 interface EditorLayoutProps {
   initialConfig: WebsiteConfig;
@@ -103,6 +104,15 @@ export function EditorLayout({ initialConfig, websiteId }: EditorLayoutProps) {
   };
 
   /**
+   * Export website as standalone HTML file
+   */
+  const handleExport = () => {
+    const html = exportToHTML(config);
+    const filename = `${config.metadata.title.toLowerCase().replace(/\s+/g, '-')}.html`;
+    downloadHTML(html, filename);
+  };
+
+  /**
    * Cleanup timeout on unmount
    */
   useEffect(() => {
@@ -147,6 +157,16 @@ export function EditorLayout({ initialConfig, websiteId }: EditorLayoutProps) {
             >
               <Save className="mr-2 h-4 w-4" />
               Save Now
+            </Button>
+
+            {/* Export button */}
+            <Button
+              onClick={handleExport}
+              variant="outline"
+              size="sm"
+            >
+              <Download className="mr-2 h-4 w-4" />
+              Export HTML
             </Button>
           </div>
         </div>
