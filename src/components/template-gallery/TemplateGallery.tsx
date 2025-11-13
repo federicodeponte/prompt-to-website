@@ -115,37 +115,47 @@ export function TemplateGallery() {
       {/* Template Grid */}
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {filteredTemplates.map((template) => (
-          <Card key={template.id} className="flex flex-col transition-shadow hover:shadow-lg">
-            <CardHeader>
-              <div className="mb-2 flex items-center gap-2">
+          <Card key={template.id} className="group flex flex-col shadow-sm transition-all hover:shadow-2xl hover:scale-[1.02]">
+            <CardHeader className="pb-4">
+              <div className="mb-3 flex items-center gap-2">
                 <span className="text-2xl">{getCategoryIcon(template.category)}</span>
-                <span className="text-xs uppercase text-muted-foreground">
+                <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                   {template.category}
                 </span>
               </div>
-              <CardTitle>{template.name}</CardTitle>
-              <CardDescription>{template.description}</CardDescription>
+              <CardTitle className="text-xl">{template.name}</CardTitle>
+              <CardDescription className="text-base">{template.description}</CardDescription>
             </CardHeader>
 
             <CardContent className="flex-1">
-              {/* Preview placeholder - could be replaced with actual screenshot */}
-              <div className="aspect-video rounded-lg border bg-gradient-to-br from-gray-100 to-gray-200 p-4">
-                <div className="flex h-full flex-col gap-2">
-                  {/* Simulated preview */}
-                  <div className="h-8 rounded bg-white/80" />
-                  <div className="flex flex-1 gap-2">
-                    <div className="flex-1 rounded bg-white/60" />
-                    <div className="flex-1 rounded bg-white/60" />
+              {/* Premium preview with modern gradient pattern */}
+              <div className="aspect-video overflow-hidden rounded-xl border-2 bg-gradient-to-br from-muted via-background to-muted/50 shadow-inner">
+                <div className="flex h-full flex-col gap-3 p-4">
+                  {/* Simulated header */}
+                  <div className="flex items-center gap-2">
+                    <div className="h-2 w-2 rounded-full bg-destructive/60" />
+                    <div className="h-2 w-2 rounded-full bg-yellow-400/60" />
+                    <div className="h-2 w-2 rounded-full bg-green-400/60" />
+                    <div className="ml-auto h-3 w-20 rounded bg-primary/10" />
                   </div>
-                  <div className="h-12 rounded bg-white/80" />
+
+                  {/* Simulated content blocks */}
+                  <div className="h-12 rounded-lg bg-gradient-to-r from-primary/20 to-secondary/20 ring-1 ring-primary/20" />
+                  <div className="flex flex-1 gap-3">
+                    <div className="flex-1 rounded-lg bg-accent/30 ring-1 ring-border" />
+                    <div className="flex-1 rounded-lg bg-muted ring-1 ring-border" />
+                  </div>
+                  <div className="h-10 rounded-lg bg-gradient-to-r from-primary/15 to-primary/5" />
                 </div>
               </div>
 
-              {/* Template details */}
-              <div className="mt-4 flex items-center gap-4 text-sm text-muted-foreground">
-                <span>{template.config.blocks.length} blocks</span>
-                <span>•</span>
-                <span className="capitalize">{template.config.template}</span>
+              {/* Template details with badge */}
+              <div className="mt-4 flex items-center justify-between text-sm">
+                <div className="flex items-center gap-3 text-muted-foreground">
+                  <span className="font-medium">{template.config.blocks.length} blocks</span>
+                  <span>•</span>
+                  <span className="capitalize">{template.config.template}</span>
+                </div>
               </div>
             </CardContent>
 

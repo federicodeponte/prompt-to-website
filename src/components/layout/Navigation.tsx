@@ -11,11 +11,12 @@ export function Navigation() {
       <div className="container mx-auto flex h-16 items-center px-6">
         {/* Logo */}
         <div className="mr-8 flex items-center space-x-2">
-          <Link href="/" className="flex items-center space-x-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary text-primary-foreground">
-              <span className="text-lg font-bold">P</span>
+          <Link href="/" className="group flex items-center space-x-3">
+            <div className="relative flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-primary via-primary to-primary/80 shadow-md ring-1 ring-primary/20 transition-transform group-hover:scale-105">
+              <span className="text-lg font-bold text-primary-foreground">P</span>
+              <div className="absolute -right-0.5 -top-0.5 h-2 w-2 rounded-full bg-gradient-to-br from-primary/60 to-secondary/60 ring-1 ring-background" />
             </div>
-            <span className="hidden font-bold sm:inline-block">
+            <span className="hidden text-lg font-bold tracking-tight sm:inline-block">
               Prompt to Website
             </span>
           </Link>
