@@ -50,7 +50,7 @@ describe('WebsiteRenderer', () => {
     };
 
     const { container } = render(<WebsiteRenderer config={config} />);
-    const renderer = container.querySelector('.website-renderer');
+    const renderer = container.querySelector('.website-renderer') as HTMLElement;
 
     const style = renderer?.style;
     expect(style?.getPropertyValue('--color-primary')).toBe('#0070f3');
@@ -133,7 +133,7 @@ describe('WebsiteRenderer', () => {
     };
 
     const { container } = render(<WebsiteRenderer config={config} />);
-    const renderer = container.querySelector('.website-renderer');
+    const renderer = container.querySelector('.website-renderer') as HTMLElement;
 
     const style = renderer?.style;
     expect(style?.getPropertyValue('--color-primary')).toBe('#ff0000');
