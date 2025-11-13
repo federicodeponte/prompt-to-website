@@ -44,7 +44,7 @@ interface WebsiteConfig {
 }
 \`\`\`
 
-Available block types: hero, features, pricing, testimonials, cta, footer, stats, faq, contact, newsletter
+Available block types: hero, features, pricing, testimonials, cta, footer, stats, faq, contact, newsletter, team
 
 Block variants:
 - hero: centered, split, gradient
@@ -57,6 +57,7 @@ Block variants:
 - faq: accordion, grid
 - contact: simple, split
 - newsletter: simple
+- team: grid, list
 
 IMPORTANT RULES:
 1. Always return ONLY valid JSON, no markdown code blocks or extra text

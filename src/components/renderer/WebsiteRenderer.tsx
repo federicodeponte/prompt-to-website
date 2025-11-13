@@ -15,6 +15,7 @@ import { FAQBlock } from '../blocks/faq';
 import { StatsBlock } from '../blocks/stats';
 import { ContactBlock } from '../blocks/contact';
 import { NewsletterBlock } from '../blocks/newsletter';
+import { TeamBlock } from '../blocks/team';
 import {
   isHeroContent,
   isFeaturesContent,
@@ -26,6 +27,7 @@ import {
   isStatsContent,
   isContactContent,
   isNewsletterContent,
+  isTeamContent,
 } from '@/lib/types/block-content';
 
 interface WebsiteRendererProps {
@@ -185,9 +187,16 @@ export function WebsiteRenderer({ config }: WebsiteRendererProps) {
           break;
 
         case 'team':
-          // Future block type - not implemented yet
-          console.warn(`Block type "${type}" is not implemented yet`);
-          return null;
+          if (isTeamContent(content)) {
+            return (
+              <TeamBlock
+                key={block.id}
+                content={content}
+                settings={settings}
+              />
+            );
+          }
+          break;
 
         default:
           // Exhaustive check ensures we handle all block types

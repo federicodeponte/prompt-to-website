@@ -339,6 +339,41 @@ export interface NewsletterContentSimple extends BaseBlockContent {
 export type NewsletterContent = NewsletterContentSimple;
 
 /**
+ * Team Block Content Types
+ */
+export interface TeamMember {
+  name: string;
+  role: string;
+  bio: string;
+  image?: string;
+  social?: {
+    linkedin?: string;
+    twitter?: string;
+    github?: string;
+    email?: string;
+  };
+}
+
+export interface TeamContentGrid extends BaseBlockContent {
+  variant: 'grid';
+  heading: string;
+  subheading: string;
+  members: TeamMember[];
+  columns: 2 | 3 | 4;
+}
+
+export interface TeamContentList extends BaseBlockContent {
+  variant: 'list';
+  heading: string;
+  subheading: string;
+  members: TeamMember[];
+}
+
+export type TeamContent =
+  | TeamContentGrid
+  | TeamContentList;
+
+/**
  * Union type of all possible block content types
  * Used by the WebsiteRenderer to determine which component to render
  */
@@ -352,7 +387,8 @@ export type BlockContent =
   | FAQContent
   | StatsContent
   | ContactContent
-  | NewsletterContent;
+  | NewsletterContent
+  | TeamContent;
 
 /**
  * Type guard functions to narrow block content types
@@ -449,5 +485,14 @@ export function isNewsletterContent(content: unknown): content is NewsletterCont
     'heading' in content &&
     'placeholder' in content &&
     'ctaText' in content
+  );
+}
+
+export function isTeamContent(content: unknown): content is TeamContent {
+  return (
+    typeof content === 'object' &&
+    content !== null &&
+    'members' in content &&
+    Array.isArray((content as Record<string, unknown>).members)
   );
 }
