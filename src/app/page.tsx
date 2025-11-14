@@ -35,13 +35,44 @@ export default function Home() {
             </Badge>
 
             {/* STRONGER TYPOGRAPHY */}
-            <h1 className="mb-8 text-6xl font-extrabold tracking-tight sm:text-7xl lg:text-8xl animate-in fade-in slide-in-from-bottom-6 duration-700" style={{ animationDelay: '100ms', animationFillMode: 'backwards' }}>
-              Build Beautiful Websites
+            <motion.h1
+              className="mb-8 text-6xl font-extrabold tracking-tight sm:text-7xl lg:text-8xl"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.1 }}
+            >
+              <motion.span
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5, delay: 0.3 }}
+              >
+                Build Beautiful Websites
+              </motion.span>
               <br />
-              <span className="bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent animate-pulse">
+              <motion.span
+                className="bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent relative inline-block"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{
+                  opacity: 1,
+                  y: 0,
+                  backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'],
+                }}
+                transition={{
+                  opacity: { duration: 0.5, delay: 0.5 },
+                  y: { duration: 0.5, delay: 0.5 },
+                  backgroundPosition: {
+                    duration: 3,
+                    repeat: Infinity,
+                    ease: 'linear',
+                  },
+                }}
+                style={{
+                  backgroundSize: '200% 200%',
+                }}
+              >
                 In Minutes, Not Hours
-              </span>
-            </h1>
+              </motion.span>
+            </motion.h1>
 
             <p className="mx-auto mb-12 max-w-2xl text-xl leading-relaxed text-muted-foreground sm:text-2xl animate-in fade-in slide-in-from-bottom-4 duration-700" style={{ animationDelay: '200ms', animationFillMode: 'backwards' }}>
               Choose a template, describe your vision to AI, and watch your website come to life.
@@ -215,59 +246,97 @@ export default function Home() {
               </p>
             </motion.div>
 
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-            >
-              <Accordion type="single" collapsible className="w-full space-y-4">
-                <AccordionItem value="item-1" className="border rounded-lg px-6 bg-card">
+            <Accordion type="single" collapsible className="w-full space-y-4">
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.5, delay: 0.1 }}
+              >
+                <AccordionItem value="item-1" className="border rounded-lg px-6 bg-card hover:border-primary/50 transition-colors">
                   <AccordionTrigger className="text-left hover:no-underline">
-                    <span className="text-lg font-semibold">How does the AI website builder work?</span>
+                    <motion.span className="text-lg font-semibold" whileHover={{ x: 4 }}>
+                      How does the AI website builder work?
+                    </motion.span>
                   </AccordionTrigger>
                   <AccordionContent className="text-base text-muted-foreground">
                     Simply choose a template, describe your website vision in plain English, and our AI powered by Gemini 2.5 Flash generates a complete design with content blocks, styling, and layout. You can then customize every aspect in our intuitive editor.
                   </AccordionContent>
                 </AccordionItem>
+              </motion.div>
 
-                <AccordionItem value="item-2" className="border rounded-lg px-6 bg-card">
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+              >
+                <AccordionItem value="item-2" className="border rounded-lg px-6 bg-card hover:border-primary/50 transition-colors">
                   <AccordionTrigger className="text-left hover:no-underline">
-                    <span className="text-lg font-semibold">Do I need coding knowledge?</span>
+                    <motion.span className="text-lg font-semibold" whileHover={{ x: 4 }}>
+                      Do I need coding knowledge?
+                    </motion.span>
                   </AccordionTrigger>
                   <AccordionContent className="text-base text-muted-foreground">
                     Not at all! Our platform is designed for everyone. The AI handles all the technical complexity, and our visual editor lets you make changes with simple clicks and drags. No code required.
                   </AccordionContent>
                 </AccordionItem>
+              </motion.div>
 
-                <AccordionItem value="item-3" className="border rounded-lg px-6 bg-card">
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.5, delay: 0.3 }}
+              >
+                <AccordionItem value="item-3" className="border rounded-lg px-6 bg-card hover:border-primary/50 transition-colors">
                   <AccordionTrigger className="text-left hover:no-underline">
-                    <span className="text-lg font-semibold">Can I customize the AI-generated website?</span>
+                    <motion.span className="text-lg font-semibold" whileHover={{ x: 4 }}>
+                      Can I customize the AI-generated website?
+                    </motion.span>
                   </AccordionTrigger>
                   <AccordionContent className="text-base text-muted-foreground">
                     Absolutely! The AI gives you a professional starting point, but you have full control. Edit text, change colors, modify layouts, add or remove blocks - everything is customizable in real-time with instant preview.
                   </AccordionContent>
                 </AccordionItem>
+              </motion.div>
 
-                <AccordionItem value="item-4" className="border rounded-lg px-6 bg-card">
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.5, delay: 0.4 }}
+              >
+                <AccordionItem value="item-4" className="border rounded-lg px-6 bg-card hover:border-primary/50 transition-colors">
                   <AccordionTrigger className="text-left hover:no-underline">
-                    <span className="text-lg font-semibold">How long does it take to create a website?</span>
+                    <motion.span className="text-lg font-semibold" whileHover={{ x: 4 }}>
+                      How long does it take to create a website?
+                    </motion.span>
                   </AccordionTrigger>
                   <AccordionContent className="text-base text-muted-foreground">
                     Most users create and customize their website in under 30 seconds. The AI generates your initial design instantly, and our editor makes customization incredibly fast. From idea to published website in minutes.
                   </AccordionContent>
                 </AccordionItem>
+              </motion.div>
 
-                <AccordionItem value="item-5" className="border rounded-lg px-6 bg-card">
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.5, delay: 0.5 }}
+              >
+                <AccordionItem value="item-5" className="border rounded-lg px-6 bg-card hover:border-primary/50 transition-colors">
                   <AccordionTrigger className="text-left hover:no-underline">
-                    <span className="text-lg font-semibold">What templates are available?</span>
+                    <motion.span className="text-lg font-semibold" whileHover={{ x: 4 }}>
+                      What templates are available?
+                    </motion.span>
                   </AccordionTrigger>
                   <AccordionContent className="text-base text-muted-foreground">
                     We offer professionally designed templates for Business (SaaS, Agency, Consulting), Product (Landing Pages, E-commerce), and Personal (Portfolio, Blog) use cases. Each template is built with modern design principles and best practices.
                   </AccordionContent>
                 </AccordionItem>
-              </Accordion>
-            </motion.div>
+              </motion.div>
+            </Accordion>
           </div>
         </section>
 
