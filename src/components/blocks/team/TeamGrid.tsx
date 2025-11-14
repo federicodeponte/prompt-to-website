@@ -2,6 +2,7 @@
 // ABOUTME: Follows Single Responsibility Principle - handles only grid layout
 
 import React from 'react';
+import Image from 'next/image';
 import { Card, CardContent } from '@/components/ui/card';
 import { TeamContentGrid } from '@/lib/types/block-content';
 import { cn } from '@/lib/utils';
@@ -43,11 +44,14 @@ export function TeamGrid({ content }: TeamGridProps) {
               <CardContent className="p-6 text-center">
                 {/* Photo/Avatar */}
                 {member.image ? (
-                  <div className="mb-4 mx-auto h-24 w-24 rounded-full bg-muted overflow-hidden">
-                    <img
+                  <div className="mb-4 mx-auto h-24 w-24 rounded-full bg-muted overflow-hidden relative">
+                    {/* Note: unoptimized for AI-generated/external URLs. TODO: Implement image proxy for optimization */}
+                    <Image
                       src={member.image}
                       alt={member.name}
-                      className="h-full w-full object-cover"
+                      fill
+                      className="object-cover"
+                      unoptimized
                     />
                   </div>
                 ) : (

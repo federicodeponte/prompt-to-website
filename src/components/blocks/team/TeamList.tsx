@@ -2,6 +2,7 @@
 // ABOUTME: Follows Single Responsibility Principle - handles only list layout
 
 import React from 'react';
+import Image from 'next/image';
 import { TeamContentList } from '@/lib/types/block-content';
 
 interface TeamListProps {
@@ -40,11 +41,14 @@ export function TeamList({ content }: TeamListProps) {
               {/* Photo/Avatar */}
               <div className="flex-shrink-0 mx-auto md:mx-0">
                 {member.image ? (
-                  <div className="h-32 w-32 rounded-full bg-muted overflow-hidden">
-                    <img
+                  <div className="h-32 w-32 rounded-full bg-muted overflow-hidden relative">
+                    {/* Note: unoptimized for AI-generated/external URLs. TODO: Implement image proxy for optimization */}
+                    <Image
                       src={member.image}
                       alt={member.name}
-                      className="h-full w-full object-cover"
+                      fill
+                      className="object-cover"
+                      unoptimized
                     />
                   </div>
                 ) : (

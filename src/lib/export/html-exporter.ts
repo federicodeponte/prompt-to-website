@@ -86,7 +86,6 @@ export function exportToHTML(config: WebsiteConfig): string {
  * Escape HTML special characters to prevent XSS
  */
 function escapeHTML(str: string): string {
-  const div = { innerHTML: '' } as unknown as HTMLElement;
   return str
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')

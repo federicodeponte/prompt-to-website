@@ -33,11 +33,25 @@ export function CommandPalette() {
 
   const handleSelect = (templateId: string) => {
     setOpen(false);
-    // Navigate to template section and highlight the template
-    const element = document.getElementById('templates');
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+
+    // Navigate to template section
+    const templatesSection = document.getElementById('templates');
+    if (templatesSection) {
+      templatesSection.scrollIntoView({ behavior: 'smooth' });
     }
+
+    // Highlight the specific template card after scroll
+    setTimeout(() => {
+      const templateCard = document.querySelector(`[data-template-id="${templateId}"]`);
+      if (templateCard) {
+        templateCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        // Add temporary highlight effect
+        templateCard.classList.add('ring-2', 'ring-primary', 'ring-offset-2');
+        setTimeout(() => {
+          templateCard.classList.remove('ring-2', 'ring-primary', 'ring-offset-2');
+        }, 2000);
+      }
+    }, 500);
   };
 
   return (

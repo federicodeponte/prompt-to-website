@@ -9,7 +9,6 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
-import { Skeleton } from '@/components/ui/skeleton';
 import { useCreateWebsite } from '@/lib/hooks/use-websites';
 import { useRouter } from 'next/navigation';
 import { Loader2, MoreVertical, Eye, Copy, ExternalLink } from 'lucide-react';
@@ -119,7 +118,11 @@ export function TemplateGallery() {
       {/* Template Grid */}
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {filteredTemplates.map((template) => (
-          <Card key={template.id} className="group flex flex-col shadow-sm transition-all hover:shadow-2xl hover:scale-[1.02]">
+          <Card
+            key={template.id}
+            data-template-id={template.id}
+            className="group flex flex-col shadow-sm transition-all hover:shadow-2xl hover:scale-[1.02]"
+          >
             <CardHeader className="pb-4">
               <div className="mb-3 flex items-center gap-2">
                 <span className="text-2xl">{getCategoryIcon(template.category)}</span>
