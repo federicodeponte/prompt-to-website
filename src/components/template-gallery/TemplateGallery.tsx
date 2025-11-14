@@ -3,7 +3,7 @@
 
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { templates, TemplateMetadata } from '@/lib/templates';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -12,6 +12,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { useCreateWebsite } from '@/lib/hooks/use-websites';
 import { useRouter } from 'next/navigation';
 import { Loader2, MoreVertical, Eye, Copy, ExternalLink } from 'lucide-react';
+import { TemplateCardSkeleton } from './TemplateCardSkeleton';
 
 type CategoryFilter = 'all' | 'business' | 'product' | 'personal';
 
@@ -32,9 +33,18 @@ type CategoryFilter = 'all' | 'business' | 'product' | 'personal';
 export function TemplateGallery() {
   const [activeCategory, setActiveCategory] = useState<CategoryFilter>('all');
   const [creatingTemplateId, setCreatingTemplateId] = useState<string | null>(null);
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
 
   const { mutate: createWebsite, isPending } = useCreateWebsite();
   const router = useRouter();
+
+  // Simulate initial loading to demonstrate skeleton UI
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsInitialLoading(false);
+    }, 1200);
+    return () => clearTimeout(timer);
+  }, []);
 
   /**
    * Filter templates by category
@@ -117,7 +127,13 @@ export function TemplateGallery() {
 
       {/* Template Grid */}
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {filteredTemplates.map((template) => (
+        {isInitialLoading ? (
+          // Show skeleton cards while loading
+          Array.from({ length: 6 }).map((_, index) => (
+            <TemplateCardSkeleton key={`skeleton-${index}`} />
+          ))
+        ) : (
+          filteredTemplates.map((template) => (
           <Card
             key={template.id}
             data-template-id={template.id}
@@ -277,11 +293,12 @@ export function TemplateGallery() {
               </DropdownMenu>
             </CardFooter>
           </Card>
-        ))}
+        ))
+        )}
       </div>
 
       {/* Empty state */}
-      {filteredTemplates.length === 0 && (
+      {!isInitialLoading && filteredTemplates.length === 0 && (
         <div className="py-16 text-center">
           <p className="text-lg text-muted-foreground">
             No templates found in this category.
