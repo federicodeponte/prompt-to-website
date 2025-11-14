@@ -365,7 +365,6 @@ export function TemplateGallery() {
               </p>
             </div>
           )}
-          </div>
         </TabsContent>
       </Tabs>
     </TooltipProvider>
