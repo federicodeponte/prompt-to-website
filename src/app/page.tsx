@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Sparkles, Zap, Palette, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 
@@ -193,6 +194,80 @@ export default function Home() {
               </p>
             </div>
             <TemplateGallery />
+          </div>
+        </section>
+
+        {/* FAQ Section with Accordion */}
+        <section className="px-6 py-24 sm:py-32">
+          <div className="container mx-auto max-w-3xl">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.6 }}
+              className="mb-16 text-center"
+            >
+              <h2 className="mb-4 text-4xl font-bold tracking-tight sm:text-5xl">
+                Frequently Asked Questions
+              </h2>
+              <p className="text-lg text-muted-foreground sm:text-xl">
+                Everything you need to know about building websites with AI
+              </p>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+            >
+              <Accordion type="single" collapsible className="w-full space-y-4">
+                <AccordionItem value="item-1" className="border rounded-lg px-6 bg-card">
+                  <AccordionTrigger className="text-left hover:no-underline">
+                    <span className="text-lg font-semibold">How does the AI website builder work?</span>
+                  </AccordionTrigger>
+                  <AccordionContent className="text-base text-muted-foreground">
+                    Simply choose a template, describe your website vision in plain English, and our AI powered by Gemini 2.5 Flash generates a complete design with content blocks, styling, and layout. You can then customize every aspect in our intuitive editor.
+                  </AccordionContent>
+                </AccordionItem>
+
+                <AccordionItem value="item-2" className="border rounded-lg px-6 bg-card">
+                  <AccordionTrigger className="text-left hover:no-underline">
+                    <span className="text-lg font-semibold">Do I need coding knowledge?</span>
+                  </AccordionTrigger>
+                  <AccordionContent className="text-base text-muted-foreground">
+                    Not at all! Our platform is designed for everyone. The AI handles all the technical complexity, and our visual editor lets you make changes with simple clicks and drags. No code required.
+                  </AccordionContent>
+                </AccordionItem>
+
+                <AccordionItem value="item-3" className="border rounded-lg px-6 bg-card">
+                  <AccordionTrigger className="text-left hover:no-underline">
+                    <span className="text-lg font-semibold">Can I customize the AI-generated website?</span>
+                  </AccordionTrigger>
+                  <AccordionContent className="text-base text-muted-foreground">
+                    Absolutely! The AI gives you a professional starting point, but you have full control. Edit text, change colors, modify layouts, add or remove blocks - everything is customizable in real-time with instant preview.
+                  </AccordionContent>
+                </AccordionItem>
+
+                <AccordionItem value="item-4" className="border rounded-lg px-6 bg-card">
+                  <AccordionTrigger className="text-left hover:no-underline">
+                    <span className="text-lg font-semibold">How long does it take to create a website?</span>
+                  </AccordionTrigger>
+                  <AccordionContent className="text-base text-muted-foreground">
+                    Most users create and customize their website in under 30 seconds. The AI generates your initial design instantly, and our editor makes customization incredibly fast. From idea to published website in minutes.
+                  </AccordionContent>
+                </AccordionItem>
+
+                <AccordionItem value="item-5" className="border rounded-lg px-6 bg-card">
+                  <AccordionTrigger className="text-left hover:no-underline">
+                    <span className="text-lg font-semibold">What templates are available?</span>
+                  </AccordionTrigger>
+                  <AccordionContent className="text-base text-muted-foreground">
+                    We offer professionally designed templates for Business (SaaS, Agency, Consulting), Product (Landing Pages, E-commerce), and Personal (Portfolio, Blog) use cases. Each template is built with modern design principles and best practices.
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
+            </motion.div>
           </div>
         </section>
 

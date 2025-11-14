@@ -10,6 +10,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useCreateWebsite } from '@/lib/hooks/use-websites';
 import { useRouter } from 'next/navigation';
 import { Loader2, MoreVertical, Eye, Copy, ExternalLink } from 'lucide-react';
@@ -123,41 +124,29 @@ export function TemplateGallery() {
 
   return (
     <TooltipProvider>
-      <div className="space-y-8">
-        {/* Category Filters */}
-        <div className="flex flex-wrap items-center justify-center gap-3 animate-in fade-in zoom-in-95 duration-700" style={{ animationFillMode: 'backwards' }}>
-        <Button
-          variant={activeCategory === 'all' ? 'default' : 'outline'}
-          onClick={() => setActiveCategory('all')}
-          className="transition-all hover:scale-105"
-        >
-          All Templates
-        </Button>
-        <Button
-          variant={activeCategory === 'business' ? 'default' : 'outline'}
-          onClick={() => setActiveCategory('business')}
-          className={`transition-all hover:scale-105 ${activeCategory === 'business' ? '' : 'hover:bg-blue-50 hover:text-blue-700 hover:border-blue-300 dark:hover:bg-blue-950'}`}
-        >
-          💼 Business
-        </Button>
-        <Button
-          variant={activeCategory === 'product' ? 'default' : 'outline'}
-          onClick={() => setActiveCategory('product')}
-          className={`transition-all hover:scale-105 ${activeCategory === 'product' ? '' : 'hover:bg-purple-50 hover:text-purple-700 hover:border-purple-300 dark:hover:bg-purple-950'}`}
-        >
-          📦 Product
-        </Button>
-        <Button
-          variant={activeCategory === 'personal' ? 'default' : 'outline'}
-          onClick={() => setActiveCategory('personal')}
-          className={`transition-all hover:scale-105 ${activeCategory === 'personal' ? '' : 'hover:bg-green-50 hover:text-green-700 hover:border-green-300 dark:hover:bg-green-950'}`}
-        >
-          👤 Personal
-        </Button>
-      </div>
+      <Tabs defaultValue="all" className="space-y-8" onValueChange={(value) => setActiveCategory(value as CategoryFilter)}>
+        {/* Category Tabs */}
+        <TabsList className="grid w-full max-w-2xl mx-auto grid-cols-4 h-auto p-1 bg-muted/50 backdrop-blur-sm">
+          <TabsTrigger value="all" className="text-sm sm:text-base data-[state=active]:bg-background data-[state=active]:shadow-sm transition-all">
+            All Templates
+          </TabsTrigger>
+          <TabsTrigger value="business" className="text-sm sm:text-base data-[state=active]:bg-background data-[state=active]:shadow-sm transition-all">
+            <span className="mr-1.5">💼</span>
+            <span className="hidden sm:inline">Business</span>
+          </TabsTrigger>
+          <TabsTrigger value="product" className="text-sm sm:text-base data-[state=active]:bg-background data-[state=active]:shadow-sm transition-all">
+            <span className="mr-1.5">📦</span>
+            <span className="hidden sm:inline">Product</span>
+          </TabsTrigger>
+          <TabsTrigger value="personal" className="text-sm sm:text-base data-[state=active]:bg-background data-[state=active]:shadow-sm transition-all">
+            <span className="mr-1.5">👤</span>
+            <span className="hidden sm:inline">Personal</span>
+          </TabsTrigger>
+        </TabsList>
 
-      {/* Template Grid */}
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <TabsContent value={activeCategory} className="mt-8">
+          {/* Template Grid */}
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {isInitialLoading ? (
           // Show skeleton cards while loading
           Array.from({ length: 6 }).map((_, index) => (
@@ -343,15 +332,17 @@ export function TemplateGallery() {
         )}
       </div>
 
-      {/* Empty state */}
-      {!isInitialLoading && filteredTemplates.length === 0 && (
-        <div className="py-16 text-center">
-          <p className="text-lg text-muted-foreground">
-            No templates found in this category.
-          </p>
-        </div>
-      )}
-      </div>
+          {/* Empty state */}
+          {!isInitialLoading && filteredTemplates.length === 0 && (
+            <div className="py-16 text-center">
+              <p className="text-lg text-muted-foreground">
+                No templates found in this category.
+              </p>
+            </div>
+          )}
+          </div>
+        </TabsContent>
+      </Tabs>
     </TooltipProvider>
   );
 }
