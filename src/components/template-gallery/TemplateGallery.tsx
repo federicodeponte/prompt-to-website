@@ -16,6 +16,7 @@ import { useRouter } from 'next/navigation';
 import { Loader2, MoreVertical, Eye, Copy, ExternalLink } from 'lucide-react';
 import { TemplateCardSkeleton } from './TemplateCardSkeleton';
 import { toast } from 'sonner';
+import { motion } from 'framer-motion';
 
 type CategoryFilter = 'all' | 'business' | 'product' | 'personal';
 
@@ -154,22 +155,39 @@ export function TemplateGallery() {
           ))
         ) : (
           filteredTemplates.map((template, index) => (
-          <Card
+          <motion.div
             key={template.id}
-            data-template-id={template.id}
-            className="group flex flex-col shadow-sm transition-all hover:shadow-2xl hover:scale-[1.02] animate-in fade-in slide-in-from-bottom-4 duration-700"
-            style={{ animationDelay: `${index * 100}ms`, animationFillMode: 'backwards' }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: index * 0.1 }}
+            whileHover={{ y: -8, transition: { duration: 0.2 } }}
           >
-            <CardHeader className="pb-4">
-              <div className="mb-3 flex items-center gap-2">
-                <span className="text-2xl">{getCategoryIcon(template.category)}</span>
-                <span className={`rounded-full border px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wide ${getCategoryColor(template.category)}`}>
-                  {template.category}
-                </span>
-              </div>
-              <CardTitle className="text-xl">{template.name}</CardTitle>
-              <CardDescription className="text-base">{template.description}</CardDescription>
-            </CardHeader>
+            <Card
+              data-template-id={template.id}
+              className="group flex flex-col shadow-sm transition-all hover:shadow-2xl h-full"
+            >
+              <CardHeader className="pb-4">
+                <div className="mb-3 flex items-center gap-2">
+                  <motion.span
+                    className="text-2xl"
+                    whileHover={{ scale: 1.2, rotate: 10, transition: { duration: 0.2 } }}
+                  >
+                    {getCategoryIcon(template.category)}
+                  </motion.span>
+                  <motion.span
+                    className={`rounded-full border px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wide ${getCategoryColor(template.category)}`}
+                    whileHover={{ scale: 1.05, transition: { duration: 0.2 } }}
+                  >
+                    {template.category}
+                  </motion.span>
+                </div>
+                <motion.div
+                  whileHover={{ x: 4, transition: { duration: 0.2 } }}
+                >
+                  <CardTitle className="text-xl">{template.name}</CardTitle>
+                </motion.div>
+                <CardDescription className="text-base">{template.description}</CardDescription>
+              </CardHeader>
 
             <CardContent className="flex-1">
               {/* Premium preview with glassmorphism */}
@@ -204,7 +222,8 @@ export function TemplateGallery() {
             </CardContent>
 
             <CardFooter className="flex gap-2">
-              <Button
+              <motion.div className="flex-1" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                <Button
                 className="flex-1"
                 onClick={() => handleUseTemplate(template)}
                 disabled={isPending && creatingTemplateId === template.id}
@@ -218,15 +237,18 @@ export function TemplateGallery() {
                   'Use Template'
                 )}
               </Button>
+              </motion.div>
 
               {/* Dialog for Preview */}
               <Dialog>
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <DialogTrigger asChild>
-                      <Button variant="outline">
-                        <Eye className="h-4 w-4" />
-                      </Button>
+                      <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+                        <Button variant="outline">
+                          <Eye className="h-4 w-4" />
+                        </Button>
+                      </motion.div>
                     </DialogTrigger>
                   </TooltipTrigger>
                   <TooltipContent>
@@ -298,9 +320,11 @@ export function TemplateGallery() {
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <DropdownMenuTrigger asChild>
-                      <Button variant="outline" size="icon">
-                        <MoreVertical className="h-4 w-4" />
-                      </Button>
+                      <motion.div whileHover={{ scale: 1.1, rotate: 90 }} whileTap={{ scale: 0.9 }}>
+                        <Button variant="outline" size="icon">
+                          <MoreVertical className="h-4 w-4" />
+                        </Button>
+                      </motion.div>
                     </DropdownMenuTrigger>
                   </TooltipTrigger>
                   <TooltipContent>
@@ -328,6 +352,7 @@ export function TemplateGallery() {
               </DropdownMenu>
             </CardFooter>
           </Card>
+          </motion.div>
         ))
         )}
       </div>

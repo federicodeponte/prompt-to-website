@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-const BASE_URL = 'https://prompt-to-website-5bjqo5v52-federico-de-pontes-projects.vercel.app';
+const BASE_URL = 'https://prompt-to-website-8nhgfmy13-federico-de-pontes-projects.vercel.app';
 
 test.describe('Shadcn Component Showcase', () => {
   test.beforeEach(async ({ page }) => {

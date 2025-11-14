@@ -7,22 +7,32 @@ const { chromium } = require('playwright');
 
   console.log('🔥 BRUTAL AUDIT: Comparing to Cursor.com & Lovable.ai\n');
 
-  // 1. Our site (latest deployment with color variety)
+  // 1. Our site (latest deployment with animations)
   console.log('1. Analyzing our site...');
-  await page.goto('https://prompt-to-website-5bjqo5v52-federico-de-pontes-projects.vercel.app');
-  await page.waitForLoadState('networkidle');
-  await page.screenshot({ path: '/tmp/our-final.png', fullPage: false });
+  await page.goto('https://prompt-to-website-8nhgfmy13-federico-de-pontes-projects.vercel.app');
+  await page.waitForLoadState('domcontentloaded');
+
+  // Check animations DURING the entrance animation phase (before they complete)
+  await page.waitForTimeout(300); // Wait 300ms to let animations start
 
   // Initial analysis before interactions
   let ourAnalysis = await page.evaluate(() => {
     const body = document.body;
     const allElements = document.querySelectorAll('*');
 
-    // Check for animations
+    // Check for animations and transitions
     const animatedElements = [];
     allElements.forEach(el => {
       const style = getComputedStyle(el);
-      if (style.animation !== 'none' || style.transition !== 'all 0s ease 0s') {
+      const classes = el.className;
+
+      // Count elements with animations or transitions or animation classes
+      if (style.animation !== 'none' ||
+          style.transition !== 'all 0s ease 0s' ||
+          (typeof classes === 'string' && (
+            classes.includes('animate-') ||
+            classes.includes('transition-')
+          ))) {
         animatedElements.push(el.tagName);
       }
     });
@@ -56,6 +66,9 @@ const { chromium } = require('playwright');
       h1Text: document.querySelector('h1')?.textContent?.trim()?.substring(0, 50),
     };
   });
+
+  await page.waitForLoadState('networkidle');
+  await page.screenshot({ path: '/tmp/our-final.png', fullPage: false });
 
   // Test interactive components by triggering them
   console.log('Testing interactive components...');
