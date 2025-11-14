@@ -27,30 +27,30 @@ export default function Home() {
         {/* Hero Section - PREMIUM SPACING */}
         <section className="border-b bg-gradient-to-b from-background via-background to-muted/20 px-6 py-24 sm:py-32">
           <div className="container mx-auto max-w-5xl text-center">
-            <Badge variant="secondary" className="mb-8">
-              <Sparkles className="mr-1.5 h-3.5 w-3.5" />
+            <Badge variant="secondary" className="mb-8 animate-in fade-in slide-in-from-top-4 duration-700" style={{ animationFillMode: 'backwards' }}>
+              <Sparkles className="mr-1.5 h-3.5 w-3.5 animate-pulse" />
               AI-Powered Website Builder
             </Badge>
 
             {/* STRONGER TYPOGRAPHY */}
-            <h1 className="mb-8 text-6xl font-extrabold tracking-tight sm:text-7xl lg:text-8xl">
+            <h1 className="mb-8 text-6xl font-extrabold tracking-tight sm:text-7xl lg:text-8xl animate-in fade-in slide-in-from-bottom-6 duration-700" style={{ animationDelay: '100ms', animationFillMode: 'backwards' }}>
               Build Beautiful Websites
               <br />
-              <span className="bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent animate-pulse">
                 In Minutes, Not Hours
               </span>
             </h1>
 
-            <p className="mx-auto mb-12 max-w-2xl text-xl leading-relaxed text-muted-foreground sm:text-2xl">
+            <p className="mx-auto mb-12 max-w-2xl text-xl leading-relaxed text-muted-foreground sm:text-2xl animate-in fade-in slide-in-from-bottom-4 duration-700" style={{ animationDelay: '200ms', animationFillMode: 'backwards' }}>
               Choose a template, describe your vision to AI, and watch your website come to life.
               No coding required.
             </p>
 
-            <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
+            <div className="flex flex-col items-center justify-center gap-4 sm:flex-row animate-in fade-in zoom-in-95 duration-700" style={{ animationDelay: '300ms', animationFillMode: 'backwards' }}>
               <Button size="lg" className="h-12 px-8 text-base shadow-lg transition-all hover:shadow-xl hover:scale-105" asChild>
                 <a href="#templates">
                   Get Started Free
-                  <ArrowRight className="ml-2 h-5 w-5" />
+                  <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
                 </a>
               </Button>
               <Button size="lg" variant="outline" className="h-12 px-8 text-base transition-all hover:scale-105" asChild>
@@ -61,9 +61,9 @@ export default function Home() {
             </div>
 
             {/* Command Palette Hint */}
-            <p className="mt-8 text-sm text-muted-foreground">
+            <p className="mt-8 text-sm text-muted-foreground animate-in fade-in duration-700" style={{ animationDelay: '400ms', animationFillMode: 'backwards' }}>
               Press{' '}
-              <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-xs font-medium text-muted-foreground opacity-100">
+              <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-xs font-medium text-muted-foreground opacity-100 transition-all hover:scale-110">
                 <span className="text-xs">⌘</span>K
               </kbd>{' '}
               to search templates
@@ -74,7 +74,7 @@ export default function Home() {
         {/* Features Section - SEMANTIC TOKENS ONLY */}
         <section className="px-6 py-24 sm:py-32">
           <div className="container mx-auto max-w-6xl">
-            <div className="mb-16 text-center">
+            <div className="mb-16 text-center animate-in fade-in slide-in-from-bottom-4 duration-700" style={{ animationFillMode: 'backwards' }}>
               <h2 className="mb-4 text-4xl font-bold tracking-tight sm:text-5xl">
                 Why Choose Our Platform?
               </h2>
@@ -154,13 +154,13 @@ export default function Home() {
         <section id="templates" className="bg-muted/30 px-6 py-24 sm:py-32">
           <div className="container mx-auto max-w-7xl">
             <div className="mb-16 text-center">
-              <Badge variant="outline" className="mb-6 text-sm">
+              <Badge variant="outline" className="mb-6 text-sm animate-in fade-in zoom-in-95 duration-500" style={{ animationFillMode: 'backwards' }}>
                 Templates
               </Badge>
-              <h2 className="mb-6 text-4xl font-bold tracking-tight sm:text-5xl">
+              <h2 className="mb-6 text-4xl font-bold tracking-tight sm:text-5xl animate-in fade-in slide-in-from-bottom-4 duration-700" style={{ animationDelay: '100ms', animationFillMode: 'backwards' }}>
                 Choose Your Template
               </h2>
-              <p className="mx-auto max-w-2xl text-xl text-muted-foreground">
+              <p className="mx-auto max-w-2xl text-xl text-muted-foreground animate-in fade-in slide-in-from-bottom-2 duration-700" style={{ animationDelay: '200ms', animationFillMode: 'backwards' }}>
                 Start with a professionally designed template and customize it to your needs
               </p>
             </div>
@@ -170,18 +170,18 @@ export default function Home() {
 
         {/* CTA Section - SEMANTIC GRADIENT */}
         <section className="px-6 py-24 sm:py-32">
-          <Card className="container mx-auto max-w-4xl border-2 bg-gradient-to-br from-primary via-primary/90 to-primary/80 shadow-2xl">
+          <Card className="container mx-auto max-w-4xl border-2 bg-gradient-to-br from-primary via-primary/90 to-primary/80 shadow-2xl animate-in fade-in zoom-in-95 duration-700" style={{ animationFillMode: 'backwards' }}>
             <CardContent className="px-8 py-20 text-center sm:px-16 sm:py-24">
-              <h2 className="mb-6 text-4xl font-bold text-primary-foreground sm:text-5xl">
+              <h2 className="mb-6 text-4xl font-bold text-primary-foreground sm:text-5xl animate-in fade-in slide-in-from-bottom-4 duration-700" style={{ animationDelay: '100ms', animationFillMode: 'backwards' }}>
                 Ready to Build Your Website?
               </h2>
-              <p className="mb-10 text-xl text-primary-foreground/90 sm:text-2xl">
+              <p className="mb-10 text-xl text-primary-foreground/90 sm:text-2xl animate-in fade-in slide-in-from-bottom-2 duration-700" style={{ animationDelay: '200ms', animationFillMode: 'backwards' }}>
                 Join thousands of creators building beautiful websites with AI
               </p>
-              <Button size="lg" variant="secondary" className="h-12 px-8 text-base shadow-lg" asChild>
+              <Button size="lg" variant="secondary" className="h-12 px-8 text-base shadow-lg transition-all hover:scale-105 animate-in fade-in zoom-in-90 duration-700" style={{ animationDelay: '300ms', animationFillMode: 'backwards' }} asChild>
                 <a href="#templates">
                   Get Started Now
-                  <ArrowRight className="ml-2 h-5 w-5" />
+                  <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
                 </a>
               </Button>
             </CardContent>
@@ -192,7 +192,7 @@ export default function Home() {
         <footer className="border-t bg-muted/30 px-6 py-16">
           <div className="container mx-auto max-w-6xl">
             <div className="grid gap-12 md:grid-cols-3">
-              <div>
+              <div className="animate-in fade-in slide-in-from-bottom-2 duration-700" style={{ animationFillMode: 'backwards' }}>
                 <h3 className="mb-4 text-xl font-semibold">
                   Prompt to Website
                 </h3>
@@ -200,52 +200,52 @@ export default function Home() {
                   Build beautiful websites with AI in minutes
                 </p>
               </div>
-              <div>
+              <div className="animate-in fade-in slide-in-from-bottom-2 duration-700" style={{ animationDelay: '100ms', animationFillMode: 'backwards' }}>
                 <h4 className="mb-4 text-sm font-semibold uppercase tracking-wider">
                   Product
                 </h4>
                 <ul className="space-y-3 text-base text-muted-foreground">
                   <li>
-                    <a href="#templates" className="transition-colors hover:text-primary">
+                    <a href="#templates" className="transition-all hover:text-primary hover:translate-x-1 inline-block">
                       Templates
                     </a>
                   </li>
                   <li>
-                    <a href="#features" className="transition-colors hover:text-primary">
+                    <a href="#features" className="transition-all hover:text-primary hover:translate-x-1 inline-block">
                       Features
                     </a>
                   </li>
                   <li>
-                    <a href="#pricing" className="transition-colors hover:text-primary">
+                    <a href="#pricing" className="transition-all hover:text-primary hover:translate-x-1 inline-block">
                       Pricing
                     </a>
                   </li>
                 </ul>
               </div>
-              <div>
+              <div className="animate-in fade-in slide-in-from-bottom-2 duration-700" style={{ animationDelay: '200ms', animationFillMode: 'backwards' }}>
                 <h4 className="mb-4 text-sm font-semibold uppercase tracking-wider">
                   Resources
                 </h4>
                 <ul className="space-y-3 text-base text-muted-foreground">
                   <li>
-                    <a href="#docs" className="transition-colors hover:text-primary">
+                    <a href="#docs" className="transition-all hover:text-primary hover:translate-x-1 inline-block">
                       Documentation
                     </a>
                   </li>
                   <li>
-                    <a href="#help" className="transition-colors hover:text-primary">
+                    <a href="#help" className="transition-all hover:text-primary hover:translate-x-1 inline-block">
                       Help Center
                     </a>
                   </li>
                   <li>
-                    <a href="#contact" className="transition-colors hover:text-primary">
+                    <a href="#contact" className="transition-all hover:text-primary hover:translate-x-1 inline-block">
                       Contact
                     </a>
                   </li>
                 </ul>
               </div>
             </div>
-            <div className="mt-16 border-t pt-8 text-center text-sm text-muted-foreground">
+            <div className="mt-16 border-t pt-8 text-center text-sm text-muted-foreground animate-in fade-in duration-700" style={{ animationDelay: '300ms', animationFillMode: 'backwards' }}>
               © 2025 Prompt to Website. All rights reserved.
             </div>
           </div>

@@ -125,31 +125,32 @@ export function TemplateGallery() {
     <TooltipProvider>
       <div className="space-y-8">
         {/* Category Filters */}
-        <div className="flex flex-wrap items-center justify-center gap-3">
+        <div className="flex flex-wrap items-center justify-center gap-3 animate-in fade-in zoom-in-95 duration-700" style={{ animationFillMode: 'backwards' }}>
         <Button
           variant={activeCategory === 'all' ? 'default' : 'outline'}
           onClick={() => setActiveCategory('all')}
+          className="transition-all hover:scale-105"
         >
           All Templates
         </Button>
         <Button
           variant={activeCategory === 'business' ? 'default' : 'outline'}
           onClick={() => setActiveCategory('business')}
-          className={activeCategory === 'business' ? '' : 'hover:bg-blue-50 hover:text-blue-700 hover:border-blue-300 dark:hover:bg-blue-950'}
+          className={`transition-all hover:scale-105 ${activeCategory === 'business' ? '' : 'hover:bg-blue-50 hover:text-blue-700 hover:border-blue-300 dark:hover:bg-blue-950'}`}
         >
           💼 Business
         </Button>
         <Button
           variant={activeCategory === 'product' ? 'default' : 'outline'}
           onClick={() => setActiveCategory('product')}
-          className={activeCategory === 'product' ? '' : 'hover:bg-purple-50 hover:text-purple-700 hover:border-purple-300 dark:hover:bg-purple-950'}
+          className={`transition-all hover:scale-105 ${activeCategory === 'product' ? '' : 'hover:bg-purple-50 hover:text-purple-700 hover:border-purple-300 dark:hover:bg-purple-950'}`}
         >
           📦 Product
         </Button>
         <Button
           variant={activeCategory === 'personal' ? 'default' : 'outline'}
           onClick={() => setActiveCategory('personal')}
-          className={activeCategory === 'personal' ? '' : 'hover:bg-green-50 hover:text-green-700 hover:border-green-300 dark:hover:bg-green-950'}
+          className={`transition-all hover:scale-105 ${activeCategory === 'personal' ? '' : 'hover:bg-green-50 hover:text-green-700 hover:border-green-300 dark:hover:bg-green-950'}`}
         >
           👤 Personal
         </Button>
@@ -163,11 +164,12 @@ export function TemplateGallery() {
             <TemplateCardSkeleton key={`skeleton-${index}`} />
           ))
         ) : (
-          filteredTemplates.map((template) => (
+          filteredTemplates.map((template, index) => (
           <Card
             key={template.id}
             data-template-id={template.id}
-            className="group flex flex-col shadow-sm transition-all hover:shadow-2xl hover:scale-[1.02]"
+            className="group flex flex-col shadow-sm transition-all hover:shadow-2xl hover:scale-[1.02] animate-in fade-in slide-in-from-bottom-4 duration-700"
+            style={{ animationDelay: `${index * 100}ms`, animationFillMode: 'backwards' }}
           >
             <CardHeader className="pb-4">
               <div className="mb-3 flex items-center gap-2">
