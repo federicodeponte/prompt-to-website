@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 
 export function Navigation() {
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60 shadow-sm">
       <div className="container mx-auto flex h-16 items-center px-6">
         {/* Logo */}
         <div className="mr-8 flex items-center space-x-2">

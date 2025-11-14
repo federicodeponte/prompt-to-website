@@ -12,6 +12,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Sparkles, Zap, Palette, ArrowRight } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 export default function Home() {
   return (
@@ -83,21 +84,34 @@ export default function Home() {
               </p>
             </div>
 
-            <div className="grid gap-8 md:grid-cols-3">
+            <motion.div
+              className="grid gap-8 md:grid-cols-3"
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.6, staggerChildren: 0.2 }}
+            >
               {/* Card 1 - PRIMARY with Tooltip */}
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Card className="border-2 transition-all duration-300 hover:shadow-xl hover:scale-[1.02] animate-in fade-in slide-in-from-bottom-4" style={{ animationDelay: '100ms', animationFillMode: 'backwards' }}>
-                    <CardHeader className="pb-8">
-                      <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-xl bg-primary/10 ring-1 ring-primary/20">
-                        <Sparkles className="h-7 w-7 text-primary" />
-                      </div>
-                      <CardTitle className="text-2xl">AI-Powered</CardTitle>
-                      <CardDescription className="text-base">
-                        Describe your website in plain English and let AI generate a complete design for you.
-                      </CardDescription>
-                    </CardHeader>
-                  </Card>
+                  <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-100px" }}
+                    transition={{ duration: 0.5, delay: 0.1 }}
+                  >
+                    <Card className="border-2 transition-all duration-300 hover:shadow-xl hover:scale-[1.02] h-full bg-gradient-to-br from-background to-blue-50/30 dark:to-blue-950/30">
+                      <CardHeader className="pb-8">
+                        <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 shadow-lg shadow-blue-500/50">
+                          <Sparkles className="h-7 w-7 text-white" />
+                        </div>
+                        <CardTitle className="text-2xl bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">AI-Powered</CardTitle>
+                        <CardDescription className="text-base">
+                          Describe your website in plain English and let AI generate a complete design for you.
+                        </CardDescription>
+                      </CardHeader>
+                    </Card>
+                  </motion.div>
                 </TooltipTrigger>
                 <TooltipContent side="bottom" className="max-w-xs">
                   <p className="font-medium">Powered by Gemini 2.5 Flash</p>
@@ -108,17 +122,24 @@ export default function Home() {
               {/* Card 2 - SECONDARY with Tooltip */}
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Card className="border-2 transition-all duration-300 hover:shadow-xl hover:scale-[1.02] animate-in fade-in slide-in-from-bottom-4" style={{ animationDelay: '200ms', animationFillMode: 'backwards' }}>
-                    <CardHeader className="pb-8">
-                      <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-xl bg-secondary/10 ring-1 ring-secondary/20">
-                        <Zap className="h-7 w-7 text-secondary-foreground" />
-                      </div>
-                      <CardTitle className="text-2xl">Lightning Fast</CardTitle>
-                      <CardDescription className="text-base">
-                        Create professional websites in minutes with our intuitive editor and templates.
-                      </CardDescription>
-                    </CardHeader>
-                  </Card>
+                  <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-100px" }}
+                    transition={{ duration: 0.5, delay: 0.2 }}
+                  >
+                    <Card className="border-2 transition-all duration-300 hover:shadow-xl hover:scale-[1.02] h-full bg-gradient-to-br from-background to-purple-50/30 dark:to-purple-950/30">
+                      <CardHeader className="pb-8">
+                        <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500 to-violet-500 shadow-lg shadow-purple-500/50">
+                          <Zap className="h-7 w-7 text-white" />
+                        </div>
+                        <CardTitle className="text-2xl bg-gradient-to-r from-purple-600 to-violet-600 bg-clip-text text-transparent">Lightning Fast</CardTitle>
+                        <CardDescription className="text-base">
+                          Create professional websites in minutes with our intuitive editor and templates.
+                        </CardDescription>
+                      </CardHeader>
+                    </Card>
+                  </motion.div>
                 </TooltipTrigger>
                 <TooltipContent side="bottom" className="max-w-xs">
                   <p className="font-medium">Average creation time: 30 seconds</p>
@@ -129,24 +150,31 @@ export default function Home() {
               {/* Card 3 - ACCENT with Tooltip */}
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Card className="border-2 transition-all duration-300 hover:shadow-xl hover:scale-[1.02] animate-in fade-in slide-in-from-bottom-4" style={{ animationDelay: '300ms', animationFillMode: 'backwards' }}>
-                    <CardHeader className="pb-8">
-                      <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-xl bg-accent/50 ring-1 ring-accent">
-                        <Palette className="h-7 w-7 text-accent-foreground" />
-                      </div>
-                      <CardTitle className="text-2xl">Beautiful Design</CardTitle>
-                      <CardDescription className="text-base">
-                        Professional templates built with modern design principles and best practices.
-                      </CardDescription>
-                    </CardHeader>
-                  </Card>
+                  <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-100px" }}
+                    transition={{ duration: 0.5, delay: 0.3 }}
+                  >
+                    <Card className="border-2 transition-all duration-300 hover:shadow-xl hover:scale-[1.02] h-full bg-gradient-to-br from-background to-pink-50/30 dark:to-pink-950/30">
+                      <CardHeader className="pb-8">
+                        <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-pink-500 to-rose-500 shadow-lg shadow-pink-500/50">
+                          <Palette className="h-7 w-7 text-white" />
+                        </div>
+                        <CardTitle className="text-2xl bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent">Beautiful Design</CardTitle>
+                        <CardDescription className="text-base">
+                          Professional templates built with modern design principles and best practices.
+                        </CardDescription>
+                      </CardHeader>
+                    </Card>
+                  </motion.div>
                 </TooltipTrigger>
                 <TooltipContent side="bottom" className="max-w-xs">
                   <p className="font-medium">Built with shadcn/ui</p>
                   <p className="text-sm text-muted-foreground">Accessible, customizable components with Tailwind CSS</p>
                 </TooltipContent>
               </Tooltip>
-            </div>
+            </motion.div>
           </div>
         </section>
 
@@ -170,37 +198,79 @@ export default function Home() {
 
         {/* CTA Section - SEMANTIC GRADIENT */}
         <section className="px-6 py-24 sm:py-32">
-          <Card className="container mx-auto max-w-4xl border-2 bg-gradient-to-br from-primary via-primary/90 to-primary/80 shadow-2xl animate-in fade-in zoom-in-95 duration-700" style={{ animationFillMode: 'backwards' }}>
-            <CardContent className="px-8 py-20 text-center sm:px-16 sm:py-24">
-              <h2 className="mb-6 text-4xl font-bold text-primary-foreground sm:text-5xl animate-in fade-in slide-in-from-bottom-4 duration-700" style={{ animationDelay: '100ms', animationFillMode: 'backwards' }}>
-                Ready to Build Your Website?
-              </h2>
-              <p className="mb-10 text-xl text-primary-foreground/90 sm:text-2xl animate-in fade-in slide-in-from-bottom-2 duration-700" style={{ animationDelay: '200ms', animationFillMode: 'backwards' }}>
-                Join thousands of creators building beautiful websites with AI
-              </p>
-              <Button size="lg" variant="secondary" className="h-12 px-8 text-base shadow-lg transition-all hover:scale-105 animate-in fade-in zoom-in-90 duration-700" style={{ animationDelay: '300ms', animationFillMode: 'backwards' }} asChild>
-                <a href="#templates">
-                  Get Started Now
-                  <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
-                </a>
-              </Button>
-            </CardContent>
-          </Card>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6 }}
+          >
+            <Card className="container mx-auto max-w-4xl border-2 bg-gradient-to-br from-primary via-primary/90 to-primary/80 shadow-2xl">
+              <CardContent className="px-8 py-20 text-center sm:px-16 sm:py-24">
+                <motion.h2
+                  className="mb-6 text-4xl font-bold text-primary-foreground sm:text-5xl"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-100px" }}
+                  transition={{ duration: 0.5, delay: 0.2 }}
+                >
+                  Ready to Build Your Website?
+                </motion.h2>
+                <motion.p
+                  className="mb-10 text-xl text-primary-foreground/90 sm:text-2xl"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-100px" }}
+                  transition={{ duration: 0.5, delay: 0.3 }}
+                >
+                  Join thousands of creators building beautiful websites with AI
+                </motion.p>
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true, margin: "-100px" }}
+                  transition={{ duration: 0.5, delay: 0.4 }}
+                >
+                  <Button size="lg" variant="secondary" className="h-12 px-8 text-base shadow-lg transition-all hover:scale-105" asChild>
+                    <a href="#templates">
+                      Get Started Now
+                      <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
+                    </a>
+                  </Button>
+                </motion.div>
+              </CardContent>
+            </Card>
+          </motion.div>
         </section>
 
         {/* Footer */}
         <footer className="border-t bg-muted/30 px-6 py-16">
           <div className="container mx-auto max-w-6xl">
-            <div className="grid gap-12 md:grid-cols-3">
-              <div className="animate-in fade-in slide-in-from-bottom-2 duration-700" style={{ animationFillMode: 'backwards' }}>
+            <motion.div
+              className="grid gap-12 md:grid-cols-3"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.6, staggerChildren: 0.1 }}
+            >
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.5, delay: 0.1 }}
+              >
                 <h3 className="mb-4 text-xl font-semibold">
                   Prompt to Website
                 </h3>
                 <p className="text-base text-muted-foreground">
                   Build beautiful websites with AI in minutes
                 </p>
-              </div>
-              <div className="animate-in fade-in slide-in-from-bottom-2 duration-700" style={{ animationDelay: '100ms', animationFillMode: 'backwards' }}>
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+              >
                 <h4 className="mb-4 text-sm font-semibold uppercase tracking-wider">
                   Product
                 </h4>
@@ -221,8 +291,13 @@ export default function Home() {
                     </a>
                   </li>
                 </ul>
-              </div>
-              <div className="animate-in fade-in slide-in-from-bottom-2 duration-700" style={{ animationDelay: '200ms', animationFillMode: 'backwards' }}>
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.5, delay: 0.3 }}
+              >
                 <h4 className="mb-4 text-sm font-semibold uppercase tracking-wider">
                   Resources
                 </h4>
@@ -243,11 +318,17 @@ export default function Home() {
                     </a>
                   </li>
                 </ul>
-              </div>
-            </div>
-            <div className="mt-16 border-t pt-8 text-center text-sm text-muted-foreground animate-in fade-in duration-700" style={{ animationDelay: '300ms', animationFillMode: 'backwards' }}>
+              </motion.div>
+            </motion.div>
+            <motion.div
+              className="mt-16 border-t pt-8 text-center text-sm text-muted-foreground"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+            >
               © 2025 Prompt to Website. All rights reserved.
-            </div>
+            </motion.div>
           </div>
         </footer>
       </main>
