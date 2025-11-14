@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Menu } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 export function Navigation() {
   const [open, setOpen] = useState(false);
@@ -30,24 +31,48 @@ export function Navigation() {
 
         {/* Desktop Navigation Links */}
         <nav className="hidden md:flex flex-1 items-center space-x-6 text-sm font-medium">
-          <Link
-            href="/#templates"
-            className="transition-colors hover:text-foreground/80 text-foreground/60"
-          >
-            Templates
-          </Link>
-          <Link
-            href="/#features"
-            className="transition-colors hover:text-foreground/80 text-foreground/60"
-          >
-            Features
-          </Link>
-          <Link
-            href="/#pricing"
-            className="transition-colors hover:text-foreground/80 text-foreground/60"
-          >
-            Pricing
-          </Link>
+          <motion.div whileHover={{ y: -2 }} whileTap={{ scale: 0.95 }}>
+            <Link
+              href="/#templates"
+              className="relative transition-colors hover:text-foreground text-foreground/60 group"
+            >
+              Templates
+              <motion.span
+                className="absolute -bottom-1 left-0 h-0.5 bg-primary"
+                initial={{ width: 0 }}
+                whileHover={{ width: '100%' }}
+                transition={{ duration: 0.2 }}
+              />
+            </Link>
+          </motion.div>
+          <motion.div whileHover={{ y: -2 }} whileTap={{ scale: 0.95 }}>
+            <Link
+              href="/#features"
+              className="relative transition-colors hover:text-foreground text-foreground/60 group"
+            >
+              Features
+              <motion.span
+                className="absolute -bottom-1 left-0 h-0.5 bg-primary"
+                initial={{ width: 0 }}
+                whileHover={{ width: '100%' }}
+                transition={{ duration: 0.2 }}
+              />
+            </Link>
+          </motion.div>
+          <motion.div whileHover={{ y: -2 }} whileTap={{ scale: 0.95 }}>
+            <Link
+              href="/#pricing"
+              className="relative transition-colors hover:text-foreground text-foreground/60 group"
+            >
+              Pricing
+              <motion.span
+                className="absolute -bottom-1 left-0 h-0.5 bg-primary"
+                initial={{ width: 0 }}
+                whileHover={{ width: '100%' }}
+                transition={{ duration: 0.2 }}
+              />
+            </Link>
+          </motion.div>
         </nav>
 
         {/* Mobile Spacer */}
