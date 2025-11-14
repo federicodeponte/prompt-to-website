@@ -7,10 +7,12 @@ import React, { useState } from 'react';
 import { templates, TemplateMetadata } from '@/lib/templates';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useCreateWebsite } from '@/lib/hooks/use-websites';
 import { useRouter } from 'next/navigation';
-import { Loader2 } from 'lucide-react';
+import { Loader2, MoreVertical, Eye, Copy, ExternalLink } from 'lucide-react';
 
 type CategoryFilter = 'all' | 'business' | 'product' | 'personal';
 
@@ -130,8 +132,8 @@ export function TemplateGallery() {
             </CardHeader>
 
             <CardContent className="flex-1">
-              {/* Premium preview with modern gradient pattern */}
-              <div className="aspect-video overflow-hidden rounded-xl border-2 bg-gradient-to-br from-muted via-background to-muted/50 shadow-inner">
+              {/* Premium preview with glassmorphism */}
+              <div className="aspect-video overflow-hidden rounded-xl border-2 bg-gradient-to-br from-muted via-background to-muted/50 shadow-inner backdrop-blur-sm">
                 <div className="flex h-full flex-col gap-3 p-4">
                   {/* Simulated header */}
                   <div className="flex items-center gap-2">
@@ -176,16 +178,100 @@ export function TemplateGallery() {
                   'Use Template'
                 )}
               </Button>
-              <Button
-                variant="outline"
-                onClick={() => {
-                  // Preview in a new tab
-                  const url = `/preview?template=${template.id}`;
-                  window.open(url, '_blank');
-                }}
-              >
-                Preview
-              </Button>
+
+              {/* Dialog for Preview */}
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant="outline">
+                    <Eye className="h-4 w-4" />
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-4xl">
+                  <DialogHeader>
+                    <DialogTitle className="flex items-center gap-2">
+                      <span className="text-2xl">{getCategoryIcon(template.category)}</span>
+                      {template.name}
+                    </DialogTitle>
+                    <DialogDescription>{template.description}</DialogDescription>
+                  </DialogHeader>
+                  <div className="space-y-4">
+                    {/* Preview with glassmorphism */}
+                    <div className="aspect-video overflow-hidden rounded-xl border-2 bg-gradient-to-br from-muted via-background to-muted/50 shadow-inner backdrop-blur-sm">
+                      <div className="flex h-full flex-col gap-3 p-4">
+                        {/* macOS window dots */}
+                        <div className="flex items-center gap-2">
+                          <div className="h-2 w-2 rounded-full bg-destructive/60" />
+                          <div className="h-2 w-2 rounded-full bg-yellow-400/60" />
+                          <div className="h-2 w-2 rounded-full bg-green-400/60" />
+                          <div className="ml-auto h-3 w-20 rounded bg-primary/10" />
+                        </div>
+
+                        {/* Simulated content blocks */}
+                        <div className="h-12 rounded-lg bg-gradient-to-r from-primary/20 to-secondary/20 ring-1 ring-primary/20" />
+                        <div className="flex flex-1 gap-3">
+                          <div className="flex-1 rounded-lg bg-accent/30 ring-1 ring-border" />
+                          <div className="flex-1 rounded-lg bg-muted ring-1 ring-border" />
+                        </div>
+                        <div className="h-10 rounded-lg bg-gradient-to-r from-primary/15 to-primary/5" />
+                      </div>
+                    </div>
+
+                    {/* Template details */}
+                    <div className="grid gap-4 sm:grid-cols-2">
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground">Category</p>
+                        <p className="text-lg capitalize">{template.category}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground">Blocks</p>
+                        <p className="text-lg">{template.config.blocks.length} content blocks</p>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground">Template Type</p>
+                        <p className="text-lg capitalize">{template.config.template}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground">Primary Color</p>
+                        <div className="flex items-center gap-2">
+                          <div className="h-6 w-6 rounded border" style={{ backgroundColor: template.config.theme.colors.primary }} />
+                          <p className="text-sm font-mono">{template.config.theme.colors.primary}</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <Button className="w-full" onClick={() => handleUseTemplate(template)}>
+                      Use This Template
+                    </Button>
+                  </div>
+                </DialogContent>
+              </Dialog>
+
+              {/* DropdownMenu for More Actions */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="icon">
+                    <MoreVertical className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem onClick={() => handleUseTemplate(template)}>
+                    <Copy className="mr-2 h-4 w-4" />
+                    Duplicate
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => {
+                    const url = `/preview?template=${template.id}`;
+                    window.open(url, '_blank');
+                  }}>
+                    <ExternalLink className="mr-2 h-4 w-4" />
+                    Open in New Tab
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem>
+                    <Eye className="mr-2 h-4 w-4" />
+                    View Details
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </CardFooter>
           </Card>
         ))}

@@ -1,19 +1,27 @@
 // ABOUTME: Home page with template gallery and website creation flow
 // ABOUTME: Professional shadcn/ui implementation with premium spacing and typography
 
+'use client';
+
 import Link from 'next/link';
 import { TemplateGallery } from '@/components/template-gallery';
 import { Navigation } from '@/components/layout/Navigation';
+import { CommandPalette } from '@/components/CommandPalette';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Sparkles, Zap, Palette, ArrowRight } from 'lucide-react';
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen flex-col">
-      {/* Navigation */}
-      <Navigation />
+    <TooltipProvider>
+      <div className="flex min-h-screen flex-col">
+        {/* Command Palette - Global Search (⌘K) */}
+        <CommandPalette />
+
+        {/* Navigation */}
+        <Navigation />
 
       <main className="flex-1">
         {/* Hero Section - PREMIUM SPACING */}
@@ -51,6 +59,15 @@ export default function Home() {
                 </Link>
               </Button>
             </div>
+
+            {/* Command Palette Hint */}
+            <p className="mt-8 text-sm text-muted-foreground">
+              Press{' '}
+              <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-xs font-medium text-muted-foreground opacity-100">
+                <span className="text-xs">⌘</span>K
+              </kbd>{' '}
+              to search templates
+            </p>
           </div>
         </section>
 
@@ -67,44 +84,68 @@ export default function Home() {
             </div>
 
             <div className="grid gap-8 md:grid-cols-3">
-              {/* Card 1 - PRIMARY */}
-              <Card className="border-2 transition-all duration-300 hover:shadow-xl hover:scale-[1.02] animate-in fade-in slide-in-from-bottom-4" style={{ animationDelay: '100ms', animationFillMode: 'backwards' }}>
-                <CardHeader className="pb-8">
-                  <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-xl bg-primary/10 ring-1 ring-primary/20">
-                    <Sparkles className="h-7 w-7 text-primary" />
-                  </div>
-                  <CardTitle className="text-2xl">AI-Powered</CardTitle>
-                  <CardDescription className="text-base">
-                    Describe your website in plain English and let AI generate a complete design for you.
-                  </CardDescription>
-                </CardHeader>
-              </Card>
+              {/* Card 1 - PRIMARY with Tooltip */}
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Card className="border-2 transition-all duration-300 hover:shadow-xl hover:scale-[1.02] animate-in fade-in slide-in-from-bottom-4" style={{ animationDelay: '100ms', animationFillMode: 'backwards' }}>
+                    <CardHeader className="pb-8">
+                      <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-xl bg-primary/10 ring-1 ring-primary/20">
+                        <Sparkles className="h-7 w-7 text-primary" />
+                      </div>
+                      <CardTitle className="text-2xl">AI-Powered</CardTitle>
+                      <CardDescription className="text-base">
+                        Describe your website in plain English and let AI generate a complete design for you.
+                      </CardDescription>
+                    </CardHeader>
+                  </Card>
+                </TooltipTrigger>
+                <TooltipContent side="bottom" className="max-w-xs">
+                  <p className="font-medium">Powered by Gemini 2.5 Flash</p>
+                  <p className="text-sm text-muted-foreground">Advanced AI model with function calling for intelligent website generation</p>
+                </TooltipContent>
+              </Tooltip>
 
-              {/* Card 2 - SECONDARY */}
-              <Card className="border-2 transition-all duration-300 hover:shadow-xl hover:scale-[1.02] animate-in fade-in slide-in-from-bottom-4" style={{ animationDelay: '200ms', animationFillMode: 'backwards' }}>
-                <CardHeader className="pb-8">
-                  <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-xl bg-secondary/10 ring-1 ring-secondary/20">
-                    <Zap className="h-7 w-7 text-secondary-foreground" />
-                  </div>
-                  <CardTitle className="text-2xl">Lightning Fast</CardTitle>
-                  <CardDescription className="text-base">
-                    Create professional websites in minutes with our intuitive editor and templates.
-                  </CardDescription>
-                </CardHeader>
-              </Card>
+              {/* Card 2 - SECONDARY with Tooltip */}
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Card className="border-2 transition-all duration-300 hover:shadow-xl hover:scale-[1.02] animate-in fade-in slide-in-from-bottom-4" style={{ animationDelay: '200ms', animationFillMode: 'backwards' }}>
+                    <CardHeader className="pb-8">
+                      <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-xl bg-secondary/10 ring-1 ring-secondary/20">
+                        <Zap className="h-7 w-7 text-secondary-foreground" />
+                      </div>
+                      <CardTitle className="text-2xl">Lightning Fast</CardTitle>
+                      <CardDescription className="text-base">
+                        Create professional websites in minutes with our intuitive editor and templates.
+                      </CardDescription>
+                    </CardHeader>
+                  </Card>
+                </TooltipTrigger>
+                <TooltipContent side="bottom" className="max-w-xs">
+                  <p className="font-medium">Average creation time: 30 seconds</p>
+                  <p className="text-sm text-muted-foreground">From idea to deployed website in under a minute</p>
+                </TooltipContent>
+              </Tooltip>
 
-              {/* Card 3 - ACCENT */}
-              <Card className="border-2 transition-all duration-300 hover:shadow-xl hover:scale-[1.02] animate-in fade-in slide-in-from-bottom-4" style={{ animationDelay: '300ms', animationFillMode: 'backwards' }}>
-                <CardHeader className="pb-8">
-                  <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-xl bg-accent/50 ring-1 ring-accent">
-                    <Palette className="h-7 w-7 text-accent-foreground" />
-                  </div>
-                  <CardTitle className="text-2xl">Beautiful Design</CardTitle>
-                  <CardDescription className="text-base">
-                    Professional templates built with modern design principles and best practices.
-                  </CardDescription>
-                </CardHeader>
-              </Card>
+              {/* Card 3 - ACCENT with Tooltip */}
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Card className="border-2 transition-all duration-300 hover:shadow-xl hover:scale-[1.02] animate-in fade-in slide-in-from-bottom-4" style={{ animationDelay: '300ms', animationFillMode: 'backwards' }}>
+                    <CardHeader className="pb-8">
+                      <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-xl bg-accent/50 ring-1 ring-accent">
+                        <Palette className="h-7 w-7 text-accent-foreground" />
+                      </div>
+                      <CardTitle className="text-2xl">Beautiful Design</CardTitle>
+                      <CardDescription className="text-base">
+                        Professional templates built with modern design principles and best practices.
+                      </CardDescription>
+                    </CardHeader>
+                  </Card>
+                </TooltipTrigger>
+                <TooltipContent side="bottom" className="max-w-xs">
+                  <p className="font-medium">Built with shadcn/ui</p>
+                  <p className="text-sm text-muted-foreground">Accessible, customizable components with Tailwind CSS</p>
+                </TooltipContent>
+              </Tooltip>
             </div>
           </div>
         </section>
@@ -211,5 +252,6 @@ export default function Home() {
         </footer>
       </main>
     </div>
+    </TooltipProvider>
   );
 }
