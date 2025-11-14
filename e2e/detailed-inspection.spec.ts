@@ -1,4 +1,13 @@
-import { test, expect } from '@playwright/test';
+import { test } from '@playwright/test';
+
+// Type definitions for test data
+interface BrokenElement {
+  type: string;
+  index: number;
+  src?: string;
+  alt?: string;
+  className?: string;
+}
 
 const siteUrl = 'https://prompt-to-website-ihu08z8cn-federico-de-pontes-projects.vercel.app';
 
@@ -47,8 +56,8 @@ test.describe('Detailed Issue Detection', () => {
     console.log(JSON.stringify(templateAreas, null, 2));
     
     // Check for broken images or missing assets
-    const brokenElements = await page.evaluate(() => {
-      const issues = [];
+    const brokenElements: BrokenElement[] = await page.evaluate(() => {
+      const issues: Array<{ type: string; index: number; src?: string; alt?: string; className?: string }> = [];
       
       // Check all img elements
       const images = Array.from(document.querySelectorAll('img'));
@@ -130,7 +139,7 @@ test.describe('Detailed Issue Detection', () => {
     });
   });
 
-  test('Check for missing routes', async ({ page, context }) => {
+  test('Check for missing routes', async ({ page }) => {
     console.log('=== CHECKING CRITICAL ROUTES ===');
     
     const routes = [
@@ -159,7 +168,8 @@ test.describe('Detailed Issue Detection', () => {
         
         await page.waitForTimeout(1000);
       } catch (e) {
-        console.log('  ✗ ERROR: ' + e.message);
+        const errorMessage = e instanceof Error ? e.message : String(e);
+        console.log('  ✗ ERROR: ' + errorMessage);
       }
     }
   });

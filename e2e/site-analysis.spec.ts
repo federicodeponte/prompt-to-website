@@ -1,14 +1,14 @@
-import { test, expect } from '@playwright/test';
+import { test } from '@playwright/test';
 
 const siteUrl = 'https://prompt-to-website-ihu08z8cn-federico-de-pontes-projects.vercel.app';
 
 test.describe('Deployed Site Analysis', () => {
   test('Homepage - Full Analysis', async ({ page }) => {
     console.log('=== NAVIGATING TO HOMEPAGE ===');
-    
-    const consoleMessages = [];
-    const consoleErrors = [];
-    
+
+    const consoleMessages: string[] = [];
+    const consoleErrors: string[] = [];
+
     page.on('console', msg => {
       const msgType = msg.type();
       const msgText = msg.text();
@@ -19,7 +19,7 @@ test.describe('Deployed Site Analysis', () => {
       }
     });
 
-    const failedRequests = [];
+    const failedRequests: string[] = [];
     page.on('requestfailed', request => {
       const method = request.method();
       const url = request.url();
