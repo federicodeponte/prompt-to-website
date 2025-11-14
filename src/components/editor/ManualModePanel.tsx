@@ -51,14 +51,158 @@ export function ManualModePanel({ config, onConfigUpdate }: ManualModePanelProps
   };
 
   /**
+   * Get default content for a block type
+   */
+  const getDefaultBlockContent = (type: BlockType, id: string): any => {
+    const defaults: Record<BlockType, any> = {
+      hero: {
+        id,
+        variant: 'centered',
+        heading: 'Welcome to Our Platform',
+        subheading: 'Build amazing things with our tools',
+        ctaPrimary: { text: 'Get Started', link: '#' },
+        ctaSecondary: { text: 'Learn More', link: '#' },
+      },
+      features: {
+        id,
+        variant: 'grid',
+        heading: 'Amazing Features',
+        subheading: 'Everything you need to succeed',
+        features: [
+          { icon: '🚀', title: 'Fast', description: 'Lightning-fast performance' },
+          { icon: '🔒', title: 'Secure', description: 'Enterprise-grade security' },
+          { icon: '📱', title: 'Responsive', description: 'Works on all devices' },
+        ],
+        columns: 3 as 3,
+      },
+      pricing: {
+        id,
+        variant: 'simple',
+        heading: 'Simple Pricing',
+        subheading: 'Choose the plan that fits your needs',
+        tiers: [
+          {
+            name: 'Starter',
+            price: '$9',
+            period: '/month',
+            description: 'Perfect for individuals',
+            features: ['Feature 1', 'Feature 2', 'Feature 3'],
+            ctaText: 'Get Started',
+            ctaLink: '#',
+          },
+        ],
+      },
+      testimonials: {
+        id,
+        variant: 'cards',
+        heading: 'What Our Customers Say',
+        subheading: 'Trusted by thousands worldwide',
+        testimonials: [
+          {
+            quote: 'This product changed everything for us!',
+            author: 'Jane Doe',
+            role: 'CEO',
+            company: 'Acme Inc',
+            rating: 5,
+          },
+        ],
+        columns: 3 as 3,
+      },
+      cta: {
+        id,
+        variant: 'simple',
+        heading: 'Ready to Get Started?',
+        subheading: 'Join thousands of happy customers today',
+        ctaPrimary: { text: 'Start Free Trial', link: '#' },
+      },
+      footer: {
+        id,
+        variant: 'multi-column',
+        logo: 'Your Logo',
+        tagline: 'Building the future',
+        copyright: '© 2024 Your Company',
+        links: [
+          {
+            title: 'Product',
+            links: [
+              { text: 'Features', href: '#' },
+              { text: 'Pricing', href: '#' },
+            ],
+          },
+        ],
+        socialLinks: [
+          { platform: 'twitter', url: '#' },
+          { platform: 'github', url: '#' },
+        ],
+      },
+      faq: {
+        id,
+        variant: 'accordion',
+        heading: 'Frequently Asked Questions',
+        subheading: 'Find answers to common questions',
+        questions: [
+          { question: 'How does it work?', answer: 'It\'s simple and intuitive!' },
+          { question: 'What are the benefits?', answer: 'Many amazing benefits!' },
+        ],
+      },
+      stats: {
+        id,
+        variant: 'grid',
+        heading: 'Our Impact',
+        subheading: 'Numbers that matter',
+        stats: [
+          { value: '10K+', label: 'Happy Customers' },
+          { value: '99%', label: 'Satisfaction Rate' },
+          { value: '24/7', label: 'Support Available' },
+        ],
+      },
+      contact: {
+        id,
+        variant: 'simple',
+        heading: 'Get In Touch',
+        subheading: 'We\'d love to hear from you',
+        email: 'hello@example.com',
+        phone: '+1 (555) 123-4567',
+        address: '123 Main St, City, State 12345',
+      },
+      newsletter: {
+        id,
+        variant: 'simple',
+        heading: 'Stay Updated',
+        subheading: 'Subscribe to our newsletter',
+        placeholder: 'Enter your email',
+        ctaText: 'Subscribe',
+      },
+      team: {
+        id,
+        variant: 'grid',
+        heading: 'Meet Our Team',
+        subheading: 'The people behind the magic',
+        members: [
+          {
+            name: 'John Doe',
+            role: 'CEO & Founder',
+            bio: 'Passionate about innovation',
+            image: '/placeholder-avatar.jpg',
+            social: { twitter: '#', linkedin: '#' },
+          },
+        ],
+      },
+    };
+
+    return defaults[type] || {};
+  };
+
+  /**
    * Add a new block to the configuration
    */
   const handleAddBlock = (type: BlockType) => {
+    const blockId = `block-${Date.now()}`;
     const newBlock: Block = {
-      id: `block-${Date.now()}`,
+      id: blockId,
       type,
       variant: undefined,
-      content: {},
+      content: getDefaultBlockContent(type, blockId),
       settings: {
         spacing: 'normal',
         background: 'default',
