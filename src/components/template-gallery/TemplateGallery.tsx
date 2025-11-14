@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useCreateWebsite } from '@/lib/hooks/use-websites';
 import { useRouter } from 'next/navigation';
 import { Loader2, MoreVertical, Eye, Copy, ExternalLink } from 'lucide-react';
@@ -108,9 +109,10 @@ export function TemplateGallery() {
   };
 
   return (
-    <div className="space-y-8">
-      {/* Category Filters */}
-      <div className="flex flex-wrap items-center justify-center gap-3">
+    <TooltipProvider>
+      <div className="space-y-8">
+        {/* Category Filters */}
+        <div className="flex flex-wrap items-center justify-center gap-3">
         <Button
           variant={activeCategory === 'all' ? 'default' : 'outline'}
           onClick={() => setActiveCategory('all')}
@@ -212,11 +214,18 @@ export function TemplateGallery() {
 
               {/* Dialog for Preview */}
               <Dialog>
-                <DialogTrigger asChild>
-                  <Button variant="outline">
-                    <Eye className="h-4 w-4" />
-                  </Button>
-                </DialogTrigger>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <DialogTrigger asChild>
+                      <Button variant="outline">
+                        <Eye className="h-4 w-4" />
+                      </Button>
+                    </DialogTrigger>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Preview template details</p>
+                  </TooltipContent>
+                </Tooltip>
                 <DialogContent className="max-w-4xl">
                   <DialogHeader>
                     <DialogTitle className="flex items-center gap-2">
@@ -279,11 +288,18 @@ export function TemplateGallery() {
 
               {/* DropdownMenu for More Actions */}
               <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline" size="icon">
-                    <MoreVertical className="h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="outline" size="icon">
+                        <MoreVertical className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>More options</p>
+                  </TooltipContent>
+                </Tooltip>
                 <DropdownMenuContent align="end">
                   <DropdownMenuItem onClick={() => handleUseTemplate(template)}>
                     <Copy className="mr-2 h-4 w-4" />
@@ -317,6 +333,7 @@ export function TemplateGallery() {
           </p>
         </div>
       )}
-    </div>
+      </div>
+    </TooltipProvider>
   );
 }
