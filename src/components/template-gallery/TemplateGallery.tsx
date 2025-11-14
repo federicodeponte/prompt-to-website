@@ -93,7 +93,7 @@ export function TemplateGallery() {
   };
 
   /**
-   * Get icon for category
+   * Get icon and color for category
    */
   const getCategoryIcon = (category: string) => {
     switch (category) {
@@ -105,6 +105,19 @@ export function TemplateGallery() {
         return '👤';
       default:
         return '🌐';
+    }
+  };
+
+  const getCategoryColor = (category: string) => {
+    switch (category) {
+      case 'business':
+        return 'bg-blue-500/10 text-blue-700 dark:text-blue-400 border-blue-200 dark:border-blue-800';
+      case 'product':
+        return 'bg-purple-500/10 text-purple-700 dark:text-purple-400 border-purple-200 dark:border-purple-800';
+      case 'personal':
+        return 'bg-green-500/10 text-green-700 dark:text-green-400 border-green-200 dark:border-green-800';
+      default:
+        return 'bg-gray-500/10 text-gray-700 dark:text-gray-400 border-gray-200 dark:border-gray-800';
     }
   };
 
@@ -122,18 +135,21 @@ export function TemplateGallery() {
         <Button
           variant={activeCategory === 'business' ? 'default' : 'outline'}
           onClick={() => setActiveCategory('business')}
+          className={activeCategory === 'business' ? '' : 'hover:bg-blue-50 hover:text-blue-700 hover:border-blue-300 dark:hover:bg-blue-950'}
         >
           💼 Business
         </Button>
         <Button
           variant={activeCategory === 'product' ? 'default' : 'outline'}
           onClick={() => setActiveCategory('product')}
+          className={activeCategory === 'product' ? '' : 'hover:bg-purple-50 hover:text-purple-700 hover:border-purple-300 dark:hover:bg-purple-950'}
         >
           📦 Product
         </Button>
         <Button
           variant={activeCategory === 'personal' ? 'default' : 'outline'}
           onClick={() => setActiveCategory('personal')}
+          className={activeCategory === 'personal' ? '' : 'hover:bg-green-50 hover:text-green-700 hover:border-green-300 dark:hover:bg-green-950'}
         >
           👤 Personal
         </Button>
@@ -156,7 +172,7 @@ export function TemplateGallery() {
             <CardHeader className="pb-4">
               <div className="mb-3 flex items-center gap-2">
                 <span className="text-2xl">{getCategoryIcon(template.category)}</span>
-                <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                <span className={`rounded-full border px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wide ${getCategoryColor(template.category)}`}>
                   {template.category}
                 </span>
               </div>
