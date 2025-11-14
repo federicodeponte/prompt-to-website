@@ -13,6 +13,7 @@ import { useCreateWebsite } from '@/lib/hooks/use-websites';
 import { useRouter } from 'next/navigation';
 import { Loader2, MoreVertical, Eye, Copy, ExternalLink } from 'lucide-react';
 import { TemplateCardSkeleton } from './TemplateCardSkeleton';
+import { toast } from 'sonner';
 
 type CategoryFilter = 'all' | 'business' | 'product' | 'personal';
 
@@ -55,28 +56,39 @@ export function TemplateGallery() {
   });
 
   /**
-   * Handle template selection and website creation
+   * Handle template selection and website creation with toast notifications
    */
   const handleUseTemplate = (template: TemplateMetadata) => {
     setCreatingTemplateId(template.id);
 
-    createWebsite(
-      {
-        label: `${template.name} - New Website`,
-        config: template.config,
-      },
-      {
-        onSuccess: (data) => {
-          // Navigate to editor with the new website
-          router.push(`/editor/${data.id}`);
+    // Create promise for toast.promise
+    const createWebsitePromise = new Promise((resolve, reject) => {
+      createWebsite(
+        {
+          label: `${template.name} - New Website`,
+          config: template.config,
         },
-        onError: (error) => {
-          console.error('Failed to create website:', error);
-          setCreatingTemplateId(null);
-          alert('Failed to create website. Please try again.');
-        },
-      }
-    );
+        {
+          onSuccess: (data) => {
+            resolve(data);
+            // Navigate to editor with the new website
+            router.push(`/editor/${data.id}`);
+          },
+          onError: (error) => {
+            console.error('Failed to create website:', error);
+            setCreatingTemplateId(null);
+            reject(error);
+          },
+        }
+      );
+    });
+
+    // Show toast with loading/success/error states
+    toast.promise(createWebsitePromise, {
+      loading: `Creating ${template.name}...`,
+      success: 'Website created! Opening editor...',
+      error: 'Failed to create website. Please try again.',
+    });
   };
 
   /**
