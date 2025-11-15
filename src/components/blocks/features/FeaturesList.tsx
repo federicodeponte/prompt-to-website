@@ -1,59 +1,153 @@
-// ABOUTME: List features block variant displaying features in a vertical list layout
-// ABOUTME: Follows Single Responsibility Principle - handles only list layout
+// ABOUTME: Premium list features with alternating animations and glassmorphism
+// ABOUTME: Production-quality design with slide-in effects and gradient icons
+
+'use client';
 
 import React from 'react';
+import { motion } from 'framer-motion';
 import { Check } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Card, CardContent } from '@/components/ui/card';
 import { FeaturesContentList } from '@/lib/types/block-content';
+import { cn } from '@/lib/utils';
 
 interface FeaturesListProps {
   content: FeaturesContentList;
 }
 
 /**
- * List-based features section with alternating layout
- * Ideal for detailed feature descriptions with more emphasis on each item
+ * Premium list-based features with alternating animations
+ * Features: Slide-in from left/right, gradient icons, glassmorphism cards
  */
 export function FeaturesList({ content }: FeaturesListProps) {
   const { heading, subheading, features } = content;
 
-  return (
-    <div className="space-y-16">
-      {/* Header */}
-      <div className="mx-auto max-w-3xl text-center">
-        <p className="mb-4 text-sm font-semibold uppercase tracking-wide text-primary">
-          {subheading}
-        </p>
-        <h2 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
-          {heading}
-        </h2>
-      </div>
+  // Gradient colors for icons (alternates)
+  const gradientColors = [
+    'from-blue-500 to-cyan-500',
+    'from-purple-500 to-pink-500',
+    'from-orange-500 to-red-500',
+    'from-green-500 to-emerald-500',
+    'from-indigo-500 to-violet-500',
+    'from-amber-500 to-orange-500',
+  ];
 
-      {/* Features List */}
-      <div className="space-y-12">
+  return (
+    <div className="space-y-20">
+      {/* Animated Header */}
+      <motion.div
+        className="mx-auto max-w-3xl text-center"
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.6 }}
+      >
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+        >
+          <Badge variant="outline" className="mb-6 text-sm">
+            {subheading}
+          </Badge>
+        </motion.div>
+
+        <motion.h2
+          className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+        >
+          {heading}
+        </motion.h2>
+      </motion.div>
+
+      {/* Animated Features List */}
+      <div className="space-y-16">
         {features.map((feature, index) => {
           const isEven = index % 2 === 0;
 
           return (
-            <div
+            <motion.div
               key={index}
-              className={`flex flex-col gap-8 ${
-                isEven ? 'md:flex-row' : 'md:flex-row-reverse'
-              } items-center`}
+              initial={{ opacity: 0, x: isEven ? -50 : 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.6, delay: index * 0.1 }}
             >
-              {/* Icon/Visual */}
-              <div className="flex h-24 w-24 flex-shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-4xl md:h-32 md:w-32 md:text-5xl">
-                {feature.icon}
-              </div>
+              <Card className="border-2 bg-gradient-to-br from-background to-muted/20 hover:shadow-xl transition-all duration-300">
+                <CardContent className="p-8">
+                  <div
+                    className={cn(
+                      'flex flex-col gap-8 items-center',
+                      isEven ? 'md:flex-row' : 'md:flex-row-reverse'
+                    )}
+                  >
+                    {/* Animated Gradient Icon */}
+                    <motion.div
+                      className={cn(
+                        'flex h-28 w-28 md:h-36 md:w-36 flex-shrink-0 items-center justify-center',
+                        'rounded-3xl text-5xl md:text-6xl shadow-2xl',
+                        'bg-gradient-to-br',
+                        gradientColors[index % gradientColors.length]
+                      )}
+                      whileHover={{ scale: 1.1, rotate: 5 }}
+                      animate={{
+                        boxShadow: [
+                          '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+                          '0 25px 50px -12px rgba(0, 0, 0, 0.4)',
+                          '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+                        ],
+                      }}
+                      transition={{
+                        boxShadow: {
+                          duration: 3,
+                          repeat: Infinity,
+                          ease: 'easeInOut',
+                        },
+                      }}
+                    >
+                      <span className="filter drop-shadow-lg" role="img" aria-label={feature.title}>
+                        {feature.icon}
+                      </span>
+                    </motion.div>
 
-              {/* Content */}
-              <div className="flex-1 space-y-3 text-center md:text-left">
-                <div className="flex items-center justify-center gap-2 md:justify-start">
-                  <Check className="h-5 w-5 text-primary" aria-hidden="true" />
-                  <h3 className="text-2xl font-bold">{feature.title}</h3>
-                </div>
-                <p className="text-lg text-muted-foreground">{feature.description}</p>
-              </div>
-            </div>
+                    {/* Content */}
+                    <div className="flex-1 space-y-4 text-center md:text-left">
+                      <motion.div
+                        className="flex items-center justify-center gap-3 md:justify-start"
+                        initial={{ opacity: 0, y: 10 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true, margin: "-100px" }}
+                        transition={{ duration: 0.5, delay: index * 0.1 + 0.2 }}
+                      >
+                        <motion.div
+                          whileHover={{ scale: 1.2, rotate: 360 }}
+                          transition={{ duration: 0.4 }}
+                        >
+                          <Check className="h-6 w-6 text-primary" aria-hidden="true" />
+                        </motion.div>
+                        <h3 className="text-3xl font-bold bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
+                          {feature.title}
+                        </h3>
+                      </motion.div>
+
+                      <motion.p
+                        className="text-xl text-muted-foreground leading-relaxed"
+                        initial={{ opacity: 0, y: 10 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true, margin: "-100px" }}
+                        transition={{ duration: 0.5, delay: index * 0.1 + 0.3 }}
+                      >
+                        {feature.description}
+                      </motion.p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
           );
         })}
       </div>

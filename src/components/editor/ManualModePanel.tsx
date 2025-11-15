@@ -52,12 +52,13 @@ export function ManualModePanel({ config, onConfigUpdate }: ManualModePanelProps
 
   /**
    * Get default content for a block type
+   * Returns properly typed content object for each block type
    */
-  const getDefaultBlockContent = (type: BlockType, id: string): any => {
-    const defaults: Record<BlockType, any> = {
+  const getDefaultBlockContent = (type: BlockType, id: string): Record<string, unknown> => {
+    const defaults: Record<BlockType, Record<string, unknown>> = {
       hero: {
         id,
-        variant: 'centered',
+        variant: 'centered' as const,
         heading: 'Welcome to Our Platform',
         subheading: 'Build amazing things with our tools',
         ctaPrimary: { text: 'Get Started', link: '#' },
@@ -65,7 +66,7 @@ export function ManualModePanel({ config, onConfigUpdate }: ManualModePanelProps
       },
       features: {
         id,
-        variant: 'grid',
+        variant: 'grid' as const,
         heading: 'Amazing Features',
         subheading: 'Everything you need to succeed',
         features: [
@@ -73,7 +74,7 @@ export function ManualModePanel({ config, onConfigUpdate }: ManualModePanelProps
           { icon: '🔒', title: 'Secure', description: 'Enterprise-grade security' },
           { icon: '📱', title: 'Responsive', description: 'Works on all devices' },
         ],
-        columns: 3 as 3,
+        columns: 3 as const,
       },
       pricing: {
         id,
@@ -94,7 +95,7 @@ export function ManualModePanel({ config, onConfigUpdate }: ManualModePanelProps
       },
       testimonials: {
         id,
-        variant: 'cards',
+        variant: 'cards' as const,
         heading: 'What Our Customers Say',
         subheading: 'Trusted by thousands worldwide',
         testimonials: [
@@ -106,7 +107,7 @@ export function ManualModePanel({ config, onConfigUpdate }: ManualModePanelProps
             rating: 5,
           },
         ],
-        columns: 3 as 3,
+        columns: 3 as const,
       },
       cta: {
         id,
