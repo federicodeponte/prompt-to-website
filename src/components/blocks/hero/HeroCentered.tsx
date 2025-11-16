@@ -10,6 +10,8 @@ import { Badge } from '@/components/ui/badge';
 import { HeroContentCentered } from '@/lib/types/block-content';
 import { cn } from '@/lib/utils';
 import { ArrowRight } from 'lucide-react';
+import { spring, fadeInUp } from '@/lib/animations';
+import { getGradientTextClasses, getMeshGradientClasses, getShimmerClasses } from '@/lib/visual-effects';
 
 interface HeroCenteredProps {
   content: HeroContentCentered;
@@ -27,16 +29,17 @@ export function HeroCentered({ content, theme }: HeroCenteredProps) {
 
   return (
     <div className="relative overflow-hidden bg-background">
-      {/* Subtle gradient - very minimal */}
-      <div className="absolute inset-0 bg-gradient-to-b from-muted/20 via-background to-background" aria-hidden="true" />
+      {/* Animated mesh gradient background - Framer-level */}
+      <div className={cn("absolute inset-0", getMeshGradientClasses())} aria-hidden="true" />
 
       {/* Content - MUCH more whitespace */}
       <div className="relative z-10 mx-auto max-w-5xl px-6 py-32 text-center sm:py-40 lg:py-48">
         {/* Badge - clean and minimal */}
         <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3 }}
+          variants={fadeInUp}
+          initial="hidden"
+          animate="visible"
+          transition={spring}
           className="mb-8 flex justify-center"
         >
           <Badge variant="outline" className="px-3 py-1 text-sm font-medium">
@@ -44,44 +47,50 @@ export function HeroCentered({ content, theme }: HeroCenteredProps) {
           </Badge>
         </motion.div>
 
-        {/* Heading - HUGE, clean, no gradients */}
+        {/* Heading with gradient text - Framer-level */}
         <motion.h1
-          className="mb-6 text-5xl font-semibold tracking-tight text-foreground sm:text-6xl lg:text-7xl"
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3, delay: 0.1 }}
+          className={cn("mb-6 text-5xl font-semibold tracking-tight sm:text-6xl lg:text-7xl", getGradientTextClasses())}
+          variants={fadeInUp}
+          initial="hidden"
+          animate="visible"
+          transition={{ ...spring, delay: 0.1 }}
         >
           {heading}
         </motion.h1>
 
-        {/* CTA Buttons - clean, simple, professional */}
+        {/* CTA Buttons with shimmer effect - Framer-level */}
         <motion.div
           className="mt-12 flex flex-col items-center justify-center gap-3 sm:flex-row"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.3, delay: 0.2 }}
+          variants={fadeInUp}
+          initial="hidden"
+          animate="visible"
+          transition={{ ...spring, delay: 0.2 }}
         >
-          <Button
-            size="lg"
-            asChild
-            className="h-11 px-8 shadow-sm transition-shadow hover:shadow"
-            style={theme?.primaryColor ? { backgroundColor: theme.primaryColor } : undefined}
-          >
-            <a href={ctaPrimary.link} className="inline-flex items-center gap-2">
-              {ctaPrimary.text}
-              <ArrowRight className="h-4 w-4" />
-            </a>
-          </Button>
-
-          {ctaSecondary && (
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
             <Button
               size="lg"
-              variant="outline"
               asChild
-              className="h-11 px-8"
+              className={cn("h-11 px-8 shadow-lg hover:shadow-xl group", getShimmerClasses())}
+              style={theme?.primaryColor ? { backgroundColor: theme.primaryColor } : undefined}
             >
-              <a href={ctaSecondary.link}>{ctaSecondary.text}</a>
+              <a href={ctaPrimary.link} className="inline-flex items-center gap-2">
+                {ctaPrimary.text}
+                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+              </a>
             </Button>
+          </motion.div>
+
+          {ctaSecondary && (
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Button
+                size="lg"
+                variant="outline"
+                asChild
+                className="h-11 px-8"
+              >
+                <a href={ctaSecondary.link}>{ctaSecondary.text}</a>
+              </Button>
+            </motion.div>
           )}
         </motion.div>
       </div>

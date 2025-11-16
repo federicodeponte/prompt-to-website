@@ -11,6 +11,8 @@ import { Badge } from '@/components/ui/badge';
 import { HeroContentSplit } from '@/lib/types/block-content';
 import { cn } from '@/lib/utils';
 import { ArrowRight, Sparkles } from 'lucide-react';
+import { spring, springMedium, fadeInUp, cardHover } from '@/lib/animations';
+import { getGradientTextClasses, getShimmerClasses, getFloatingClasses } from '@/lib/visual-effects';
 
 interface HeroSplitProps {
   content: HeroContentSplit;
@@ -44,13 +46,14 @@ export function HeroSplit({ content, theme }: HeroSplitProps) {
         className={cn('space-y-8', isImageRight ? 'lg:order-1' : 'lg:order-2')}
         initial={{ opacity: 0, x: isImageRight ? -50 : 50 }}
         animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.6 }}
+        transition={spring}
       >
         {/* Animated Badge */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
+          variants={fadeInUp}
+          initial="hidden"
+          animate="visible"
+          transition={{ ...spring, delay: 0.1 }}
         >
           <Badge className="mb-4">
             <Sparkles className="mr-1.5 h-3.5 w-3.5" />
@@ -58,40 +61,41 @@ export function HeroSplit({ content, theme }: HeroSplitProps) {
           </Badge>
         </motion.div>
 
-        {/* Heading */}
+        {/* Heading with gradient text */}
         <motion.h1
-          className="text-5xl font-bold tracking-tight sm:text-6xl md:text-7xl"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
+          className={cn("text-5xl font-bold tracking-tight sm:text-6xl md:text-7xl", getGradientTextClasses())}
+          variants={fadeInUp}
+          initial="hidden"
+          animate="visible"
+          transition={{ ...spring, delay: 0.2 }}
         >
-          <span className="bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
-            {heading}
-          </span>
+          {heading}
         </motion.h1>
 
         {/* Description */}
         <motion.p
           className="text-xl text-muted-foreground leading-relaxed"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
+          variants={fadeInUp}
+          initial="hidden"
+          animate="visible"
+          transition={{ ...spring, delay: 0.3 }}
         >
           {description}
         </motion.p>
 
-        {/* CTA Buttons */}
+        {/* CTA Buttons with shimmer */}
         <motion.div
           className="flex flex-col gap-4 sm:flex-row"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
+          variants={fadeInUp}
+          initial="hidden"
+          animate="visible"
+          transition={{ ...spring, delay: 0.4 }}
         >
           <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
             <Button
               size="lg"
               asChild
-              className="h-12 px-8 text-base shadow-lg hover:shadow-xl group"
+              className={cn("h-12 px-8 text-base shadow-lg hover:shadow-xl group", getShimmerClasses())}
               style={theme?.primaryColor ? { backgroundColor: theme.primaryColor } : undefined}
             >
               <a href={ctaPrimary.link}>
@@ -116,13 +120,13 @@ export function HeroSplit({ content, theme }: HeroSplitProps) {
         </motion.div>
       </motion.div>
 
-      {/* Image with Glassmorphism */}
+      {/* Image with Glassmorphism and 3D lift */}
       <motion.div
         className={cn('relative', isImageRight ? 'lg:order-2' : 'lg:order-1')}
         initial={{ opacity: 0, x: isImageRight ? 50 : -50 }}
         animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.6, delay: 0.2 }}
-        whileHover={{ scale: 1.02 }}
+        transition={{ ...spring, delay: 0.2 }}
+        whileHover={{ scale: 1.02, y: -8 }}
       >
         <div className="relative aspect-[4/3] overflow-hidden rounded-3xl border-2 border-border/50 shadow-2xl backdrop-blur-sm">
           {/* Gradient overlay for depth */}
@@ -138,18 +142,9 @@ export function HeroSplit({ content, theme }: HeroSplitProps) {
           />
         </div>
 
-        {/* Floating accent element */}
+        {/* Floating accent element with physics animation */}
         <motion.div
-          className="absolute -right-4 -top-4 h-24 w-24 rounded-full bg-gradient-to-br from-primary/20 to-secondary/20 blur-3xl"
-          animate={{
-            scale: [1, 1.2, 1],
-            opacity: [0.3, 0.6, 0.3],
-          }}
-          transition={{
-            duration: 4,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
+          className={cn("absolute -right-4 -top-4 h-24 w-24 rounded-full bg-gradient-to-br from-primary/20 to-secondary/20 blur-3xl", getFloatingClasses())}
           aria-hidden="true"
         />
       </motion.div>
