@@ -13,7 +13,7 @@ export default defineConfig({
   reporter: 'html',
 
   use: {
-    baseURL: 'http://localhost:3001',
+    baseURL: 'http://localhost:3002',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
   },
@@ -25,11 +25,14 @@ export default defineConfig({
     },
   ],
 
-  // Run dev server before tests
+  // Use existing dev server on port 3002
+  // webServer disabled - run 'npm run dev' manually before tests
+  /*
   webServer: {
-    command: 'cd /home/federicodeponte/prompt-to-website && npm run dev -- --port 3001',
-    url: 'http://localhost:3001',
-    reuseExistingServer: true,  // Always reuse existing server
+    command: 'cd /home/federicodeponte/prompt-to-website && npm run dev -- --port 3002',
+    url: 'http://localhost:3002',
+    reuseExistingServer: true,
     timeout: 120000,
   },
+  */
 });
