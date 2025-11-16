@@ -4,13 +4,13 @@
 'use client';
 
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { HeroContentCentered } from '@/lib/types/block-content';
 import { cn } from '@/lib/utils';
 import { ArrowRight } from 'lucide-react';
-import { spring, fadeInUp } from '@/lib/animations';
+import { spring, fadeInUp, buttonHoverPremium } from '@/lib/animations';
 import { getGradientTextClasses, getMeshGradientClasses, getShimmerClasses } from '@/lib/visual-effects';
 
 interface HeroCenteredProps {
@@ -27,10 +27,19 @@ interface HeroCenteredProps {
 export function HeroCentered({ content, theme }: HeroCenteredProps) {
   const { heading, subheading, ctaPrimary, ctaSecondary } = content;
 
+  // Parallax effect on background
+  const { scrollY } = useScroll();
+  const y = useTransform(scrollY, [0, 500], [0, 150]);
+  const opacity = useTransform(scrollY, [0, 300], [1, 0]);
+
   return (
     <div className="relative overflow-hidden bg-background">
-      {/* Animated mesh gradient background - Framer-level */}
-      <div className={cn("absolute inset-0", getMeshGradientClasses())} aria-hidden="true" />
+      {/* Animated mesh gradient background with parallax - Framer-level */}
+      <motion.div
+        className={cn("absolute inset-0", getMeshGradientClasses())}
+        style={{ y, opacity }}
+        aria-hidden="true"
+      />
 
       {/* Content - MUCH more whitespace */}
       <div className="relative z-10 mx-auto max-w-5xl px-6 py-32 text-center sm:py-40 lg:py-48">
@@ -66,11 +75,16 @@ export function HeroCentered({ content, theme }: HeroCenteredProps) {
           animate="visible"
           transition={{ ...spring, delay: 0.2 }}
         >
-          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+          <motion.div
+            variants={buttonHoverPremium}
+            initial="rest"
+            whileHover="hover"
+            whileTap="tap"
+          >
             <Button
               size="lg"
               asChild
-              className={cn("h-11 px-8 shadow-lg hover:shadow-xl group", getShimmerClasses())}
+              className={cn("h-11 px-8 group", getShimmerClasses())}
               style={theme?.primaryColor ? { backgroundColor: theme.primaryColor } : undefined}
             >
               <a href={ctaPrimary.link} className="inline-flex items-center gap-2">
@@ -81,7 +95,12 @@ export function HeroCentered({ content, theme }: HeroCenteredProps) {
           </motion.div>
 
           {ctaSecondary && (
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <motion.div
+              variants={buttonHoverPremium}
+              initial="rest"
+              whileHover="hover"
+              whileTap="tap"
+            >
               <Button
                 size="lg"
                 variant="outline"

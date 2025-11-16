@@ -2,11 +2,12 @@
 // ABOUTME: DRY principle - centralized Tailwind class generation
 
 /**
- * Gradient text effect - animated rainbow gradient
+ * Gradient text effect - TRUE animated rainbow gradient with vibrant colors
  * Used for hero headings, feature titles, etc.
+ * Uses actual color variety, not just position shifts
  */
 export function getGradientTextClasses() {
-  return 'bg-gradient-to-r from-foreground via-primary to-foreground bg-clip-text text-transparent animate-gradient';
+  return 'bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent animate-gradient bg-[length:200%_auto]';
 }
 
 /**
@@ -19,10 +20,10 @@ export function getGlassmorphismClasses() {
 
 /**
  * Shimmer effect for buttons and interactive elements
- * Creates a moving shine/highlight
+ * Creates a VISIBLE moving shine/highlight (60% opacity for impact)
  */
 export function getShimmerClasses() {
-  return 'relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-shimmer before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent';
+  return 'relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-shimmer before:bg-gradient-to-r before:from-transparent before:via-white/60 before:to-transparent';
 }
 
 /**
@@ -43,15 +44,18 @@ export function getFloatingClasses() {
 
 /**
  * Mesh gradient background (for hero, CTA sections)
- * Animated multi-color gradient with blur
+ * Animated multi-color gradient with VIBRANT colors (40% opacity for visibility)
+ * Note: For parallax, wrap in motion.div with useScroll
  */
 export function getMeshGradientClasses() {
-  return 'bg-gradient-to-br from-primary/10 via-background to-secondary/10 animate-gradient-shift';
+  return 'bg-gradient-to-br from-blue-500/40 via-purple-500/30 to-pink-500/40 animate-gradient-shift bg-[length:150%_150%]';
 }
 
 /**
  * 3D card lift shadow (for hover states)
+ * NOTE: This provides base shadow styling. Use with Framer Motion whileHover for spring physics!
+ * Apply whileHover={{ y: -8, scale: 1.02, boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)" }}
  */
 export function getCardLiftClasses() {
-  return 'transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 hover:scale-[1.02]';
+  return 'shadow-sm'; // Base shadow only - motion handled by whileHover
 }

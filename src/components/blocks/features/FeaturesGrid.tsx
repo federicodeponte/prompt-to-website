@@ -17,8 +17,8 @@ import {
   DollarSign, CreditCard, ShoppingCart, Gift, TrendingDown,
   BarChart, PieChart, Activity, Calendar, Clock, Bell
 } from 'lucide-react';
-import { spring, fadeInUp, staggerContainer, staggerItem } from '@/lib/animations';
-import { getGradientTextClasses, getCardLiftClasses } from '@/lib/visual-effects';
+import { spring, fadeInUp, staggerContainer, staggerItem, cardHover } from '@/lib/animations';
+import { getGradientTextClasses } from '@/lib/visual-effects';
 
 // Map emoji to proper lucide icons
 const iconMap: Record<string, React.ElementType> = {
@@ -141,8 +141,14 @@ export function FeaturesGrid({ content }: FeaturesGridProps) {
                 key={index}
                 variants={staggerItem}
               >
-                <Card className={cn("h-full border shadow-sm", getCardLiftClasses())}>
-                  <CardContent className="p-6">
+                <motion.div
+                  variants={cardHover}
+                  initial="rest"
+                  whileHover="hover"
+                  animate="rest"
+                >
+                  <Card className="h-full border">
+                    <CardContent className="p-6">
                     {/* Icon with pulse animation */}
                     <motion.div
                       className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10"
@@ -161,8 +167,9 @@ export function FeaturesGrid({ content }: FeaturesGridProps) {
                     <p className="text-sm text-muted-foreground leading-relaxed">
                       {feature.description}
                     </p>
-                  </CardContent>
-                </Card>
+                    </CardContent>
+                  </Card>
+                </motion.div>
               </motion.div>
             );
           })}

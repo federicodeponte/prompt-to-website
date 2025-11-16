@@ -11,8 +11,8 @@ import { Badge } from '@/components/ui/badge';
 import { Check } from 'lucide-react';
 import { PricingContentSimple } from '@/lib/types/block-content';
 import { cn } from '@/lib/utils';
-import { spring, fadeInUp, staggerContainer, staggerItem } from '@/lib/animations';
-import { getGradientTextClasses, getCardLiftClasses, getShimmerClasses } from '@/lib/visual-effects';
+import { spring, fadeInUp, staggerContainer, staggerItem, cardHoverDramatic } from '@/lib/animations';
+import { getGradientTextClasses, getShimmerClasses } from '@/lib/visual-effects';
 
 interface PricingSimpleProps {
   content: PricingContentSimple;
@@ -65,13 +65,18 @@ export function PricingSimple({ content, theme }: PricingSimpleProps) {
               variants={staggerItem}
               className="relative"
             >
-              <Card
-                className={cn(
-                  'relative flex h-full flex-col border shadow-sm',
-                  getCardLiftClasses(),
-                  tier.highlighted && 'border-primary shadow-md'
-                )}
+              <motion.div
+                variants={cardHoverDramatic}
+                initial="rest"
+                whileHover="hover"
+                animate="rest"
               >
+                <Card
+                  className={cn(
+                    'relative flex h-full flex-col border',
+                    tier.highlighted && 'border-primary'
+                  )}
+                >
                 {tier.highlighted && (
                   <div className="absolute -top-4 left-1/2 -translate-x-1/2">
                     <Badge className="px-3 py-1 text-xs font-medium">
@@ -132,6 +137,7 @@ export function PricingSimple({ content, theme }: PricingSimpleProps) {
                   </motion.div>
                 </CardContent>
               </Card>
+              </motion.div>
             </motion.div>
           ))}
         </motion.div>
