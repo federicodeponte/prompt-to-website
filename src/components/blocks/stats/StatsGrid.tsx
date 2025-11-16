@@ -1,8 +1,12 @@
-// ABOUTME: Grid-style stats block variant with metrics in a responsive grid
-// ABOUTME: Follows Single Responsibility Principle
+// ABOUTME: Clean, minimal stats grid with professional typography
+// ABOUTME: Production-quality design matching shadcn/ui aesthetic
+
+'use client';
 
 import React from 'react';
+import { motion } from 'framer-motion';
 import { StatsContentGrid } from '@/lib/types/block-content';
+import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 
 interface StatsGridProps {
@@ -10,8 +14,8 @@ interface StatsGridProps {
 }
 
 /**
- * Stats section with grid layout for key metrics
- * Clean, scannable display of important numbers
+ * Clean stats grid with minimal design
+ * Design principles: Professional typography, subtle animations, whitespace
  */
 export function StatsGrid({ content }: StatsGridProps) {
   const { heading, subheading, stats, columns = 4 } = content;
@@ -26,34 +30,47 @@ export function StatsGrid({ content }: StatsGridProps) {
     <div className="space-y-12">
       {/* Header */}
       {heading && (
-        <div className="mx-auto max-w-3xl text-center">
+        <motion.div
+          className="mx-auto max-w-2xl text-center"
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.3 }}
+        >
           {subheading && (
-            <p className="mb-4 text-sm font-semibold uppercase tracking-wide text-primary">
+            <Badge variant="outline" className="mb-4 px-3 py-1 text-sm font-medium">
               {subheading}
-            </p>
+            </Badge>
           )}
-          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
+          <h2 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl lg:text-5xl">
             {heading}
           </h2>
-        </div>
+        </motion.div>
       )}
 
       {/* Stats Grid */}
-      <div className={cn('grid gap-8', gridColsClass[columns])}>
+      <div className={cn('grid gap-8 lg:gap-12', gridColsClass[columns])}>
         {stats.map((stat, index) => (
-          <div key={index} className="text-center">
-            <div className="mb-2 text-4xl font-bold tracking-tight sm:text-5xl">
+          <motion.div
+            key={index}
+            className="text-center"
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.3, delay: index * 0.05 }}
+          >
+            <div className="mb-2 text-4xl font-semibold tracking-tight text-foreground sm:text-5xl">
               {stat.prefix}
               {stat.value}
               {stat.suffix}
             </div>
-            <div className="text-lg font-semibold">{stat.label}</div>
+            <div className="text-base font-medium text-foreground">{stat.label}</div>
             {stat.description && (
-              <p className="mt-1 text-sm text-muted-foreground">
+              <p className="mt-1 text-sm text-muted-foreground leading-relaxed">
                 {stat.description}
               </p>
             )}
-          </div>
+          </motion.div>
         ))}
       </div>
     </div>

@@ -1,13 +1,17 @@
-// ABOUTME: Accordion-style FAQ block variant with collapsible questions
-// ABOUTME: Follows Single Responsibility Principle
+// ABOUTME: Clean FAQ accordion with shadcn/ui design
+// ABOUTME: Production-quality design with minimal animations
+
+'use client';
 
 import React from 'react';
+import { motion } from 'framer-motion';
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
+import { Badge } from '@/components/ui/badge';
 import { FAQContentAccordion } from '@/lib/types/block-content';
 
 interface FAQAccordionProps {
@@ -15,37 +19,52 @@ interface FAQAccordionProps {
 }
 
 /**
- * FAQ section with accordion-style collapsible questions
- * Clean, space-efficient layout for common questions
+ * Clean FAQ accordion with shadcn/ui design
+ * Design principles: Professional typography, subtle animations, whitespace
  */
 export function FAQAccordion({ content }: FAQAccordionProps) {
   const { heading, subheading, faqs } = content;
 
   return (
-    <div className="mx-auto max-w-3xl space-y-8">
+    <div className="mx-auto max-w-3xl space-y-12">
       {/* Header */}
-      <div className="text-center">
-        <p className="mb-4 text-sm font-semibold uppercase tracking-wide text-primary">
-          {subheading}
-        </p>
-        <h2 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
+      <motion.div
+        className="text-center"
+        initial={{ opacity: 0, y: 10 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.3 }}
+      >
+        {subheading && (
+          <Badge variant="outline" className="mb-4 px-3 py-1 text-sm font-medium">
+            {subheading}
+          </Badge>
+        )}
+        <h2 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl lg:text-5xl">
           {heading}
         </h2>
-      </div>
+      </motion.div>
 
       {/* FAQ Accordion */}
-      <Accordion type="single" collapsible className="w-full">
-        {faqs.map((faq, index) => (
-          <AccordionItem key={index} value={`item-${index}`}>
-            <AccordionTrigger className="text-left text-lg font-semibold">
-              {faq.question}
-            </AccordionTrigger>
-            <AccordionContent className="text-base text-muted-foreground">
-              {faq.answer}
-            </AccordionContent>
-          </AccordionItem>
-        ))}
-      </Accordion>
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.3, delay: 0.1 }}
+      >
+        <Accordion type="single" collapsible className="w-full">
+          {faqs.map((faq, index) => (
+            <AccordionItem key={index} value={`item-${index}`}>
+              <AccordionTrigger className="text-left text-base font-medium">
+                {faq.question}
+              </AccordionTrigger>
+              <AccordionContent className="text-sm text-muted-foreground leading-relaxed">
+                {faq.answer}
+              </AccordionContent>
+            </AccordionItem>
+          ))}
+        </Accordion>
+      </motion.div>
     </div>
   );
 }

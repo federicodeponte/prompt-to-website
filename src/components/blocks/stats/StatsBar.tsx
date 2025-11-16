@@ -1,16 +1,20 @@
-// ABOUTME: Bar-style stats block variant with horizontal layout
-// ABOUTME: Follows Single Responsibility Principle
+// ABOUTME: Clean, minimal stats bar with horizontal layout
+// ABOUTME: Production-quality design matching shadcn/ui aesthetic
+
+'use client';
 
 import React from 'react';
+import { motion } from 'framer-motion';
 import { StatsContentBar } from '@/lib/types/block-content';
+import { Badge } from '@/components/ui/badge';
 
 interface StatsBarProps {
   content: StatsContentBar;
 }
 
 /**
- * Stats section with horizontal bar layout
- * Compact display for smaller stat sets
+ * Clean stats bar with horizontal layout
+ * Design principles: Professional typography, subtle animations, compact
  */
 export function StatsBar({ content }: StatsBarProps) {
   const { heading, subheading, stats } = content;
@@ -19,23 +23,36 @@ export function StatsBar({ content }: StatsBarProps) {
     <div className="space-y-8">
       {/* Header */}
       {heading && (
-        <div className="text-center">
+        <motion.div
+          className="text-center"
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.3 }}
+        >
           {subheading && (
-            <p className="mb-4 text-sm font-semibold uppercase tracking-wide text-primary">
+            <Badge variant="outline" className="mb-4 px-3 py-1 text-sm font-medium">
               {subheading}
-            </p>
+            </Badge>
           )}
-          <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">
+          <h2 className="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
             {heading}
           </h2>
-        </div>
+        </motion.div>
       )}
 
       {/* Stats Bar */}
-      <div className="flex flex-wrap items-center justify-center gap-x-12 gap-y-6">
+      <div className="flex flex-wrap items-center justify-center gap-x-12 gap-y-8">
         {stats.map((stat, index) => (
-          <div key={index} className="text-center">
-            <div className="mb-1 text-3xl font-bold sm:text-4xl">
+          <motion.div
+            key={index}
+            className="text-center"
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.3, delay: index * 0.05 }}
+          >
+            <div className="mb-1 text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
               {stat.prefix}
               {stat.value}
               {stat.suffix}
@@ -43,7 +60,7 @@ export function StatsBar({ content }: StatsBarProps) {
             <div className="text-sm font-medium text-muted-foreground">
               {stat.label}
             </div>
-          </div>
+          </motion.div>
         ))}
       </div>
     </div>
