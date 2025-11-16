@@ -1,24 +1,13 @@
 // ABOUTME: Portfolio template for showcasing personal work and services
 // ABOUTME: Minimal version with essential blocks
 
+import { defaultTheme } from '../theme/defaults';
 import { WebsiteConfig } from '../types/website-config';
 
 export const portfolioTemplate: WebsiteConfig = {
   version: '1.0',
   template: 'portfolio',
-  theme: {
-    colors: {
-      primary: '#0EA5E9',
-      secondary: '#14B8A6',
-      background: '#FFFFFF',
-      text: '#0F172A',
-      muted: '#64748B',
-    },
-    fonts: {
-      heading: 'Inter, sans-serif',
-      body: 'Inter, sans-serif',
-    },
-  },
+  theme: defaultTheme,
   metadata: {
     title: 'Alex Chen - Developer & Designer',
     description: 'Crafting digital experiences',

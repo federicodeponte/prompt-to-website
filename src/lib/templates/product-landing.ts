@@ -1,24 +1,13 @@
 // ABOUTME: Product landing page template for showcasing a specific product
 // ABOUTME: Minimal version with essential blocks
 
+import { defaultTheme } from '../theme/defaults';
 import { WebsiteConfig } from '../types/website-config';
 
 export const productLandingTemplate: WebsiteConfig = {
   version: '1.0',
   template: 'product-landing',
-  theme: {
-    colors: {
-      primary: '#8B5CF6',
-      secondary: '#EC4899',
-      background: '#FFFFFF',
-      text: '#111827',
-      muted: '#6B7280',
-    },
-    fonts: {
-      heading: 'Inter, sans-serif',
-      body: 'Inter, sans-serif',
-    },
-  },
+  theme: defaultTheme,
   metadata: {
     title: 'TaskMaster Pro - Task Management App',
     description: 'Stay organized with TaskMaster Pro',

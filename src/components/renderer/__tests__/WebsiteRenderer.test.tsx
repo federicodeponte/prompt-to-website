@@ -3,21 +3,10 @@ import { render } from '@testing-library/react';
 import React from 'react';
 import { WebsiteRenderer } from '../WebsiteRenderer';
 import { WebsiteConfig } from '@/lib/types/website-config';
+import { defaultTheme } from '@/lib/theme/defaults';
 
 describe('WebsiteRenderer', () => {
-  const mockTheme = {
-    colors: {
-      primary: '#0070f3',
-      secondary: '#7928ca',
-      background: '#ffffff',
-      text: '#000000',
-      muted: '#666666',
-    },
-    fonts: {
-      heading: 'Inter',
-      body: 'Inter',
-    },
-  };
+  const mockTheme = defaultTheme;
 
   const mockMetadata = {
     title: 'Test Website',
@@ -53,13 +42,13 @@ describe('WebsiteRenderer', () => {
     const renderer = container.querySelector('.website-renderer') as HTMLElement;
 
     const style = renderer?.style;
-    expect(style?.getPropertyValue('--color-primary')).toBe('#0070f3');
-    expect(style?.getPropertyValue('--color-secondary')).toBe('#7928ca');
-    expect(style?.getPropertyValue('--color-background')).toBe('#ffffff');
-    expect(style?.getPropertyValue('--color-text')).toBe('#000000');
-    expect(style?.getPropertyValue('--color-muted')).toBe('#666666');
-    expect(style?.getPropertyValue('--font-heading')).toBe('Inter');
-    expect(style?.getPropertyValue('--font-body')).toBe('Inter');
+    expect(style?.getPropertyValue('--color-primary')).toBe(defaultTheme.colors.primary);
+    expect(style?.getPropertyValue('--color-secondary')).toBe(defaultTheme.colors.secondary);
+    expect(style?.getPropertyValue('--color-background')).toBe(defaultTheme.colors.background);
+    expect(style?.getPropertyValue('--color-text')).toBe(defaultTheme.colors.text);
+    expect(style?.getPropertyValue('--color-muted')).toBe(defaultTheme.colors.muted);
+    expect(style?.getPropertyValue('--font-heading')).toBe(defaultTheme.fonts.heading);
+    expect(style?.getPropertyValue('--font-body')).toBe(defaultTheme.fonts.body);
   });
 
   it('should have min-h-screen class for full height', () => {
@@ -111,17 +100,6 @@ describe('WebsiteRenderer', () => {
 
   it('should apply different theme colors', () => {
     const customTheme = {
-      colors: {
-        primary: '#ff0000',
-        secondary: '#00ff00',
-        background: '#000000',
-        text: '#ffffff',
-        muted: '#cccccc',
-      },
-      fonts: {
-        heading: 'Arial',
-        body: 'Helvetica',
-      },
     };
 
     const config: WebsiteConfig = {

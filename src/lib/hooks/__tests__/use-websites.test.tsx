@@ -2,15 +2,10 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { renderHook, waitFor } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import React from 'react';
-import {
-  useWebsites,
-  useWebsite,
-  useCreateWebsite,
-  useUpdateWebsite,
-  useDeleteWebsite,
-  useGenerateWebsite,
-} from '../use-websites';
-import { Website, WebsiteConfig } from '@/lib/types/website-config';
+import { useWebsites, useCreateWebsite, useUpdateWebsite, useDeleteWebsite } from '../use-websites';
+import { Website } from '@/lib/types/website-config';
+import { defaultTheme } from '@/lib/theme/defaults';
+import * as api from '@/lib/api/websites-api';
 
 // Mock localStorage
 const localStorageMock = (() => {
@@ -71,19 +66,7 @@ const mockWebsite: Website = {
   config: {
     version: '1.0',
     template: 'saas-landing',
-    theme: {
-      colors: {
-        primary: '#000',
-        secondary: '#fff',
-        background: '#fff',
-        text: '#000',
-        muted: '#ccc',
-      },
-      fonts: {
-        heading: 'Arial',
-        body: 'Arial',
-      },
-    },
+    theme: defaultTheme,
     blocks: [],
     metadata: {
       title: 'Test',

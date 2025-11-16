@@ -50,10 +50,25 @@ export interface WebsiteTheme {
     background: string;
     text: string;
     muted: string;
+    accent?: string;
+    border?: string;
   };
   fonts: {
     heading: string;
     body: string;
+  };
+  spacing?: {
+    section: string; // Spacing between sections (e.g., "6rem", "8rem")
+    container: string; // Max container width (e.g., "1280px")
+  };
+  radius?: {
+    button: string; // Button border radius (e.g., "0.5rem", "9999px")
+    card: string; // Card border radius (e.g., "1rem")
+    input: string; // Input border radius (e.g., "0.5rem")
+  };
+  shadows?: {
+    card: string; // Card shadow (e.g., "0 4px 6px rgba(0,0,0,0.1)")
+    button: string; // Button shadow
   };
 }
 

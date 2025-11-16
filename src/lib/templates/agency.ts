@@ -1,24 +1,13 @@
 // ABOUTME: Agency/Consulting landing page template
 // ABOUTME: Professional services showcase with team, portfolio, and contact
 
+import { defaultTheme } from '../theme/defaults';
 import { WebsiteConfig } from '../types/website-config';
 
 export const agencyTemplate: WebsiteConfig = {
   version: '1.0',
   template: 'custom',
-  theme: {
-    colors: {
-      primary: '#7C3AED',
-      secondary: '#EC4899',
-      background: '#FFFFFF',
-      text: '#1F2937',
-      muted: '#6B7280',
-    },
-    fonts: {
-      heading: 'Inter, sans-serif',
-      body: 'Inter, sans-serif',
-    },
-  },
+  theme: defaultTheme,
   metadata: {
     title: 'CreativeStudio - Digital Agency',
     description: 'Transform your brand with creative excellence',

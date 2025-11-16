@@ -1,24 +1,13 @@
 // ABOUTME: E-commerce product landing page template
 // ABOUTME: Product showcase with features, pricing, and conversion-focused design
 
+import { defaultTheme } from '../theme/defaults';
 import { WebsiteConfig } from '../types/website-config';
 
 export const ecommerceTemplate: WebsiteConfig = {
   version: '1.0',
   template: 'product-landing',
-  theme: {
-    colors: {
-      primary: '#F59E0B',
-      secondary: '#8B5CF6',
-      background: '#FFFFFF',
-      text: '#111827',
-      muted: '#6B7280',
-    },
-    fonts: {
-      heading: 'Inter, sans-serif',
-      body: 'Inter, sans-serif',
-    },
-  },
+  theme: defaultTheme,
   metadata: {
     title: 'Premium Wireless Headphones - AudioPro',
     description: 'Experience studio-quality sound with our flagship headphones',

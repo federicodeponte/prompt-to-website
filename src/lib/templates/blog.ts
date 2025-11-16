@@ -1,24 +1,13 @@
 // ABOUTME: Blog/Content website template
 // ABOUTME: Content-focused design with newsletter signup and author showcase
 
+import { defaultTheme } from '../theme/defaults';
 import { WebsiteConfig } from '../types/website-config';
 
 export const blogTemplate: WebsiteConfig = {
   version: '1.0',
   template: 'custom',
-  theme: {
-    colors: {
-      primary: '#10B981',
-      secondary: '#3B82F6',
-      background: '#FFFFFF',
-      text: '#1F2937',
-      muted: '#6B7280',
-    },
-    fonts: {
-      heading: 'Inter, sans-serif',
-      body: 'Inter, sans-serif',
-    },
-  },
+  theme: defaultTheme,
   metadata: {
     title: 'TechInsights - Modern Technology Blog',
     description: 'Deep dives into web development, AI, and emerging technologies',

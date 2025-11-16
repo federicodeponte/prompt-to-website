@@ -5,6 +5,7 @@
 
 import React from 'react';
 import { WebsiteConfig, Block } from '@/lib/types/website-config';
+import { mergeWithDefaults } from '@/lib/theme/defaults';
 import { HeroBlock } from '../blocks/hero';
 import { FeaturesBlock } from '../blocks/features';
 import { PricingBlock } from '../blocks/pricing';
@@ -48,7 +49,8 @@ interface WebsiteRendererProps {
  * - Dependency Inversion: Depends on Block abstractions, not concrete implementations
  */
 export function WebsiteRenderer({ config }: WebsiteRendererProps) {
-  const { theme } = config;
+  // Merge user theme with defaults to ensure all properties exist
+  const theme = mergeWithDefaults(config.theme);
   const blocks = config.blocks || [];
 
   /**
@@ -220,13 +222,27 @@ export function WebsiteRenderer({ config }: WebsiteRendererProps) {
       className="website-renderer min-h-screen"
       style={
         {
+          // Colors
           '--color-primary': theme.colors.primary,
           '--color-secondary': theme.colors.secondary,
           '--color-background': theme.colors.background,
           '--color-text': theme.colors.text,
           '--color-muted': theme.colors.muted,
+          '--color-accent': theme.colors.accent || theme.colors.secondary,
+          '--color-border': theme.colors.border || 'hsl(214.3 31.8% 91.4%)',
+          // Fonts
           '--font-heading': theme.fonts.heading,
           '--font-body': theme.fonts.body,
+          // Spacing
+          '--spacing-section': theme.spacing!.section,
+          '--spacing-container': theme.spacing!.container,
+          // Radius
+          '--radius-button': theme.radius!.button,
+          '--radius-card': theme.radius!.card,
+          '--radius-input': theme.radius!.input,
+          // Shadows
+          '--shadow-card': theme.shadows!.card,
+          '--shadow-button': theme.shadows!.button,
         } as React.CSSProperties
       }
     >

@@ -2,23 +2,12 @@
 // ABOUTME: Minimal version demonstrating core structure
 
 import { WebsiteConfig } from '../types/website-config';
+import { defaultTheme } from '../theme/defaults';
 
 export const saasLandingTemplate: WebsiteConfig = {
   version: '1.0',
   template: 'saas-landing',
-  theme: {
-    colors: {
-      primary: '#3B82F6',
-      secondary: '#10B981',
-      background: '#FFFFFF',
-      text: '#1F2937',
-      muted: '#6B7280',
-    },
-    fonts: {
-      heading: 'Inter, sans-serif',
-      body: 'Inter, sans-serif',
-    },
-  },
+  theme: defaultTheme,
   metadata: {
     title: 'ProjectFlow - Project Management',
     description: 'Streamline your workflow',
