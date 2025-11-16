@@ -1,5 +1,5 @@
-// ABOUTME: Premium testimonials card grid with ratings and avatars
-// ABOUTME: Production-quality design with Framer Motion animations and star ratings
+// ABOUTME: Clean testimonials card grid matching shadcn/ui aesthetic
+// ABOUTME: Production-quality design with minimal animations and proper avatars
 
 'use client';
 
@@ -8,7 +8,7 @@ import { motion } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Quote, Star } from 'lucide-react';
+import { Star } from 'lucide-react';
 import { TestimonialsContentCards } from '@/lib/types/block-content';
 import { cn } from '@/lib/utils';
 
@@ -17,8 +17,8 @@ interface TestimonialsCardsProps {
 }
 
 /**
- * Premium testimonials card grid with star ratings
- * Features: Avatar, star ratings, staggered animations, quote icons
+ * Clean testimonials card grid with shadcn/ui design
+ * Design principles: Whitespace, subtle shadows, professional typography
  */
 export function TestimonialsCards({ content }: TestimonialsCardsProps) {
   const { heading, subheading, testimonials, columns = 3 } = content;
@@ -63,127 +63,81 @@ export function TestimonialsCards({ content }: TestimonialsCardsProps) {
   };
 
   return (
-    <div className="space-y-16">
-      {/* Animated Header */}
+    <div className="space-y-12">
+      {/* Header - clean and minimal */}
       <motion.div
-        className="mx-auto max-w-3xl text-center"
-        initial={{ opacity: 0, y: 20 }}
+        className="mx-auto max-w-2xl text-center"
+        initial={{ opacity: 0, y: 10 }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-100px" }}
-        transition={{ duration: 0.6 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.3 }}
       >
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-        >
-          <Badge variant="outline" className="mb-6 text-sm">
+        {subheading && (
+          <Badge variant="outline" className="mb-4 px-3 py-1 text-sm font-medium">
             {subheading}
           </Badge>
-        </motion.div>
+        )}
 
-        <motion.h2
-          className="text-4xl font-bold tracking-tight sm:text-5xl"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-        >
+        <h2 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl lg:text-5xl">
           {heading}
-        </motion.h2>
+        </h2>
       </motion.div>
 
-      {/* Animated Testimonials Grid */}
+      {/* Testimonials Grid - clean cards */}
       {testimonials && testimonials.length > 0 && (
-        <motion.div
-          className={cn('grid gap-8', gridColsClass[columns])}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-          variants={{
-            hidden: {},
-            visible: {
-              transition: {
-                staggerChildren: 0.1,
-              },
-            },
-          }}
-        >
+        <div className={cn('grid gap-6 lg:gap-8', gridColsClass[columns])}>
           {testimonials.map((testimonial, index) => (
             <motion.div
               key={index}
-              variants={{
-                hidden: { opacity: 0, y: 30 },
-                visible: { opacity: 1, y: 0 },
-              }}
-              transition={{ duration: 0.5 }}
-              whileHover={{ y: -8 }}
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.3, delay: index * 0.05 }}
             >
-              <Card className="h-full border-2 transition-all duration-300 hover:shadow-xl hover:border-primary/50 bg-gradient-to-br from-background to-muted/20 relative overflow-hidden">
-                {/* Decorative Quote Icon */}
-                <motion.div
-                  className="absolute -top-2 -right-2 text-primary/10"
-                  whileHover={{ scale: 1.1, rotate: 5 }}
-                >
-                  <Quote className="h-24 w-24" aria-hidden="true" />
-                </motion.div>
-
-                <CardContent className="p-8 flex flex-col h-full relative z-10">
+              <Card className="h-full border shadow-sm transition-shadow hover:shadow-md">
+                <CardContent className="flex h-full flex-col p-6">
                   {/* Rating */}
                   {testimonial.rating && (
-                    <motion.div
-                      className="mb-6"
-                      initial={{ opacity: 0, scale: 0.8 }}
-                      whileInView={{ opacity: 1, scale: 1 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: 0.3 + index * 0.1 }}
-                    >
+                    <div className="mb-4">
                       {renderStars(testimonial.rating)}
-                    </motion.div>
+                    </div>
                   )}
 
                   {/* Quote */}
-                  <blockquote className="flex-1 mb-8">
-                    <p className="text-lg text-muted-foreground italic leading-relaxed">
+                  <blockquote className="mb-6 flex-1">
+                    <p className="text-sm leading-relaxed text-foreground">
                       "{testimonial.quote}"
                     </p>
                   </blockquote>
 
                   {/* Author Info */}
-                  <motion.div
-                    className="flex items-center gap-4"
-                    initial={{ opacity: 0, x: -20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: 0.4 + index * 0.1 }}
-                  >
+                  <div className="flex items-center gap-3">
                     {/* Avatar */}
-                    <Avatar className="h-12 w-12 border-2 border-primary/20">
+                    <Avatar className="h-10 w-10">
                       <AvatarImage
                         src={testimonial.avatar}
                         alt={testimonial.author}
                       />
-                      <AvatarFallback className="bg-gradient-to-br from-primary/20 to-primary/10 text-primary font-bold">
+                      <AvatarFallback className="bg-muted text-muted-foreground">
                         {getInitials(testimonial.author)}
                       </AvatarFallback>
                     </Avatar>
 
                     {/* Name and Role */}
                     <div className="flex-1 min-w-0">
-                      <div className="font-bold text-foreground truncate">
+                      <div className="truncate font-semibold text-sm text-foreground">
                         {testimonial.author}
                       </div>
-                      <div className="text-sm text-muted-foreground truncate">
+                      <div className="truncate text-xs text-muted-foreground">
                         {testimonial.role} at {testimonial.company}
                       </div>
                     </div>
-                  </motion.div>
+                  </div>
                 </CardContent>
               </Card>
             </motion.div>
           ))}
-        </motion.div>
+        </div>
       )}
     </div>
   );
