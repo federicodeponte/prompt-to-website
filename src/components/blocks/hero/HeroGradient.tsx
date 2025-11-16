@@ -4,7 +4,7 @@
 'use client';
 
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { HeroContentGradient } from '@/lib/types/block-content';
@@ -27,10 +27,19 @@ interface HeroGradientProps {
 export function HeroGradient({ content, theme }: HeroGradientProps) {
   const { heading, subheading, description, ctaPrimary, features } = content;
 
+  // Parallax effect on background
+  const { scrollY } = useScroll();
+  const y = useTransform(scrollY, [0, 500], [0, 150]);
+  const opacity = useTransform(scrollY, [0, 300], [1, 0]);
+
   return (
     <div className="relative overflow-hidden">
-      {/* Animated Gradient Mesh Background - Framer-level */}
-      <div className={cn("absolute inset-0", getMeshGradientClasses())} aria-hidden="true" />
+      {/* Animated Gradient Mesh Background with parallax - Framer-level */}
+      <motion.div
+        className={cn("absolute inset-0", getMeshGradientClasses())}
+        style={{ y, opacity }}
+        aria-hidden="true"
+      />
 
       {/* Floating particles with physics animation */}
       {[...Array(3)].map((_, i) => (

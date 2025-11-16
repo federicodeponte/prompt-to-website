@@ -2,12 +2,12 @@
 // ABOUTME: DRY principle - centralized Tailwind class generation
 
 /**
- * Gradient text effect - TRUE animated rainbow gradient with vibrant colors
+ * Gradient text effect - TRUE color-morphing animation (not just position shifts)
+ * CSS keyframes rotate actual gradient colors: blue→purple→pink
  * Used for hero headings, feature titles, etc.
- * Uses actual color variety, not just position shifts
  */
 export function getGradientTextClasses() {
-  return 'bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent animate-gradient bg-[length:200%_auto]';
+  return 'bg-clip-text text-transparent animate-gradient bg-[length:200%_auto]';
 }
 
 /**
@@ -19,11 +19,12 @@ export function getGlassmorphismClasses() {
 }
 
 /**
- * Shimmer effect for buttons and interactive elements
- * Creates a VISIBLE moving shine/highlight (60% opacity for impact)
+ * Multi-layer shimmer effect for buttons and interactive elements
+ * Two shimmer layers at different speeds (1.5s fast + 3s slow diagonal) + subtle glow
+ * TRUE Framer-level depth with 60% opacity for visibility
  */
 export function getShimmerClasses() {
-  return 'relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-shimmer before:bg-gradient-to-r before:from-transparent before:via-white/60 before:to-transparent';
+  return 'relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-shimmer before:bg-gradient-to-r before:from-transparent before:via-white/60 before:to-transparent after:absolute after:inset-0 after:-translate-x-full after:animate-shimmer-slow after:bg-gradient-to-r after:from-transparent after:via-white/30 after:to-transparent shadow-[0_0_20px_rgba(var(--primary),0.15)]';
 }
 
 /**

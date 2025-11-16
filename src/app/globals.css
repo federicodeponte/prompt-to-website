@@ -95,6 +95,7 @@
 }
 
 /* Framer-level animations and effects */
+/* Multi-layer shimmer for depth - faster animation */
 @keyframes shimmer {
   0% {
     transform: translateX(-100%);
@@ -104,12 +105,32 @@
   }
 }
 
+@keyframes shimmer-slow {
+  0% {
+    transform: translateX(-100%) translateY(-5%);
+  }
+  100% {
+    transform: translateX(100%) translateY(5%);
+  }
+}
+
+/* REAL gradient color morphing - not just position shifts */
 @keyframes gradient {
-  0%, 100% {
+  0% {
+    background-image: linear-gradient(to right, #2563eb, #9333ea, #ec4899);
     background-position: 0% 50%;
   }
-  50% {
+  33% {
+    background-image: linear-gradient(to right, #ec4899, #2563eb, #9333ea);
+    background-position: 50% 50%;
+  }
+  66% {
+    background-image: linear-gradient(to right, #9333ea, #ec4899, #2563eb);
     background-position: 100% 50%;
+  }
+  100% {
+    background-image: linear-gradient(to right, #2563eb, #9333ea, #ec4899);
+    background-position: 0% 50%;
   }
 }
 
@@ -144,12 +165,16 @@
 
 @layer utilities {
   .animate-shimmer {
-    animation: shimmer 2s infinite linear;
+    animation: shimmer 1.5s infinite linear;
+  }
+
+  .animate-shimmer-slow {
+    animation: shimmer-slow 3s infinite linear;
   }
 
   .animate-gradient {
     background-size: 200% 200%;
-    animation: gradient 3s ease infinite;
+    animation: gradient 5s ease-in-out infinite;
   }
 
   .animate-gradient-shift {

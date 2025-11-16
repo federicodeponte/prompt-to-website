@@ -10,7 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { FeaturesContentList } from '@/lib/types/block-content';
 import { cn } from '@/lib/utils';
-import { spring, springMedium, fadeInUp } from '@/lib/animations';
+import { spring, springMedium, fadeInUp, cardHover } from '@/lib/animations';
 import { getGradientTextClasses } from '@/lib/visual-effects';
 
 interface FeaturesListProps {
@@ -82,7 +82,13 @@ export function FeaturesList({ content }: FeaturesListProps) {
               viewport={{ once: true, margin: "-100px" }}
               transition={spring}
             >
-              <Card className="border-2 bg-gradient-to-br from-background to-muted/20 hover:shadow-xl transition-all duration-300">
+              <motion.div
+                variants={cardHover}
+                initial="rest"
+                whileHover="hover"
+                animate="rest"
+              >
+                <Card className="border-2 bg-gradient-to-br from-background to-muted/20">
                 <CardContent className="p-8">
                   <div
                     className={cn(
@@ -141,6 +147,7 @@ export function FeaturesList({ content }: FeaturesListProps) {
                   </div>
                 </CardContent>
               </Card>
+              </motion.div>
             </motion.div>
           );
         })}

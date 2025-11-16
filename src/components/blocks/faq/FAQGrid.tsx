@@ -1,10 +1,14 @@
 // ABOUTME: Grid-style FAQ block variant displaying questions in a grid layout
 // ABOUTME: Follows Single Responsibility Principle
 
+'use client';
+
 import React from 'react';
+import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { FAQContentGrid } from '@/lib/types/block-content';
 import { cn } from '@/lib/utils';
+import { cardHover } from '@/lib/animations';
 
 interface FAQGridProps {
   content: FAQContentGrid;
@@ -37,7 +41,20 @@ export function FAQGrid({ content }: FAQGridProps) {
       {/* FAQ Grid */}
       <div className={cn('grid gap-6 sm:gap-8', gridColsClass[columns])}>
         {faqs.map((faq, index) => (
-          <Card key={index} className="h-full">
+          <motion.div
+            key={index}
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.3, delay: index * 0.05 }}
+          >
+            <motion.div
+              variants={cardHover}
+              initial="rest"
+              whileHover="hover"
+              animate="rest"
+            >
+              <Card className="h-full">
             <CardHeader>
               <CardTitle className="text-lg">{faq.question}</CardTitle>
             </CardHeader>
@@ -45,6 +62,8 @@ export function FAQGrid({ content }: FAQGridProps) {
               <p className="text-muted-foreground">{faq.answer}</p>
             </CardContent>
           </Card>
+            </motion.div>
+          </motion.div>
         ))}
       </div>
     </div>

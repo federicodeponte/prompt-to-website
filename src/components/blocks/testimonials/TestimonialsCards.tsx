@@ -11,6 +11,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Star } from 'lucide-react';
 import { TestimonialsContentCards } from '@/lib/types/block-content';
 import { cn } from '@/lib/utils';
+import { cardHover } from '@/lib/animations';
 
 interface TestimonialsCardsProps {
   content: TestimonialsContentCards;
@@ -94,7 +95,13 @@ export function TestimonialsCards({ content }: TestimonialsCardsProps) {
               viewport={{ once: true }}
               transition={{ duration: 0.3, delay: index * 0.05 }}
             >
-              <Card className="h-full border shadow-sm transition-shadow hover:shadow-md">
+              <motion.div
+                variants={cardHover}
+                initial="rest"
+                whileHover="hover"
+                animate="rest"
+              >
+                <Card className="h-full border shadow-sm">
                 <CardContent className="flex h-full flex-col p-6">
                   {/* Rating */}
                   {testimonial.rating && (
@@ -135,6 +142,7 @@ export function TestimonialsCards({ content }: TestimonialsCardsProps) {
                   </div>
                 </CardContent>
               </Card>
+              </motion.div>
             </motion.div>
           ))}
         </div>

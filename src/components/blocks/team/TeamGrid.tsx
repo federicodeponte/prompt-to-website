@@ -12,6 +12,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { TeamContentGrid } from '@/lib/types/block-content';
 import { Linkedin, Twitter, Github, Mail } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { cardHover } from '@/lib/animations';
 
 interface TeamGridProps {
   content: TeamContentGrid;
@@ -70,7 +71,13 @@ export function TeamGrid({ content }: TeamGridProps) {
               viewport={{ once: true }}
               transition={{ duration: 0.3, delay: index * 0.05 }}
             >
-              <Card className="border shadow-sm transition-shadow hover:shadow-md">
+              <motion.div
+                variants={cardHover}
+                initial="rest"
+                whileHover="hover"
+                animate="rest"
+              >
+                <Card className="border shadow-sm">
                 <CardContent className="p-6 text-center">
                   {/* Avatar */}
                   <Avatar className="mx-auto mb-4 h-24 w-24">
@@ -140,6 +147,7 @@ export function TeamGrid({ content }: TeamGridProps) {
                   )}
                 </CardContent>
               </Card>
+              </motion.div>
             </motion.div>
           ))}
         </div>

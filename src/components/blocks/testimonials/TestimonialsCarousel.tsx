@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button';
 import { Quote, Star, ChevronLeft, ChevronRight } from 'lucide-react';
 import { TestimonialsContentCarousel } from '@/lib/types/block-content';
 import { cn } from '@/lib/utils';
+import { cardHoverDramatic } from '@/lib/animations';
 
 interface TestimonialsCarouselProps {
   content: TestimonialsContentCarousel;
@@ -165,7 +166,14 @@ export function TestimonialsCarousel({ content }: TestimonialsCarouselProps) {
               }}
               className="absolute inset-0"
             >
-              <Card className="h-full border-2 bg-gradient-to-br from-background to-muted/20 shadow-xl relative overflow-hidden">
+              <motion.div
+                variants={cardHoverDramatic}
+                initial="rest"
+                whileHover="hover"
+                animate="rest"
+                className="h-full"
+              >
+                <Card className="h-full border-2 bg-gradient-to-br from-background to-muted/20 shadow-xl relative overflow-hidden">
                 {/* Decorative Quote Icon */}
                 <div className="absolute -top-4 -right-4 text-primary/10">
                   <Quote className="h-32 w-32" aria-hidden="true" />
@@ -211,6 +219,7 @@ export function TestimonialsCarousel({ content }: TestimonialsCarouselProps) {
                   </div>
                 </CardContent>
               </Card>
+              </motion.div>
             </motion.div>
           </AnimatePresence>
         </div>

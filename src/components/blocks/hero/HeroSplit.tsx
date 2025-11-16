@@ -5,7 +5,7 @@
 
 import React from 'react';
 import Image from 'next/image';
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { HeroContentSplit } from '@/lib/types/block-content';
@@ -38,6 +38,11 @@ export function HeroSplit({ content, theme }: HeroSplitProps) {
   } = content;
 
   const isImageRight = imagePosition === 'right';
+
+  // Parallax effect on image
+  const { scrollY } = useScroll();
+  const y = useTransform(scrollY, [0, 500], [0, 100]);
+  const opacity = useTransform(scrollY, [0, 300], [1, 0.7]);
 
   return (
     <div className="grid gap-12 lg:grid-cols-2 lg:gap-16 items-center py-16 md:py-24">
@@ -120,13 +125,14 @@ export function HeroSplit({ content, theme }: HeroSplitProps) {
         </motion.div>
       </motion.div>
 
-      {/* Image with Glassmorphism and 3D lift */}
+      {/* Image with Glassmorphism, 3D lift, and parallax */}
       <motion.div
         className={cn('relative', isImageRight ? 'lg:order-2' : 'lg:order-1')}
         initial={{ opacity: 0, x: isImageRight ? 50 : -50 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ ...spring, delay: 0.2 }}
         whileHover={{ scale: 1.02, y: -8 }}
+        style={{ y, opacity }}
       >
         <div className="relative aspect-[4/3] overflow-hidden rounded-3xl border-2 border-border/50 shadow-2xl backdrop-blur-sm">
           {/* Gradient overlay for depth */}

@@ -12,6 +12,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent } from '@/components/ui/card';
 import { ContactContentSimple } from '@/lib/types/block-content';
 import { Mail, Phone, MapPin, Send } from 'lucide-react';
+import { cardHover } from '@/lib/animations';
 
 interface ContactSimpleProps {
   content: ContactContentSimple;
@@ -45,7 +46,13 @@ export function ContactSimple({ content }: ContactSimpleProps) {
             viewport={{ once: true }}
             transition={{ duration: 0.3, delay: 0.1 }}
           >
-            <Card className="border shadow-sm transition-shadow hover:shadow-md">
+            <motion.div
+              variants={cardHover}
+              initial="rest"
+              whileHover="hover"
+              animate="rest"
+            >
+              <Card className="border shadow-sm">
               <CardContent className="flex flex-col items-center p-6 text-center">
                 <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
                   <Mail className="h-6 w-6 text-primary" />
@@ -59,6 +66,7 @@ export function ContactSimple({ content }: ContactSimpleProps) {
                 </a>
               </CardContent>
             </Card>
+            </motion.div>
           </motion.div>
         )}
         {phone && (
@@ -68,7 +76,13 @@ export function ContactSimple({ content }: ContactSimpleProps) {
             viewport={{ once: true }}
             transition={{ duration: 0.3, delay: 0.15 }}
           >
-            <Card className="border shadow-sm transition-shadow hover:shadow-md">
+            <motion.div
+              variants={cardHover}
+              initial="rest"
+              whileHover="hover"
+              animate="rest"
+            >
+              <Card className="border shadow-sm">
               <CardContent className="flex flex-col items-center p-6 text-center">
                 <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
                   <Phone className="h-6 w-6 text-primary" />
@@ -82,6 +96,7 @@ export function ContactSimple({ content }: ContactSimpleProps) {
                 </a>
               </CardContent>
             </Card>
+            </motion.div>
           </motion.div>
         )}
         {address && (
@@ -91,7 +106,13 @@ export function ContactSimple({ content }: ContactSimpleProps) {
             viewport={{ once: true }}
             transition={{ duration: 0.3, delay: 0.2 }}
           >
-            <Card className="border shadow-sm transition-shadow hover:shadow-md">
+            <motion.div
+              variants={cardHover}
+              initial="rest"
+              whileHover="hover"
+              animate="rest"
+            >
+              <Card className="border shadow-sm">
               <CardContent className="flex flex-col items-center p-6 text-center">
                 <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
                   <MapPin className="h-6 w-6 text-primary" />
@@ -100,6 +121,7 @@ export function ContactSimple({ content }: ContactSimpleProps) {
                 <p className="text-sm text-muted-foreground">{address}</p>
               </CardContent>
             </Card>
+            </motion.div>
           </motion.div>
         )}
       </div>
