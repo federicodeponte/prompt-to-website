@@ -10,6 +10,8 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { FeaturesContentList } from '@/lib/types/block-content';
 import { cn } from '@/lib/utils';
+import { spring, springMedium, fadeInUp } from '@/lib/animations';
+import { getGradientTextClasses } from '@/lib/visual-effects';
 
 interface FeaturesListProps {
   content: FeaturesContentList;
@@ -34,19 +36,21 @@ export function FeaturesList({ content }: FeaturesListProps) {
 
   return (
     <div className="space-y-20">
-      {/* Animated Header */}
+      {/* Animated Header with gradient text */}
       <motion.div
         className="mx-auto max-w-3xl text-center"
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
+        variants={fadeInUp}
+        initial="hidden"
+        whileInView="visible"
         viewport={{ once: true, margin: "-100px" }}
-        transition={{ duration: 0.6 }}
+        transition={spring}
       >
         <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          whileInView={{ opacity: 1, scale: 1 }}
+          variants={fadeInUp}
+          initial="hidden"
+          whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.5, delay: 0.1 }}
+          transition={{ ...spring, delay: 0.1 }}
         >
           <Badge variant="outline" className="mb-6 text-sm">
             {subheading}
@@ -54,11 +58,12 @@ export function FeaturesList({ content }: FeaturesListProps) {
         </motion.div>
 
         <motion.h2
-          className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          className={cn("text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl", getGradientTextClasses())}
+          variants={fadeInUp}
+          initial="hidden"
+          whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.6, delay: 0.2 }}
+          transition={{ ...spring, delay: 0.2 }}
         >
           {heading}
         </motion.h2>
@@ -75,7 +80,7 @@ export function FeaturesList({ content }: FeaturesListProps) {
               initial={{ opacity: 0, x: isEven ? -50 : 50 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
+              transition={spring}
             >
               <Card className="border-2 bg-gradient-to-br from-background to-muted/20 hover:shadow-xl transition-all duration-300">
                 <CardContent className="p-8">
@@ -85,7 +90,7 @@ export function FeaturesList({ content }: FeaturesListProps) {
                       isEven ? 'md:flex-row' : 'md:flex-row-reverse'
                     )}
                   >
-                    {/* Animated Gradient Icon */}
+                    {/* Animated Gradient Icon with spring physics */}
                     <motion.div
                       className={cn(
                         'flex h-28 w-28 md:h-36 md:w-36 flex-shrink-0 items-center justify-center',
@@ -94,52 +99,41 @@ export function FeaturesList({ content }: FeaturesListProps) {
                         gradientColors[index % gradientColors.length]
                       )}
                       whileHover={{ scale: 1.1, rotate: 5 }}
-                      animate={{
-                        boxShadow: [
-                          '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
-                          '0 25px 50px -12px rgba(0, 0, 0, 0.4)',
-                          '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
-                        ],
-                      }}
-                      transition={{
-                        boxShadow: {
-                          duration: 3,
-                          repeat: Infinity,
-                          ease: 'easeInOut',
-                        },
-                      }}
+                      transition={springMedium}
                     >
                       <span className="filter drop-shadow-lg" role="img" aria-label={feature.title}>
                         {feature.icon}
                       </span>
                     </motion.div>
 
-                    {/* Content */}
+                    {/* Content with spring animations */}
                     <div className="flex-1 space-y-4 text-center md:text-left">
                       <motion.div
                         className="flex items-center justify-center gap-3 md:justify-start"
-                        initial={{ opacity: 0, y: 10 }}
-                        whileInView={{ opacity: 1, y: 0 }}
+                        variants={fadeInUp}
+                        initial="hidden"
+                        whileInView="visible"
                         viewport={{ once: true, margin: "-100px" }}
-                        transition={{ duration: 0.5, delay: index * 0.1 + 0.2 }}
+                        transition={{ ...spring, delay: 0.1 }}
                       >
                         <motion.div
                           whileHover={{ scale: 1.2, rotate: 360 }}
-                          transition={{ duration: 0.4 }}
+                          transition={springMedium}
                         >
                           <Check className="h-6 w-6 text-primary" aria-hidden="true" />
                         </motion.div>
-                        <h3 className="text-3xl font-bold bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
+                        <h3 className={cn("text-3xl font-bold", getGradientTextClasses())}>
                           {feature.title}
                         </h3>
                       </motion.div>
 
                       <motion.p
                         className="text-xl text-muted-foreground leading-relaxed"
-                        initial={{ opacity: 0, y: 10 }}
-                        whileInView={{ opacity: 1, y: 0 }}
+                        variants={fadeInUp}
+                        initial="hidden"
+                        whileInView="visible"
                         viewport={{ once: true, margin: "-100px" }}
-                        transition={{ duration: 0.5, delay: index * 0.1 + 0.3 }}
+                        transition={{ ...spring, delay: 0.2 }}
                       >
                         {feature.description}
                       </motion.p>

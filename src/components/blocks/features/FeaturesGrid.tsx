@@ -17,6 +17,8 @@ import {
   DollarSign, CreditCard, ShoppingCart, Gift, TrendingDown,
   BarChart, PieChart, Activity, Calendar, Clock, Bell
 } from 'lucide-react';
+import { spring, fadeInUp, staggerContainer, staggerItem } from '@/lib/animations';
+import { getGradientTextClasses, getCardLiftClasses } from '@/lib/visual-effects';
 
 // Map emoji to proper lucide icons
 const iconMap: Record<string, React.ElementType> = {
@@ -101,13 +103,14 @@ export function FeaturesGrid({ content }: FeaturesGridProps) {
 
   return (
     <div className="space-y-12">
-      {/* Header - clean and minimal */}
+      {/* Header with gradient text */}
       <motion.div
         className="mx-auto max-w-3xl text-center"
-        initial={{ opacity: 0, y: 10 }}
-        whileInView={{ opacity: 1, y: 0 }}
+        variants={fadeInUp}
+        initial="hidden"
+        whileInView="visible"
         viewport={{ once: true }}
-        transition={{ duration: 0.3 }}
+        transition={spring}
       >
         {subheading && (
           <Badge variant="outline" className="mb-4 px-3 py-1 text-sm font-medium">
@@ -115,14 +118,20 @@ export function FeaturesGrid({ content }: FeaturesGridProps) {
           </Badge>
         )}
 
-        <h2 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl lg:text-5xl">
+        <h2 className={cn("text-3xl font-semibold tracking-tight sm:text-4xl lg:text-5xl", getGradientTextClasses())}>
           {heading}
         </h2>
       </motion.div>
 
-      {/* Features Grid - clean cards with subtle shadows */}
+      {/* Features Grid with stagger and 3D lift */}
       {features && features.length > 0 && (
-        <div className={cn('grid gap-6 lg:gap-8', gridColsClass[columns])}>
+        <motion.div
+          className={cn('grid gap-6 lg:gap-8', gridColsClass[columns])}
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+        >
           {features.map((feature, index) => {
             // Get proper icon component
             const IconComponent = iconMap[feature.icon] || Sparkles;
@@ -130,17 +139,18 @@ export function FeaturesGrid({ content }: FeaturesGridProps) {
             return (
               <motion.div
                 key={index}
-                initial={{ opacity: 0, y: 10 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.3, delay: index * 0.05 }}
+                variants={staggerItem}
               >
-                <Card className="h-full border shadow-sm transition-shadow hover:shadow-md">
+                <Card className={cn("h-full border shadow-sm", getCardLiftClasses())}>
                   <CardContent className="p-6">
-                    {/* Icon - clean, simple, one color */}
-                    <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
+                    {/* Icon with pulse animation */}
+                    <motion.div
+                      className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10"
+                      whileHover={{ scale: 1.1, rotate: 5 }}
+                      transition={{ type: 'spring', stiffness: 400, damping: 10 }}
+                    >
                       <IconComponent className="h-6 w-6 text-primary" />
-                    </div>
+                    </motion.div>
 
                     {/* Title - clean typography */}
                     <h3 className="mb-2 text-lg font-semibold text-foreground">
@@ -156,7 +166,7 @@ export function FeaturesGrid({ content }: FeaturesGridProps) {
               </motion.div>
             );
           })}
-        </div>
+        </motion.div>
       )}
     </div>
   );
