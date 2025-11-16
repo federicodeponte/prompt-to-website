@@ -7,6 +7,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Badge } from '@/components/ui/badge';
 import { WebsiteConfig } from '@/lib/types/website-config';
 import { cn } from '@/lib/utils';
 import { useGenerateWebsite } from '@/lib/hooks/use-websites';

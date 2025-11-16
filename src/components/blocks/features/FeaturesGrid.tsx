@@ -1,5 +1,5 @@
-// ABOUTME: Premium grid features with Framer Motion animations and gradient accents
-// ABOUTME: Production-quality design with staggered entrance and hover effects
+// ABOUTME: Clean, minimal features grid matching shadcn/ui aesthetic
+// ABOUTME: Professional design with proper icons and subtle animations
 
 'use client';
 
@@ -9,14 +9,86 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { FeaturesContentGrid } from '@/lib/types/block-content';
 import { cn } from '@/lib/utils';
+import {
+  Zap, Shield, Users, Sparkles, Target, TrendingUp,
+  Lock, Globe, Check, Star, Heart, Award, Smartphone,
+  Cloud, Code, Cpu, Database, Rocket, Settings, Package,
+  Mail, MessageSquare, FileText, Image, Video, Music,
+  DollarSign, CreditCard, ShoppingCart, Gift, TrendingDown,
+  BarChart, PieChart, Activity, Calendar, Clock, Bell
+} from 'lucide-react';
+
+// Map emoji to proper lucide icons
+const iconMap: Record<string, React.ElementType> = {
+  // Common actions
+  '⚡': Zap,
+  '🚀': Rocket,
+  '✨': Sparkles,
+  '⭐': Star,
+  '✓': Check,
+  '🎯': Target,
+
+  // Tech & Development
+  '💻': Code,
+  '📱': Smartphone,
+  '☁️': Cloud,
+  '🖥️': Cpu,
+  '🗄️': Database,
+  '⚙️': Settings,
+  '📦': Package,
+
+  // Communication
+  '✉️': Mail,
+  '💬': MessageSquare,
+  '📄': FileText,
+
+  // Media
+  '🖼️': Image,
+  '🎬': Video,
+  '🎵': Music,
+
+  // Security & Protection
+  '🔒': Lock,
+  '🛡️': Shield,
+
+  // People & Social
+  '👥': Users,
+  '❤️': Heart,
+
+  // Money & Commerce
+  '💰': DollarSign,
+  '💳': CreditCard,
+  '🛒': ShoppingCart,
+  '🎁': Gift,
+
+  // Analytics & Growth
+  '📈': TrendingUp,
+  '📉': TrendingDown,
+  '📊': BarChart,
+  '🥧': PieChart,
+  '💹': Activity,
+
+  // Location & World
+  '🌍': Globe,
+  '🌎': Globe,
+  '🌏': Globe,
+
+  // Achievement
+  '🏆': Award,
+
+  // Time & Schedule
+  '📅': Calendar,
+  '⏰': Clock,
+  '🔔': Bell,
+};
 
 interface FeaturesGridProps {
   content: FeaturesContentGrid;
 }
 
 /**
- * Premium grid-based features with animations
- * Features: Staggered entrance, gradient icons, hover lift effects, badge component
+ * Clean, minimal features grid with proper icons
+ * Design principles: Whitespace, subtle colors, proper iconography, professional
  */
 export function FeaturesGrid({ content }: FeaturesGridProps) {
   const { heading, subheading, features, columns = 3 } = content;
@@ -27,105 +99,64 @@ export function FeaturesGrid({ content }: FeaturesGridProps) {
     4: 'md:grid-cols-2 lg:grid-cols-4',
   } as const;
 
-  // Gradient colors for icons (cycles through for variety)
-  const gradientColors = [
-    'from-blue-500 to-cyan-500',
-    'from-purple-500 to-violet-500',
-    'from-pink-500 to-rose-500',
-    'from-orange-500 to-amber-500',
-    'from-green-500 to-emerald-500',
-    'from-indigo-500 to-blue-500',
-  ];
-
   return (
-    <div className="space-y-16">
-      {/* Animated Header */}
+    <div className="space-y-12">
+      {/* Header - clean and minimal */}
       <motion.div
         className="mx-auto max-w-3xl text-center"
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 10 }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-100px" }}
-        transition={{ duration: 0.6 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.3 }}
       >
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-        >
-          <Badge variant="outline" className="mb-6 text-sm">
+        {subheading && (
+          <Badge variant="outline" className="mb-4 px-3 py-1 text-sm font-medium">
             {subheading}
           </Badge>
-        </motion.div>
+        )}
 
-        <motion.h2
-          className="text-4xl font-bold tracking-tight sm:text-5xl"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-        >
+        <h2 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl lg:text-5xl">
           {heading}
-        </motion.h2>
+        </h2>
       </motion.div>
 
-      {/* Animated Features Grid */}
+      {/* Features Grid - clean cards with subtle shadows */}
       {features && features.length > 0 && (
-        <motion.div
-          className={cn('grid gap-8', gridColsClass[columns])}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-          variants={{
-            hidden: {},
-            visible: {
-              transition: {
-                staggerChildren: 0.1,
-              },
-            },
-          }}
-        >
-          {features.map((feature, index) => (
-            <motion.div
-              key={index}
-              variants={{
-                hidden: { opacity: 0, y: 30 },
-                visible: { opacity: 1, y: 0 },
-              }}
-              transition={{ duration: 0.5 }}
-              whileHover={{ y: -8 }}
-            >
-              <Card className="h-full border-2 transition-all duration-300 hover:shadow-xl hover:border-primary/50 bg-gradient-to-br from-background to-muted/20">
-                <CardContent className="p-8">
-                  {/* Gradient Icon */}
-                  <motion.div
-                    className={cn(
-                      'mb-6 flex h-14 w-14 items-center justify-center rounded-xl text-3xl',
-                      'bg-gradient-to-br shadow-lg',
-                      gradientColors[index % gradientColors.length]
-                    )}
-                    whileHover={{ scale: 1.1, rotate: 5 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <span className="filter drop-shadow-sm" role="img" aria-label={feature.title}>
-                      {feature.icon}
-                    </span>
-                  </motion.div>
+        <div className={cn('grid gap-6 lg:gap-8', gridColsClass[columns])}>
+          {features.map((feature, index) => {
+            // Get proper icon component
+            const IconComponent = iconMap[feature.icon] || Sparkles;
 
-                  {/* Title */}
-                  <h3 className="mb-3 text-2xl font-bold bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
-                    {feature.title}
-                  </h3>
+            return (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.3, delay: index * 0.05 }}
+              >
+                <Card className="h-full border shadow-sm transition-shadow hover:shadow-md">
+                  <CardContent className="p-6">
+                    {/* Icon - clean, simple, one color */}
+                    <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
+                      <IconComponent className="h-6 w-6 text-primary" />
+                    </div>
 
-                  {/* Description */}
-                  <p className="text-base text-muted-foreground leading-relaxed">
-                    {feature.description}
-                  </p>
-                </CardContent>
-              </Card>
-            </motion.div>
-          ))}
-        </motion.div>
+                    {/* Title - clean typography */}
+                    <h3 className="mb-2 text-lg font-semibold text-foreground">
+                      {feature.title}
+                    </h3>
+
+                    {/* Description - subtle gray */}
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      {feature.description}
+                    </p>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            );
+          })}
+        </div>
       )}
     </div>
   );
