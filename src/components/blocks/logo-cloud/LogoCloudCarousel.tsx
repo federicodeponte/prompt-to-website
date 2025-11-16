@@ -3,7 +3,7 @@
 
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { LogoCloudContentCarousel } from '@/lib/types/block-content';
@@ -18,6 +18,7 @@ interface LogoCloudCarouselProps {
  */
 export function LogoCloudCarousel({ content }: LogoCloudCarouselProps) {
   const { heading, subheading, logos, autoplay = true, speed = 30 } = content;
+  const [isHovered, setIsHovered] = useState(false);
 
   // Duplicate logos for seamless infinite scroll
   const duplicatedLogos = [...logos, ...logos];
@@ -56,14 +57,14 @@ export function LogoCloudCarousel({ content }: LogoCloudCarouselProps) {
         <motion.div
           className="flex gap-12"
           animate={
-            autoplay
+            autoplay && !isHovered
               ? {
                   x: ['0%', '-50%'],
                 }
               : {}
           }
           transition={
-            autoplay
+            autoplay && !isHovered
               ? {
                   x: {
                     repeat: Infinity,
@@ -74,7 +75,8 @@ export function LogoCloudCarousel({ content }: LogoCloudCarouselProps) {
                 }
               : {}
           }
-          whileHover={autoplay ? { animationPlayState: 'paused' } : {}}
+          onMouseEnter={() => autoplay && setIsHovered(true)}
+          onMouseLeave={() => autoplay && setIsHovered(false)}
         >
           {duplicatedLogos.map((logo, index) => {
             const LogoWrapper = logo.link ? 'a' : 'div';

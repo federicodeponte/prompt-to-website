@@ -3,7 +3,7 @@
 
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
@@ -28,15 +28,15 @@ export function GalleryGrid({ content }: GalleryGridProps) {
     4: 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4',
   };
 
-  const handleNext = () => {
+  const handleNext = useCallback(() => {
     if (selectedImage === null) return;
     setSelectedImage((selectedImage + 1) % images.length);
-  };
+  }, [selectedImage, images.length]);
 
-  const handlePrevious = () => {
+  const handlePrevious = useCallback(() => {
     if (selectedImage === null) return;
     setSelectedImage((selectedImage - 1 + images.length) % images.length);
-  };
+  }, [selectedImage, images.length]);
 
   // Keyboard navigation
   React.useEffect(() => {
@@ -49,7 +49,7 @@ export function GalleryGrid({ content }: GalleryGridProps) {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [selectedImage]);
+  }, [selectedImage, handleNext, handlePrevious]);
 
   return (
     <>

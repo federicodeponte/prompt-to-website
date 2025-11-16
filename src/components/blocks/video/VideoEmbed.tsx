@@ -8,45 +8,10 @@ import { motion } from 'framer-motion';
 import { Play } from 'lucide-react';
 import { VideoContentEmbed } from '@/lib/types/block-content';
 import Image from 'next/image';
+import { getEmbedUrl, getVideoThumbnail } from '@/lib/utils/video-utils';
 
 interface VideoEmbedProps {
   content: VideoContentEmbed;
-}
-
-/**
- * Convert YouTube/Vimeo URL to embed URL
- */
-function getEmbedUrl(url: string, autoplay: boolean = false): string {
-  const autoplayParam = autoplay ? '&autoplay=1' : '';
-
-  // YouTube
-  if (url.includes('youtube.com') || url.includes('youtu.be')) {
-    const videoId = url.includes('youtu.be')
-      ? url.split('youtu.be/')[1]?.split('?')[0]
-      : url.split('v=')[1]?.split('&')[0];
-    return `https://www.youtube.com/embed/${videoId}?rel=0${autoplayParam}`;
-  }
-
-  // Vimeo
-  if (url.includes('vimeo.com')) {
-    const videoId = url.split('vimeo.com/')[1]?.split('?')[0];
-    return `https://player.vimeo.com/video/${videoId}?${autoplayParam}`;
-  }
-
-  return url;
-}
-
-/**
- * Get YouTube thumbnail from video URL
- */
-function getYouTubeThumbnail(url: string): string | null {
-  if (!url.includes('youtube.com') && !url.includes('youtu.be')) return null;
-
-  const videoId = url.includes('youtu.be')
-    ? url.split('youtu.be/')[1]?.split('?')[0]
-    : url.split('v=')[1]?.split('&')[0];
-
-  return `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
 }
 
 /**
@@ -58,7 +23,7 @@ export function VideoEmbed({ content }: VideoEmbedProps) {
   const [isPlaying, setIsPlaying] = useState(autoplayDefault);
 
   const embedUrl = getEmbedUrl(videoUrl, isPlaying);
-  const posterImage = poster || getYouTubeThumbnail(videoUrl);
+  const posterImage = poster || getVideoThumbnail(videoUrl, 'maxres');
 
   return (
     <div className="space-y-8">
