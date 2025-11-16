@@ -90,6 +90,28 @@ async function generateWebsite(data: {
 }
 
 /**
+ * Edit website configuration with AI
+ * NOTE: Uses API endpoint for Gemini AI editing
+ */
+async function editWebsiteWithAI(data: {
+  config: WebsiteConfig;
+  instruction: string;
+}): Promise<{ config: WebsiteConfig }> {
+  const response = await fetch('/api/edit', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.error || 'Failed to edit website');
+  }
+
+  return response.json();
+}
+
+/**
  * Hook: Get all websites
  */
 export function useWebsites() {
@@ -186,5 +208,14 @@ export function useDeleteWebsite() {
 export function useGenerateWebsite() {
   return useMutation({
     mutationFn: generateWebsite,
+  });
+}
+
+/**
+ * Hook: Edit website configuration with AI
+ */
+export function useEditWebsiteWithAI() {
+  return useMutation({
+    mutationFn: editWebsiteWithAI,
   });
 }

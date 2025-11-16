@@ -10,7 +10,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
 import { WebsiteConfig } from '@/lib/types/website-config';
 import { cn } from '@/lib/utils';
-import { useGenerateWebsite } from '@/lib/hooks/use-websites';
+import { useGenerateWebsite, useEditWebsiteWithAI } from '@/lib/hooks/use-websites';
 
 export interface Message {
   id: string;
@@ -43,7 +43,7 @@ export function AIModePanel({ config, onConfigUpdate }: AIModePanelProps) {
     {
       id: '1',
       role: 'system',
-      content: 'Welcome! Describe the website you want to create, and I\'ll help you build it.\n\n💡 Tip: Be specific! Example: "Create a SaaS landing page for a project management tool called TaskMaster with pricing tiers and testimonials"',
+      content: 'Welcome! I can help you build and edit websites.\n\n✨ Start from scratch: "Create a SaaS landing page for TaskMaster with pricing and testimonials"\n\n🎨 Edit existing: "Make the hero blue", "Add a pricing block", "Change the heading to Welcome Home"\n\n💡 Tip: Be specific for best results!',
       timestamp: new Date(),
     },
   ]);
@@ -51,8 +51,13 @@ export function AIModePanel({ config, onConfigUpdate }: AIModePanelProps) {
   const [apiConfigured, setApiConfigured] = useState<boolean | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  // Use React Query mutation for AI generation
-  const { mutate: generateWebsite, isPending } = useGenerateWebsite();
+  // Use React Query mutations for AI generation and editing
+  const { mutate: generateWebsite, isPending: isGenerating } = useGenerateWebsite();
+  const { mutate: editWebsite, isPending: isEditing } = useEditWebsiteWithAI();
+
+  // Determine if we're editing or generating
+  const isPending = isGenerating || isEditing;
+  const hasExistingWebsite = config && config.blocks && config.blocks.length > 0;
 
   /**
    * Auto-scroll to bottom when new messages arrive
@@ -99,7 +104,7 @@ export function AIModePanel({ config, onConfigUpdate }: AIModePanelProps) {
 
   /**
    * Handle sending a new message to AI
-   * Calls Gemini API to generate website configuration
+   * Uses edit endpoint if website exists, generate endpoint otherwise
    */
   const handleSend = async () => {
     if (!input.trim() || isPending) return;
@@ -115,53 +120,88 @@ export function AIModePanel({ config, onConfigUpdate }: AIModePanelProps) {
     const promptText = input.trim();
     setInput('');
 
-    // Call AI generation API
-    generateWebsite(
-      {
-        prompt: promptText,
-        template: config.template,
-      },
-      {
-        onSuccess: (data) => {
-          // Update config with AI-generated version
-          onConfigUpdate(data.config);
-
-          // Add success message
-          const blocksCount = data.config.blocks?.length || 0;
-          const assistantMessage: Message = {
-            id: (Date.now() + 1).toString(),
-            role: 'assistant',
-            content: `I've generated a ${data.config.template} website with ${blocksCount} blocks based on your request. Check the preview on the right!`,
-            timestamp: new Date(),
-          };
-          setMessages((prev) => [...prev, assistantMessage]);
+    // Decide whether to edit or generate
+    if (hasExistingWebsite) {
+      // Edit existing website
+      editWebsite(
+        {
+          config,
+          instruction: promptText,
         },
-        onError: (error) => {
-          console.error('AI Generation Error:', error);
+        {
+          onSuccess: (data) => {
+            // Update config with AI-edited version
+            onConfigUpdate(data.config);
 
-          // Add detailed error message
-          const errorMsg = error instanceof Error ? error.message : 'Failed to generate website';
-          let helpText = '';
-
-          if (errorMsg.includes('API key')) {
-            helpText = '\n\n🔧 Fix: Add your Gemini API key to .env.local\n1. Get a key from https://aistudio.google.com/app/apikey\n2. Create .env.local file\n3. Add: GEMINI_API_KEY=your_key_here\n4. Restart dev server';
-            setApiConfigured(false);
-          } else if (errorMsg.includes('network') || errorMsg.includes('fetch')) {
-            helpText = '\n\n🌐 Network error. Check your internet connection and try again.';
-          } else if (errorMsg.includes('JSON')) {
-            helpText = '\n\n🤖 AI generated invalid response. Try simplifying your prompt.';
-          }
-
-          const errorMessage: Message = {
-            id: (Date.now() + 1).toString(),
-            role: 'system',
-            content: `❌ Error: ${errorMsg}${helpText}`,
-            timestamp: new Date(),
-          };
-          setMessages((prev) => [...prev, errorMessage]);
+            // Add success message
+            const assistantMessage: Message = {
+              id: (Date.now() + 1).toString(),
+              role: 'assistant',
+              content: `✅ I've updated your website based on your request. Check the preview on the right!`,
+              timestamp: new Date(),
+            };
+            setMessages((prev) => [...prev, assistantMessage]);
+          },
+          onError: (error) => {
+            handleAIError(error, 'editing');
+          },
+        }
+      );
+    } else {
+      // Generate new website
+      generateWebsite(
+        {
+          prompt: promptText,
+          template: config.template,
         },
-      }
-    );
+        {
+          onSuccess: (data) => {
+            // Update config with AI-generated version
+            onConfigUpdate(data.config);
+
+            // Add success message
+            const blocksCount = data.config.blocks?.length || 0;
+            const assistantMessage: Message = {
+              id: (Date.now() + 1).toString(),
+              role: 'assistant',
+              content: `🎉 I've generated a ${data.config.template} website with ${blocksCount} blocks based on your request. Check the preview on the right!`,
+              timestamp: new Date(),
+            };
+            setMessages((prev) => [...prev, assistantMessage]);
+          },
+          onError: (error) => {
+            handleAIError(error, 'generating');
+          },
+        }
+      );
+    }
+  };
+
+  /**
+   * Handle AI errors with helpful messages
+   */
+  const handleAIError = (error: unknown, action: 'generating' | 'editing') => {
+    console.error(`AI ${action} error:`, error);
+
+    const errorMsg = error instanceof Error ? error.message : `Failed to ${action === 'generating' ? 'generate' : 'edit'} website`;
+    let helpText = '';
+
+    if (errorMsg.includes('API key')) {
+      helpText = '\n\n🔧 Fix: Add your Gemini API key to .env.local\n1. Get a key from https://aistudio.google.com/app/apikey\n2. Create .env.local file\n3. Add: GEMINI_API_KEY=your_key_here\n4. Restart dev server';
+      setApiConfigured(false);
+    } else if (errorMsg.includes('network') || errorMsg.includes('fetch')) {
+      helpText = '\n\n🌐 Network error. Check your internet connection and try again.';
+    } else if (errorMsg.includes('JSON')) {
+      helpText = '\n\n🤖 AI generated invalid response. Try simplifying your prompt.';
+    }
+
+    const errorMessage: Message = {
+      id: (Date.now() + 1).toString(),
+      role: 'system',
+      content: `❌ Error: ${errorMsg}${helpText}`,
+      timestamp: new Date(),
+    };
+    setMessages((prev) => [...prev, errorMessage]);
   };
 
   /**
@@ -182,7 +222,9 @@ export function AIModePanel({ config, onConfigUpdate }: AIModePanelProps) {
           <div>
             <h3 className="text-sm font-semibold">AI Assistant</h3>
             <p className="text-xs text-muted-foreground">
-              Describe your website and I&apos;ll build it for you
+              {hasExistingWebsite
+                ? '🎨 Editing mode - I can modify your existing website'
+                : '✨ Creation mode - Describe your website and I\'ll build it'}
             </p>
           </div>
           <div className="flex items-center gap-2">
@@ -257,7 +299,11 @@ export function AIModePanel({ config, onConfigUpdate }: AIModePanelProps) {
             className="flex-1"
           />
           <Button onClick={handleSend} disabled={isPending || !input.trim()}>
-            {isPending ? 'Generating...' : 'Send'}
+            {isPending
+              ? hasExistingWebsite
+                ? 'Editing...'
+                : 'Generating...'
+              : 'Send'}
           </Button>
         </div>
         <p className="mt-2 text-xs text-muted-foreground">
