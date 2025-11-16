@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import { WebsiteConfig } from '@/lib/types/website-config';
 import { AIModePanel } from './AIModePanel';
 import { ManualModePanel } from './ManualModePanel';
+import { ThemeModePanel } from './ThemeModePanel';
 import { PreviewPane } from './PreviewPane';
 import { useUpdateWebsite } from '@/lib/hooks/use-websites';
 import { Save, CheckCircle2, Download } from 'lucide-react';
@@ -41,7 +42,7 @@ export function EditorLayout({ initialConfig, websiteId }: EditorLayoutProps) {
   };
 
   const [config, setConfig] = useState<WebsiteConfig>(normalizedConfig);
-  const [activeMode, setActiveMode] = useState<'ai' | 'manual'>('ai');
+  const [activeMode, setActiveMode] = useState<'ai' | 'manual' | 'theme'>('ai');
   const [lastSaved, setLastSaved] = useState<Date>(new Date());
   const [isSaving, setIsSaving] = useState(false);
 
@@ -179,17 +180,20 @@ export function EditorLayout({ initialConfig, websiteId }: EditorLayoutProps) {
           <div className="h-full overflow-hidden border-r bg-background">
             <Tabs
               value={activeMode}
-              onValueChange={(value) => setActiveMode(value as 'ai' | 'manual')}
+              onValueChange={(value) => setActiveMode(value as 'ai' | 'manual' | 'theme')}
               className="flex h-full flex-col"
             >
               {/* Mode selector tabs */}
               <div className="border-b px-4 pt-4">
-                <TabsList className="w-full">
-                  <TabsTrigger value="ai" className="flex-1">
+                <TabsList className="w-full grid grid-cols-3">
+                  <TabsTrigger value="ai">
                     AI Mode
                   </TabsTrigger>
-                  <TabsTrigger value="manual" className="flex-1">
+                  <TabsTrigger value="manual">
                     Manual Mode
+                  </TabsTrigger>
+                  <TabsTrigger value="theme">
+                    Theme
                   </TabsTrigger>
                 </TabsList>
               </div>
@@ -207,6 +211,14 @@ export function EditorLayout({ initialConfig, websiteId }: EditorLayoutProps) {
                 <TabsContent value="manual" className="h-full m-0 p-0">
                   {/* Manual Mode Panel - Form editor */}
                   <ManualModePanel
+                    config={config}
+                    onConfigUpdate={handleConfigUpdate}
+                  />
+                </TabsContent>
+
+                <TabsContent value="theme" className="h-full m-0 p-0">
+                  {/* Theme Mode Panel - Theme customization */}
+                  <ThemeModePanel
                     config={config}
                     onConfigUpdate={handleConfigUpdate}
                   />
