@@ -84,8 +84,7 @@ export function HeroCentered({ content, theme }: HeroCenteredProps) {
             <Button
               size="lg"
               asChild
-              className={cn("h-11 px-8 group", getShimmerClasses())}
-              style={theme?.primaryColor ? { backgroundColor: theme.primaryColor } : undefined}
+              className={cn("h-11 px-8 group bg-theme-primary hover:bg-theme-primary/90 rounded-theme-button shadow-theme-button", getShimmerClasses())}
             >
               <a href={ctaPrimary.link} className="inline-flex items-center gap-2">
                 {ctaPrimary.text}

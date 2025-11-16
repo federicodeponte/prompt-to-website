@@ -39,13 +39,13 @@ export function NewsletterSimple({ content, theme }: NewsletterSimpleProps) {
           <Input
             type="email"
             placeholder={placeholder}
-            className="pl-10"
+            className="pl-10 rounded-theme-input"
           />
         </div>
         <Button
           type="submit"
           size="lg"
-          style={theme?.primaryColor ? { backgroundColor: theme.primaryColor } : undefined}
+          className="bg-theme-primary hover:bg-theme-primary/90 rounded-theme-button shadow-theme-button"
         >
           {ctaText}
         </Button>

@@ -54,7 +54,7 @@ export function FAQGrid({ content }: FAQGridProps) {
               whileHover="hover"
               animate="rest"
             >
-              <Card className="h-full">
+              <Card className="h-full rounded-theme-card shadow-theme-card">
             <CardHeader>
               <CardTitle className="text-lg">{faq.question}</CardTitle>
             </CardHeader>

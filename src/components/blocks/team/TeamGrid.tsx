@@ -77,7 +77,7 @@ export function TeamGrid({ content }: TeamGridProps) {
                 whileHover="hover"
                 animate="rest"
               >
-                <Card className="border shadow-sm">
+                <Card className="border rounded-theme-card shadow-theme-card">
                 <CardContent className="p-6 text-center">
                   {/* Avatar */}
                   <Avatar className="mx-auto mb-4 h-24 w-24">

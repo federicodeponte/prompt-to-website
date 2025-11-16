@@ -69,8 +69,7 @@ export function CTASplit({ content, theme }: CTASplitProps) {
             <Button
               size="lg"
               asChild
-              className="h-14 px-8 text-lg shadow-xl group"
-              style={theme?.primaryColor ? { backgroundColor: theme.primaryColor } : undefined}
+              className="h-14 px-8 text-lg bg-theme-primary hover:bg-theme-primary/90 rounded-theme-button shadow-theme-button group"
             >
               <a href={ctaPrimary.link}>
                 {ctaPrimary.text}

@@ -100,8 +100,7 @@ export function HeroSplit({ content, theme }: HeroSplitProps) {
             <Button
               size="lg"
               asChild
-              className={cn("h-12 px-8 text-base shadow-lg hover:shadow-xl group", getShimmerClasses())}
-              style={theme?.primaryColor ? { backgroundColor: theme.primaryColor } : undefined}
+              className={cn("h-12 px-8 text-base bg-theme-primary hover:bg-theme-primary/90 rounded-theme-button shadow-theme-button hover:shadow-xl group", getShimmerClasses())}
             >
               <a href={ctaPrimary.link}>
                 {ctaPrimary.text}

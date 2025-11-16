@@ -88,7 +88,7 @@ export function FeaturesList({ content }: FeaturesListProps) {
                 whileHover="hover"
                 animate="rest"
               >
-                <Card className="border-2 bg-gradient-to-br from-background to-muted/20">
+                <Card className="border-2 bg-gradient-to-br from-background to-muted/20 rounded-theme-card shadow-theme-card">
                 <CardContent className="p-8">
                   <div
                     className={cn(

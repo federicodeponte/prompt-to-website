@@ -58,6 +58,7 @@
 }
 
 @theme inline {
+  /* shadcn/ui default colors (for editor UI) */
   --color-background: hsl(var(--background));
   --color-foreground: hsl(var(--foreground));
   --color-card: hsl(var(--card));
@@ -77,8 +78,34 @@
   --color-border: hsl(var(--border));
   --color-input: hsl(var(--input));
   --color-ring: hsl(var(--ring));
+
+  /* User theme colors (from WebsiteTheme) - dynamically set by WebsiteRenderer */
+  --color-theme-primary: var(--color-primary, #3B82F6);
+  --color-theme-secondary: var(--color-secondary, #10B981);
+  --color-theme-background: var(--color-background, #FFFFFF);
+  --color-theme-text: var(--color-text, #1F2937);
+  --color-theme-muted: var(--color-muted, #6B7280);
+  --color-theme-accent: var(--color-accent, #8B5CF6);
+  --color-theme-border: var(--color-border, hsl(214.3 31.8% 91.4%));
+
+  /* Fonts */
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-theme-heading: var(--font-heading, 'Inter, system-ui, sans-serif');
+  --font-theme-body: var(--font-body, 'Inter, system-ui, sans-serif');
+
+  /* Spacing */
+  --spacing-theme-section: var(--spacing-section, 6rem);
+  --spacing-theme-container: var(--spacing-container, 1280px);
+
+  /* Radius */
+  --radius-theme-button: var(--radius-button, 0.5rem);
+  --radius-theme-card: var(--radius-card, 1rem);
+  --radius-theme-input: var(--radius-input, 0.5rem);
+
+  /* Shadows */
+  --shadow-theme-card: var(--shadow-card, 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06));
+  --shadow-theme-button: var(--shadow-button, 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06));
 }
 
 @layer base {
@@ -164,6 +191,7 @@
 }
 
 @layer utilities {
+  /* Framer-level animations */
   .animate-shimmer {
     animation: shimmer 1.5s infinite linear;
   }
@@ -188,5 +216,87 @@
 
   .animate-pulse-glow {
     animation: pulse-glow 2s ease-in-out infinite;
+  }
+
+  /* Theme color utilities - use user's theme colors */
+  .bg-theme-primary {
+    background-color: var(--color-theme-primary);
+  }
+
+  .bg-theme-secondary {
+    background-color: var(--color-theme-secondary);
+  }
+
+  .bg-theme-accent {
+    background-color: var(--color-theme-accent);
+  }
+
+  .text-theme-primary {
+    color: var(--color-theme-primary);
+  }
+
+  .text-theme-secondary {
+    color: var(--color-theme-secondary);
+  }
+
+  .text-theme-text {
+    color: var(--color-theme-text);
+  }
+
+  .text-theme-muted {
+    color: var(--color-theme-muted);
+  }
+
+  .border-theme-primary {
+    border-color: var(--color-theme-primary);
+  }
+
+  .border-theme-border {
+    border-color: var(--color-theme-border);
+  }
+
+  /* Theme font utilities */
+  .font-theme-heading {
+    font-family: var(--font-theme-heading);
+  }
+
+  .font-theme-body {
+    font-family: var(--font-theme-body);
+  }
+
+  /* Theme spacing utilities */
+  .section-spacing {
+    padding-top: var(--spacing-theme-section);
+    padding-bottom: var(--spacing-theme-section);
+  }
+
+  .container-theme {
+    max-width: var(--spacing-theme-container);
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+
+  /* Theme radius utilities */
+  .rounded-theme-button {
+    border-radius: var(--radius-theme-button);
+  }
+
+  .rounded-theme-card {
+    border-radius: var(--radius-theme-card);
+  }
+
+  .rounded-theme-input {
+    border-radius: var(--radius-theme-input);
+  }
+
+  /* Theme shadow utilities */
+  .shadow-theme-card {
+    box-shadow: var(--shadow-theme-card);
+  }
+
+  .shadow-theme-button {
+    box-shadow: var(--shadow-theme-button);
   }
 }

@@ -121,16 +121,11 @@ export function PricingSimple({ content, theme }: PricingSimpleProps) {
                   <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                     <Button
                       className={cn(
-                        "w-full font-medium",
-                        tier.highlighted && getShimmerClasses()
+                        "w-full font-medium rounded-theme-button shadow-theme-button",
+                        tier.highlighted && cn("bg-theme-primary hover:bg-theme-primary/90", getShimmerClasses())
                       )}
                       variant={tier.highlighted ? 'default' : 'outline'}
                       asChild
-                      style={
-                        tier.highlighted && theme?.primaryColor
-                          ? { backgroundColor: theme.primaryColor }
-                          : undefined
-                      }
                     >
                       <a href={tier.ctaLink}>{tier.ctaText}</a>
                     </Button>

@@ -147,7 +147,7 @@ export function FeaturesGrid({ content }: FeaturesGridProps) {
                   whileHover="hover"
                   animate="rest"
                 >
-                  <Card className="h-full border">
+                  <Card className="h-full border rounded-theme-card shadow-theme-card">
                     <CardContent className="p-6">
                     {/* Icon with pulse animation */}
                     <motion.div

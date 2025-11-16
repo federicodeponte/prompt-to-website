@@ -47,8 +47,7 @@ export function CTASimple({ content, theme }: CTASimpleProps) {
           <Button
             size="lg"
             asChild
-            className="group"
-            style={theme?.primaryColor ? { backgroundColor: theme.primaryColor } : undefined}
+            className="group bg-theme-primary hover:bg-theme-primary/90 rounded-theme-button shadow-theme-button"
           >
             <a href={ctaPrimary.link}>
               {ctaPrimary.text}
@@ -57,7 +56,7 @@ export function CTASimple({ content, theme }: CTASimpleProps) {
           </Button>
 
           {ctaSecondary && (
-            <Button size="lg" variant="outline" asChild>
+            <Button size="lg" variant="outline" asChild className="rounded-theme-button">
               <a href={ctaSecondary.link}>{ctaSecondary.text}</a>
             </Button>
           )}

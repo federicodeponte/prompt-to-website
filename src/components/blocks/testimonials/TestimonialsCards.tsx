@@ -101,7 +101,7 @@ export function TestimonialsCards({ content }: TestimonialsCardsProps) {
                 whileHover="hover"
                 animate="rest"
               >
-                <Card className="h-full border shadow-sm">
+                <Card className="h-full border rounded-theme-card shadow-theme-card">
                 <CardContent className="flex h-full flex-col p-6">
                   {/* Rating */}
                   {testimonial.rating && (

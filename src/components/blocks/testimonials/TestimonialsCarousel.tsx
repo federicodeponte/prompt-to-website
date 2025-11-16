@@ -173,7 +173,7 @@ export function TestimonialsCarousel({ content }: TestimonialsCarouselProps) {
                 animate="rest"
                 className="h-full"
               >
-                <Card className="h-full border-2 bg-gradient-to-br from-background to-muted/20 shadow-xl relative overflow-hidden">
+                <Card className="h-full border-2 bg-gradient-to-br from-background to-muted/20 rounded-theme-card shadow-theme-card relative overflow-hidden">
                 {/* Decorative Quote Icon */}
                 <div className="absolute -top-4 -right-4 text-primary/10">
                   <Quote className="h-32 w-32" aria-hidden="true" />

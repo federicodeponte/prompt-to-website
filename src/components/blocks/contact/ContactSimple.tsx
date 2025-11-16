@@ -52,7 +52,7 @@ export function ContactSimple({ content }: ContactSimpleProps) {
               whileHover="hover"
               animate="rest"
             >
-              <Card className="border shadow-sm">
+              <Card className="border rounded-theme-card shadow-theme-card">
               <CardContent className="flex flex-col items-center p-6 text-center">
                 <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
                   <Mail className="h-6 w-6 text-primary" />
@@ -82,7 +82,7 @@ export function ContactSimple({ content }: ContactSimpleProps) {
               whileHover="hover"
               animate="rest"
             >
-              <Card className="border shadow-sm">
+              <Card className="border rounded-theme-card shadow-theme-card">
               <CardContent className="flex flex-col items-center p-6 text-center">
                 <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
                   <Phone className="h-6 w-6 text-primary" />
@@ -112,7 +112,7 @@ export function ContactSimple({ content }: ContactSimpleProps) {
               whileHover="hover"
               animate="rest"
             >
-              <Card className="border shadow-sm">
+              <Card className="border rounded-theme-card shadow-theme-card">
               <CardContent className="flex flex-col items-center p-6 text-center">
                 <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
                   <MapPin className="h-6 w-6 text-primary" />
@@ -134,7 +134,7 @@ export function ContactSimple({ content }: ContactSimpleProps) {
           viewport={{ once: true }}
           transition={{ duration: 0.3, delay: 0.25 }}
         >
-          <Card className="border shadow-sm">
+          <Card className="border rounded-theme-card shadow-theme-card">
             <CardContent className="p-6 sm:p-8">
               <form className="space-y-6">
                 <div className="grid gap-6 sm:grid-cols-2">
@@ -142,22 +142,22 @@ export function ContactSimple({ content }: ContactSimpleProps) {
                     <Label htmlFor="name" className="text-sm font-medium">
                       Name
                     </Label>
-                    <Input id="name" placeholder="Your name" />
+                    <Input id="name" placeholder="Your name" className="rounded-theme-input" />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="email" className="text-sm font-medium">
                       Email
                     </Label>
-                    <Input id="email" type="email" placeholder="your@email.com" />
+                    <Input id="email" type="email" placeholder="your@email.com" className="rounded-theme-input" />
                   </div>
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="message" className="text-sm font-medium">
                     Message
                   </Label>
-                  <Textarea id="message" placeholder="Your message..." rows={5} />
+                  <Textarea id="message" placeholder="Your message..." rows={5} className="rounded-theme-input" />
                 </div>
-                <Button type="submit" size="lg" className="w-full sm:w-auto">
+                <Button type="submit" size="lg" className="w-full sm:w-auto bg-theme-primary hover:bg-theme-primary/90 rounded-theme-button shadow-theme-button">
                   <Send className="mr-2 h-4 w-4" />
                   Send Message
                 </Button>

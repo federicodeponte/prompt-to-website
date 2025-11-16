@@ -103,8 +103,7 @@ export function HeroGradient({ content, theme }: HeroGradientProps) {
             <Button
               size="lg"
               asChild
-              className={cn("h-12 min-w-[200px] px-8 text-base shadow-2xl hover:shadow-3xl group", getShimmerClasses())}
-              style={theme?.primaryColor ? { backgroundColor: theme.primaryColor } : undefined}
+              className={cn("h-12 min-w-[200px] px-8 text-base bg-theme-primary hover:bg-theme-primary/90 rounded-theme-button shadow-theme-button hover:shadow-3xl group", getShimmerClasses())}
             >
               <a href={ctaPrimary.link}>
                 {ctaPrimary.text}

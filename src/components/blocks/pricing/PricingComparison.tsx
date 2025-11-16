@@ -154,16 +154,11 @@ export function PricingComparison({ content, theme }: PricingComparisonProps) {
                       <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}>
                         <Button
                           className={cn(
-                            "w-full shadow-lg",
-                            tier.highlighted && getShimmerClasses()
+                            "w-full rounded-theme-button shadow-theme-button",
+                            tier.highlighted && cn("bg-theme-primary hover:bg-theme-primary/90", getShimmerClasses())
                           )}
                           variant={tier.highlighted ? 'default' : 'outline'}
                           asChild
-                          style={
-                            tier.highlighted && theme?.primaryColor
-                              ? { backgroundColor: theme.primaryColor }
-                              : undefined
-                          }
                         >
                           <a href={tier.ctaLink}>{tier.ctaText}</a>
                         </Button>
@@ -305,16 +300,11 @@ export function PricingComparison({ content, theme }: PricingComparisonProps) {
                 <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}>
                   <Button
                     className={cn(
-                      "w-full h-12 text-base font-semibold shadow-lg",
-                      tier.highlighted && getShimmerClasses()
+                      "w-full h-12 text-base font-semibold rounded-theme-button shadow-theme-button",
+                      tier.highlighted && cn("bg-theme-primary hover:bg-theme-primary/90", getShimmerClasses())
                     )}
                     variant={tier.highlighted ? 'default' : 'outline'}
                     asChild
-                    style={
-                      tier.highlighted && theme?.primaryColor
-                        ? { backgroundColor: theme.primaryColor }
-                        : undefined
-                    }
                   >
                     <a href={tier.ctaLink}>{tier.ctaText}</a>
                   </Button>
