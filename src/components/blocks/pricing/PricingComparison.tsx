@@ -19,6 +19,8 @@ import {
 import { Check, X, Sparkles } from 'lucide-react';
 import { PricingContentComparison } from '@/lib/types/block-content';
 import { cn } from '@/lib/utils';
+import { spring, springMedium, fadeInUp, staggerContainer, staggerItem } from '@/lib/animations';
+import { getGradientTextClasses, getShimmerClasses } from '@/lib/visual-effects';
 
 interface PricingComparisonProps {
   content: PricingContentComparison;
@@ -42,7 +44,7 @@ export function PricingComparison({ content, theme }: PricingComparisonProps) {
       return (
         <motion.div
           whileHover={{ scale: 1.2, rotate: 360 }}
-          transition={{ duration: 0.3 }}
+          transition={springMedium}
         >
           <Check className="h-5 w-5 text-primary mx-auto" aria-label="Included" />
         </motion.div>
@@ -61,19 +63,21 @@ export function PricingComparison({ content, theme }: PricingComparisonProps) {
 
   return (
     <div className="space-y-16">
-      {/* Animated Header */}
+      {/* Animated Header with gradient text */}
       <motion.div
         className="mx-auto max-w-3xl text-center"
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
+        variants={fadeInUp}
+        initial="hidden"
+        whileInView="visible"
         viewport={{ once: true, margin: "-100px" }}
-        transition={{ duration: 0.6 }}
+        transition={spring}
       >
         <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          whileInView={{ opacity: 1, scale: 1 }}
+          variants={fadeInUp}
+          initial="hidden"
+          whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.5, delay: 0.1 }}
+          transition={{ ...spring, delay: 0.1 }}
         >
           <Badge variant="outline" className="mb-6 text-sm">
             {subheading}
@@ -81,11 +85,12 @@ export function PricingComparison({ content, theme }: PricingComparisonProps) {
         </motion.div>
 
         <motion.h2
-          className="text-4xl font-bold tracking-tight sm:text-5xl"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          className={cn("text-4xl font-bold tracking-tight sm:text-5xl", getGradientTextClasses())}
+          variants={fadeInUp}
+          initial="hidden"
+          whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.6, delay: 0.2 }}
+          transition={{ ...spring, delay: 0.2 }}
         >
           {heading}
         </motion.h2>
@@ -94,10 +99,11 @@ export function PricingComparison({ content, theme }: PricingComparisonProps) {
       {/* Desktop: Comparison Table */}
       <motion.div
         className="hidden lg:block overflow-hidden rounded-2xl border-2 bg-gradient-to-br from-background to-muted/20 shadow-xl"
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
+        variants={fadeInUp}
+        initial="hidden"
+        whileInView="visible"
         viewport={{ once: true, margin: "-100px" }}
-        transition={{ duration: 0.6, delay: 0.3 }}
+        transition={{ ...spring, delay: 0.3 }}
       >
         <Table>
           <TableHeader>
@@ -147,7 +153,10 @@ export function PricingComparison({ content, theme }: PricingComparisonProps) {
                     <div className="px-4 pt-2">
                       <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}>
                         <Button
-                          className="w-full shadow-lg"
+                          className={cn(
+                            "w-full shadow-lg",
+                            tier.highlighted && getShimmerClasses()
+                          )}
                           variant={tier.highlighted ? 'default' : 'outline'}
                           asChild
                           style={
@@ -177,7 +186,7 @@ export function PricingComparison({ content, theme }: PricingComparisonProps) {
                 initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: 0.6 + featureIndex * 0.05 }}
+                transition={{ ...spring, delay: featureIndex * 0.03 }}
               >
                 {/* Feature name */}
                 <TableCell className="font-semibold bg-muted/30">
@@ -286,10 +295,13 @@ export function PricingComparison({ content, theme }: PricingComparisonProps) {
                   })}
                 </ul>
 
-                {/* CTA Button */}
+                {/* CTA Button with shimmer */}
                 <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}>
                   <Button
-                    className="w-full h-12 text-base font-semibold shadow-lg"
+                    className={cn(
+                      "w-full h-12 text-base font-semibold shadow-lg",
+                      tier.highlighted && getShimmerClasses()
+                    )}
                     variant={tier.highlighted ? 'default' : 'outline'}
                     asChild
                     style={

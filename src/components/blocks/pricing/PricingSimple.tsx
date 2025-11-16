@@ -11,6 +11,8 @@ import { Badge } from '@/components/ui/badge';
 import { Check } from 'lucide-react';
 import { PricingContentSimple } from '@/lib/types/block-content';
 import { cn } from '@/lib/utils';
+import { spring, fadeInUp, staggerContainer, staggerItem } from '@/lib/animations';
+import { getGradientTextClasses, getCardLiftClasses, getShimmerClasses } from '@/lib/visual-effects';
 
 interface PricingSimpleProps {
   content: PricingContentSimple;
@@ -28,13 +30,14 @@ export function PricingSimple({ content, theme }: PricingSimpleProps) {
 
   return (
     <div className="space-y-12">
-      {/* Header - clean and minimal */}
+      {/* Header with gradient text */}
       <motion.div
         className="mx-auto max-w-2xl text-center"
-        initial={{ opacity: 0, y: 10 }}
-        whileInView={{ opacity: 1, y: 0 }}
+        variants={fadeInUp}
+        initial="hidden"
+        whileInView="visible"
         viewport={{ once: true }}
-        transition={{ duration: 0.3 }}
+        transition={spring}
       >
         {subheading && (
           <Badge variant="outline" className="mb-4 px-3 py-1 text-sm font-medium">
@@ -42,26 +45,30 @@ export function PricingSimple({ content, theme }: PricingSimpleProps) {
           </Badge>
         )}
 
-        <h2 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl lg:text-5xl">
+        <h2 className={cn("text-3xl font-semibold tracking-tight sm:text-4xl lg:text-5xl", getGradientTextClasses())}>
           {heading}
         </h2>
       </motion.div>
 
-      {/* Pricing Tiers - clean cards */}
+      {/* Pricing Tiers with stagger and 3D lift */}
       {tiers && tiers.length > 0 && (
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-8">
+        <motion.div
+          className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-8"
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+        >
           {tiers.map((tier, index) => (
             <motion.div
               key={index}
-              initial={{ opacity: 0, y: 10 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.3, delay: index * 0.05 }}
+              variants={staggerItem}
               className="relative"
             >
               <Card
                 className={cn(
-                  'relative flex h-full flex-col border shadow-sm transition-shadow hover:shadow-md',
+                  'relative flex h-full flex-col border shadow-sm',
+                  getCardLiftClasses(),
                   tier.highlighted && 'border-primary shadow-md'
                 )}
               >
@@ -105,24 +112,29 @@ export function PricingSimple({ content, theme }: PricingSimpleProps) {
                     </ul>
                   )}
 
-                  {/* CTA Button */}
-                  <Button
-                    className="w-full font-medium"
-                    variant={tier.highlighted ? 'default' : 'outline'}
-                    asChild
-                    style={
-                      tier.highlighted && theme?.primaryColor
-                        ? { backgroundColor: theme.primaryColor }
-                        : undefined
-                    }
-                  >
-                    <a href={tier.ctaLink}>{tier.ctaText}</a>
-                  </Button>
+                  {/* CTA Button with shimmer on highlighted */}
+                  <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                    <Button
+                      className={cn(
+                        "w-full font-medium",
+                        tier.highlighted && getShimmerClasses()
+                      )}
+                      variant={tier.highlighted ? 'default' : 'outline'}
+                      asChild
+                      style={
+                        tier.highlighted && theme?.primaryColor
+                          ? { backgroundColor: theme.primaryColor }
+                          : undefined
+                      }
+                    >
+                      <a href={tier.ctaLink}>{tier.ctaText}</a>
+                    </Button>
+                  </motion.div>
                 </CardContent>
               </Card>
             </motion.div>
           ))}
-        </div>
+        </motion.div>
       )}
     </div>
   );
