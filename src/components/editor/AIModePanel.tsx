@@ -42,11 +42,12 @@ export function AIModePanel({ config, onConfigUpdate }: AIModePanelProps) {
     {
       id: '1',
       role: 'system',
-      content: 'Welcome! Describe the website you want to create, and I\'ll help you build it.',
+      content: 'Welcome! Describe the website you want to create, and I\'ll help you build it.\n\n💡 Tip: Be specific! Example: "Create a SaaS landing page for a project management tool called TaskMaster with pricing tiers and testimonials"',
       timestamp: new Date(),
     },
   ]);
   const [input, setInput] = useState('');
+  const [apiConfigured, setApiConfigured] = useState<boolean | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   // Use React Query mutation for AI generation
@@ -60,6 +61,40 @@ export function AIModePanel({ config, onConfigUpdate }: AIModePanelProps) {
       scrollRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   }, [messages]);
+
+  /**
+   * Check if API is configured on mount
+   */
+  useEffect(() => {
+    async function checkAPI() {
+      try {
+        const response = await fetch('/api/generate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ prompt: '__health_check__' }),
+        });
+
+        if (response.status === 400) {
+          // Expected response for health check (missing prompt is OK)
+          setApiConfigured(true);
+        } else if (response.status === 500) {
+          const data = await response.json();
+          if (data.error?.includes('API key')) {
+            setApiConfigured(false);
+          } else {
+            setApiConfigured(true);
+          }
+        } else {
+          setApiConfigured(true);
+        }
+      } catch (error) {
+        console.error('API health check failed:', error);
+        setApiConfigured(false);
+      }
+    }
+
+    checkAPI();
+  }, []);
 
   /**
    * Handle sending a new message to AI
@@ -101,11 +136,25 @@ export function AIModePanel({ config, onConfigUpdate }: AIModePanelProps) {
           setMessages((prev) => [...prev, assistantMessage]);
         },
         onError: (error) => {
-          // Add error message
+          console.error('AI Generation Error:', error);
+
+          // Add detailed error message
+          const errorMsg = error instanceof Error ? error.message : 'Failed to generate website';
+          let helpText = '';
+
+          if (errorMsg.includes('API key')) {
+            helpText = '\n\n🔧 Fix: Add your Gemini API key to .env.local\n1. Get a key from https://aistudio.google.com/app/apikey\n2. Create .env.local file\n3. Add: GEMINI_API_KEY=your_key_here\n4. Restart dev server';
+            setApiConfigured(false);
+          } else if (errorMsg.includes('network') || errorMsg.includes('fetch')) {
+            helpText = '\n\n🌐 Network error. Check your internet connection and try again.';
+          } else if (errorMsg.includes('JSON')) {
+            helpText = '\n\n🤖 AI generated invalid response. Try simplifying your prompt.';
+          }
+
           const errorMessage: Message = {
             id: (Date.now() + 1).toString(),
             role: 'system',
-            content: `Error: ${error instanceof Error ? error.message : 'Failed to generate website'}. Please try again with a different prompt.`,
+            content: `❌ Error: ${errorMsg}${helpText}`,
             timestamp: new Date(),
           };
           setMessages((prev) => [...prev, errorMessage]);
@@ -128,10 +177,31 @@ export function AIModePanel({ config, onConfigUpdate }: AIModePanelProps) {
     <div className="flex h-full flex-col">
       {/* Chat header */}
       <div className="border-b px-4 py-3">
-        <h3 className="text-sm font-semibold">AI Assistant</h3>
-        <p className="text-xs text-muted-foreground">
-          Describe your website and I&apos;ll build it for you
-        </p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h3 className="text-sm font-semibold">AI Assistant</h3>
+            <p className="text-xs text-muted-foreground">
+              Describe your website and I&apos;ll build it for you
+            </p>
+          </div>
+          <div className="flex items-center gap-2">
+            {apiConfigured === null && (
+              <Badge variant="secondary" className="text-xs">
+                Checking...
+              </Badge>
+            )}
+            {apiConfigured === true && (
+              <Badge variant="default" className="bg-green-500 text-xs">
+                ✓ Ready
+              </Badge>
+            )}
+            {apiConfigured === false && (
+              <Badge variant="destructive" className="text-xs">
+                ⚠ Not Configured
+              </Badge>
+            )}
+          </div>
+        </div>
       </div>
 
       {/* Messages area */}
