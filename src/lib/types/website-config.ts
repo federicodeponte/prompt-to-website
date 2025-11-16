@@ -12,7 +12,11 @@ export type BlockType =
   | "faq"
   | "team"
   | "contact"
-  | "newsletter";
+  | "newsletter"
+  | "logo-cloud"
+  | "gallery"
+  | "process"
+  | "video";
 
 export type BlockVariant =
   | "centered"
@@ -26,7 +30,11 @@ export type BlockVariant =
   | "carousel"
   | "multi-column"
   | "accordion"
-  | "bar";
+  | "bar"
+  | "featured"
+  | "timeline"
+  | "steps"
+  | "embed";
 
 export interface BlockSettings {
   spacing?: "tight" | "normal" | "loose";

@@ -374,6 +374,121 @@ export type TeamContent =
   | TeamContentList;
 
 /**
+ * Logo Cloud Block Content Types
+ */
+export interface Logo {
+  name: string;
+  image: string;
+  link?: string;
+}
+
+export interface LogoCloudContentGrid extends BaseBlockContent {
+  variant: 'grid';
+  heading?: string;
+  subheading?: string;
+  logos: Logo[];
+  columns: 3 | 4 | 5;
+}
+
+export interface LogoCloudContentCarousel extends BaseBlockContent {
+  variant: 'carousel';
+  heading?: string;
+  subheading?: string;
+  logos: Logo[];
+  autoplay?: boolean;
+  speed?: number;
+}
+
+export type LogoCloudContent =
+  | LogoCloudContentGrid
+  | LogoCloudContentCarousel;
+
+/**
+ * Gallery Block Content Types
+ */
+export interface GalleryImage {
+  image: string;
+  alt: string;
+  title?: string;
+  description?: string;
+  category?: string;
+}
+
+export interface GalleryContentGrid extends BaseBlockContent {
+  variant: 'grid';
+  heading?: string;
+  subheading?: string;
+  images: GalleryImage[];
+  columns: 2 | 3 | 4;
+  lightbox?: boolean;
+}
+
+export interface GalleryContentFeatured extends BaseBlockContent {
+  variant: 'featured';
+  heading?: string;
+  subheading?: string;
+  images: GalleryImage[];
+  featured: number; // Index of featured image
+}
+
+export type GalleryContent =
+  | GalleryContentGrid
+  | GalleryContentFeatured;
+
+/**
+ * Process/Timeline Block Content Types
+ */
+export interface ProcessStep {
+  title: string;
+  description: string;
+  icon?: string;
+  date?: string;
+}
+
+export interface ProcessContentTimeline extends BaseBlockContent {
+  variant: 'timeline';
+  heading?: string;
+  subheading?: string;
+  steps: ProcessStep[];
+}
+
+export interface ProcessContentSteps extends BaseBlockContent {
+  variant: 'steps';
+  heading?: string;
+  subheading?: string;
+  steps: ProcessStep[];
+}
+
+export type ProcessContent =
+  | ProcessContentTimeline
+  | ProcessContentSteps;
+
+/**
+ * Video Block Content Types
+ */
+export interface VideoContentEmbed extends BaseBlockContent {
+  variant: 'embed';
+  heading?: string;
+  description?: string;
+  videoUrl: string; // YouTube/Vimeo URL
+  poster?: string;
+  autoplay?: boolean;
+}
+
+export interface VideoContentSplit extends BaseBlockContent {
+  variant: 'split';
+  heading: string;
+  description: string;
+  videoUrl: string;
+  videoPosition: 'left' | 'right';
+  features?: string[];
+}
+
+export type VideoContent =
+  | VideoContentEmbed
+  | VideoContentSplit;
+
+/**
  * Union type of all possible block content types
  * Used by the WebsiteRenderer to determine which component to render
  */
@@ -388,7 +503,11 @@ export type BlockContent =
   | StatsContent
   | ContactContent
   | NewsletterContent
-  | TeamContent;
+  | TeamContent
+  | LogoCloudContent
+  | GalleryContent
+  | ProcessContent
+  | VideoContent;
 
 /**
  * Type guard functions to narrow block content types
@@ -494,5 +613,40 @@ export function isTeamContent(content: unknown): content is TeamContent {
     content !== null &&
     'members' in content &&
     Array.isArray((content as Record<string, unknown>).members)
+  );
+}
+
+export function isLogoCloudContent(content: unknown): content is LogoCloudContent {
+  return (
+    typeof content === 'object' &&
+    content !== null &&
+    'logos' in content &&
+    Array.isArray((content as Record<string, unknown>).logos)
+  );
+}
+
+export function isGalleryContent(content: unknown): content is GalleryContent {
+  return (
+    typeof content === 'object' &&
+    content !== null &&
+    'images' in content &&
+    Array.isArray((content as Record<string, unknown>).images)
+  );
+}
+
+export function isProcessContent(content: unknown): content is ProcessContent {
+  return (
+    typeof content === 'object' &&
+    content !== null &&
+    'steps' in content &&
+    Array.isArray((content as Record<string, unknown>).steps)
+  );
+}
+
+export function isVideoContent(content: unknown): content is VideoContent {
+  return (
+    typeof content === 'object' &&
+    content !== null &&
+    'videoUrl' in content
   );
 }

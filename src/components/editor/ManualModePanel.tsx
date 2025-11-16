@@ -189,6 +189,51 @@ export function ManualModePanel({ config, onConfigUpdate }: ManualModePanelProps
           },
         ],
       },
+      'logo-cloud': {
+        id,
+        variant: 'grid',
+        heading: 'Trusted By',
+        subheading: 'Join thousands of companies',
+        logos: [
+          { name: 'Company 1', image: 'https://via.placeholder.com/120x40/3B82F6/FFFFFF?text=Logo+1' },
+          { name: 'Company 2', image: 'https://via.placeholder.com/120x40/10B981/FFFFFF?text=Logo+2' },
+          { name: 'Company 3', image: 'https://via.placeholder.com/120x40/8B5CF6/FFFFFF?text=Logo+3' },
+          { name: 'Company 4', image: 'https://via.placeholder.com/120x40/F97316/FFFFFF?text=Logo+4' },
+        ],
+        columns: 4 as const,
+      },
+      gallery: {
+        id,
+        variant: 'grid',
+        heading: 'Our Work',
+        subheading: 'Explore our portfolio',
+        images: [
+          { image: 'https://via.placeholder.com/600x400/3B82F6/FFFFFF?text=Image+1', alt: 'Gallery image 1', title: 'Project 1' },
+          { image: 'https://via.placeholder.com/600x400/10B981/FFFFFF?text=Image+2', alt: 'Gallery image 2', title: 'Project 2' },
+          { image: 'https://via.placeholder.com/600x400/8B5CF6/FFFFFF?text=Image+3', alt: 'Gallery image 3', title: 'Project 3' },
+        ],
+        columns: 3 as const,
+        lightbox: true,
+      },
+      process: {
+        id,
+        variant: 'timeline',
+        heading: 'Our Process',
+        subheading: 'How we work',
+        steps: [
+          { title: 'Step 1', description: 'Discovery and planning', date: 'Week 1' },
+          { title: 'Step 2', description: 'Design and development', date: 'Week 2-3' },
+          { title: 'Step 3', description: 'Testing and launch', date: 'Week 4' },
+        ],
+      },
+      video: {
+        id,
+        variant: 'embed',
+        heading: 'Watch Our Story',
+        description: 'See how we make a difference',
+        videoUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+        autoplay: false,
+      },
     };
 
     return defaults[type] || {};

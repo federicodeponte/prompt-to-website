@@ -17,6 +17,10 @@ import { StatsBlock } from '../blocks/stats';
 import { ContactBlock } from '../blocks/contact';
 import { NewsletterBlock } from '../blocks/newsletter';
 import { TeamBlock } from '../blocks/team';
+import { LogoCloudBlock } from '../blocks/logo-cloud/LogoCloudBlock';
+import { GalleryBlock } from '../blocks/gallery/GalleryBlock';
+import { ProcessBlock } from '../blocks/process/ProcessBlock';
+import { VideoBlock } from '../blocks/video/VideoBlock';
 import {
   isHeroContent,
   isFeaturesContent,
@@ -29,6 +33,10 @@ import {
   isContactContent,
   isNewsletterContent,
   isTeamContent,
+  isLogoCloudContent,
+  isGalleryContent,
+  isProcessContent,
+  isVideoContent,
 } from '@/lib/types/block-content';
 
 interface WebsiteRendererProps {
@@ -192,6 +200,54 @@ export function WebsiteRenderer({ config }: WebsiteRendererProps) {
           if (isTeamContent(content)) {
             return (
               <TeamBlock
+                key={block.id}
+                content={content}
+                settings={settings}
+              />
+            );
+          }
+          break;
+
+        case 'logo-cloud':
+          if (isLogoCloudContent(content)) {
+            return (
+              <LogoCloudBlock
+                key={block.id}
+                content={content}
+                settings={settings}
+              />
+            );
+          }
+          break;
+
+        case 'gallery':
+          if (isGalleryContent(content)) {
+            return (
+              <GalleryBlock
+                key={block.id}
+                content={content}
+                settings={settings}
+              />
+            );
+          }
+          break;
+
+        case 'process':
+          if (isProcessContent(content)) {
+            return (
+              <ProcessBlock
+                key={block.id}
+                content={content}
+                settings={settings}
+              />
+            );
+          }
+          break;
+
+        case 'video':
+          if (isVideoContent(content)) {
+            return (
+              <VideoBlock
                 key={block.id}
                 content={content}
                 settings={settings}
