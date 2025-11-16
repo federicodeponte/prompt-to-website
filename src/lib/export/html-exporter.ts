@@ -33,21 +33,37 @@ export function exportToHTML(config: WebsiteConfig): string {
     }
   `;
 
-  // Generate HTML for blocks (simplified - just show a message)
-  const blocksHTML = `
-    <main class="min-h-screen">
-      <div class="container mx-auto px-4 py-16 text-center">
-        <h1 class="text-4xl font-bold mb-4">Website Export</h1>
-        <p class="text-lg text-gray-600 mb-8">This is a static export of your website.</p>
-        <p class="text-sm text-gray-500">
-          Your website contains ${blocks.length} block${blocks.length !== 1 ? 's' : ''}.
-        </p>
-        <p class="text-sm text-gray-500 mt-4">
-          For a fully functional website, please deploy through the editor.
-        </p>
-      </div>
-    </main>
-  `;
+  // Generate HTML for each block
+  const blocksHTML = blocks.map(block => {
+    const content = block.content as any;
+
+    switch (block.type) {
+      case 'hero':
+        return generateHeroHTML(content);
+      case 'features':
+        return generateFeaturesHTML(content);
+      case 'pricing':
+        return generatePricingHTML(content);
+      case 'testimonials':
+        return generateTestimonialsHTML(content);
+      case 'cta':
+        return generateCTAHTML(content);
+      case 'footer':
+        return generateFooterHTML(content);
+      case 'faq':
+        return generateFAQHTML(content);
+      case 'stats':
+        return generateStatsHTML(content);
+      case 'contact':
+        return generateContactHTML(content);
+      case 'newsletter':
+        return generateNewsletterHTML(content);
+      case 'team':
+        return generateTeamHTML(content);
+      default:
+        return '';
+    }
+  }).join('\n');
 
   // Complete HTML document
   const html = `<!DOCTYPE html>
@@ -105,4 +121,248 @@ export function downloadHTML(html: string, filename: string = 'website.html'): v
   a.download = filename;
   a.click();
   URL.revokeObjectURL(url);
+}
+
+// Block generators
+function generateHeroHTML(content: any): string {
+  if (content.variant === 'centered') {
+    return `
+      <section class="py-20 px-6 text-center bg-gradient-to-b from-white to-gray-50">
+        <div class="container mx-auto max-w-4xl">
+          <h1 class="text-5xl md:text-6xl font-bold mb-6">${escapeHTML(content.heading)}</h1>
+          <p class="text-xl md:text-2xl text-gray-600 mb-8">${escapeHTML(content.subheading)}</p>
+          <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="${escapeHTML(content.ctaPrimary.link)}" class="inline-block px-8 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700">${escapeHTML(content.ctaPrimary.text)}</a>
+            ${content.ctaSecondary ? `<a href="${escapeHTML(content.ctaSecondary.link)}" class="inline-block px-8 py-3 border-2 border-gray-300 rounded-lg font-semibold hover:border-gray-400">${escapeHTML(content.ctaSecondary.text)}</a>` : ''}
+          </div>
+        </div>
+      </section>
+    `;
+  }
+  return '';
+}
+
+function generateFeaturesHTML(content: any): string {
+  if (content.variant === 'grid') {
+    return `
+      <section class="py-20 px-6">
+        <div class="container mx-auto max-w-6xl">
+          <div class="text-center mb-16">
+            <h2 class="text-4xl font-bold mb-4">${escapeHTML(content.heading)}</h2>
+            ${content.subheading ? `<p class="text-xl text-gray-600">${escapeHTML(content.subheading)}</p>` : ''}
+          </div>
+          <div class="grid md:grid-cols-${content.columns || 3} gap-8">
+            ${content.features.map((feature: any) => `
+              <div class="text-center p-6">
+                <div class="text-4xl mb-4">${feature.icon}</div>
+                <h3 class="text-xl font-semibold mb-2">${escapeHTML(feature.title)}</h3>
+                <p class="text-gray-600">${escapeHTML(feature.description)}</p>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      </section>
+    `;
+  }
+  return '';
+}
+
+function generatePricingHTML(content: any): string {
+  return `
+    <section class="py-20 px-6 bg-gray-50">
+      <div class="container mx-auto max-w-6xl">
+        <div class="text-center mb-16">
+          <h2 class="text-4xl font-bold mb-4">${escapeHTML(content.heading)}</h2>
+          ${content.subheading ? `<p class="text-xl text-gray-600">${escapeHTML(content.subheading)}</p>` : ''}
+        </div>
+        <div class="grid md:grid-cols-3 gap-8">
+          ${content.tiers.map((tier: any) => `
+            <div class="bg-white rounded-lg shadow-lg p-8 ${tier.highlighted ? 'ring-2 ring-blue-600' : ''}">
+              <h3 class="text-2xl font-bold mb-2">${escapeHTML(tier.name)}</h3>
+              <p class="text-gray-600 mb-4">${escapeHTML(tier.description)}</p>
+              <div class="mb-6">
+                <span class="text-4xl font-bold">${escapeHTML(tier.price)}</span>
+                <span class="text-gray-600">/${escapeHTML(tier.period)}</span>
+              </div>
+              <ul class="mb-8 space-y-3">
+                ${tier.features.map((feature: string) => `<li class="flex items-center"><svg class="w-5 h-5 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/></svg>${escapeHTML(feature)}</li>`).join('')}
+              </ul>
+              <a href="${escapeHTML(tier.ctaLink)}" class="block text-center px-6 py-3 ${tier.highlighted ? 'bg-blue-600 text-white' : 'bg-gray-100'} rounded-lg font-semibold hover:bg-blue-700 hover:text-white">${escapeHTML(tier.ctaText)}</a>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    </section>
+  `;
+}
+
+function generateTestimonialsHTML(content: any): string {
+  return `
+    <section class="py-20 px-6">
+      <div class="container mx-auto max-w-6xl">
+        <div class="text-center mb-16">
+          <h2 class="text-4xl font-bold mb-4">${escapeHTML(content.heading)}</h2>
+          ${content.subheading ? `<p class="text-xl text-gray-600">${escapeHTML(content.subheading)}</p>` : ''}
+        </div>
+        <div class="grid md:grid-cols-${content.columns || 3} gap-8">
+          ${content.testimonials.map((testimonial: any) => `
+            <div class="bg-white rounded-lg shadow p-6">
+              <p class="text-gray-700 mb-4">"${escapeHTML(testimonial.quote)}"</p>
+              <div class="flex items-center">
+                <div class="ml-3">
+                  <p class="font-semibold">${escapeHTML(testimonial.author)}</p>
+                  <p class="text-sm text-gray-600">${escapeHTML(testimonial.role)} at ${escapeHTML(testimonial.company)}</p>
+                </div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    </section>
+  `;
+}
+
+function generateCTAHTML(content: any): string {
+  return `
+    <section class="py-20 px-6 bg-blue-600 text-white">
+      <div class="container mx-auto max-w-4xl text-center">
+        <h2 class="text-4xl font-bold mb-4">${escapeHTML(content.heading)}</h2>
+        <p class="text-xl mb-8">${escapeHTML(content.description)}</p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a href="${escapeHTML(content.ctaPrimary.link)}" class="inline-block px-8 py-3 bg-white text-blue-600 rounded-lg font-semibold hover:bg-gray-100">${escapeHTML(content.ctaPrimary.text)}</a>
+          ${content.ctaSecondary ? `<a href="${escapeHTML(content.ctaSecondary.link)}" class="inline-block px-8 py-3 border-2 border-white rounded-lg font-semibold hover:bg-blue-700">${escapeHTML(content.ctaSecondary.text)}</a>` : ''}
+        </div>
+      </div>
+    </section>
+  `;
+}
+
+function generateFooterHTML(content: any): string {
+  return `
+    <footer class="bg-gray-900 text-white py-12 px-6">
+      <div class="container mx-auto max-w-6xl">
+        <div class="grid md:grid-cols-4 gap-8">
+          <div>
+            <h3 class="font-bold text-lg mb-4">${escapeHTML(content.logo)}</h3>
+            ${content.tagline ? `<p class="text-gray-400">${escapeHTML(content.tagline)}</p>` : ''}
+          </div>
+          ${content.sections ? content.sections.map((section: any) => `
+            <div>
+              <h4 class="font-semibold mb-4">${escapeHTML(section.title)}</h4>
+              <ul class="space-y-2">
+                ${section.links.map((link: any) => `<li><a href="${escapeHTML(link.link)}" class="text-gray-400 hover:text-white">${escapeHTML(link.text)}</a></li>`).join('')}
+              </ul>
+            </div>
+          `).join('') : ''}
+        </div>
+        ${content.copyright ? `<div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400"><p>${escapeHTML(content.copyright)}</p></div>` : ''}
+      </div>
+    </footer>
+  `;
+}
+
+function generateFAQHTML(content: any): string {
+  return `
+    <section class="py-20 px-6">
+      <div class="container mx-auto max-w-3xl">
+        <div class="text-center mb-16">
+          <h2 class="text-4xl font-bold mb-4">${escapeHTML(content.heading)}</h2>
+          ${content.subheading ? `<p class="text-xl text-gray-600">${escapeHTML(content.subheading)}</p>` : ''}
+        </div>
+        <div class="space-y-4">
+          ${content.faqs.map((faq: any) => `
+            <details class="bg-white rounded-lg shadow p-6">
+              <summary class="font-semibold cursor-pointer">${escapeHTML(faq.question)}</summary>
+              <p class="mt-4 text-gray-600">${escapeHTML(faq.answer)}</p>
+            </details>
+          `).join('')}
+        </div>
+      </div>
+    </section>
+  `;
+}
+
+function generateStatsHTML(content: any): string {
+  return `
+    <section class="py-20 px-6 bg-gray-50">
+      <div class="container mx-auto max-w-6xl">
+        ${content.heading ? `<div class="text-center mb-12"><h2 class="text-4xl font-bold">${escapeHTML(content.heading)}</h2></div>` : ''}
+        <div class="grid md:grid-cols-${content.columns || 4} gap-8">
+          ${content.stats.map((stat: any) => `
+            <div class="text-center">
+              <div class="text-4xl font-bold text-blue-600 mb-2">${stat.prefix || ''}${escapeHTML(stat.value)}${stat.suffix || ''}</div>
+              <div class="text-xl font-semibold mb-1">${escapeHTML(stat.label)}</div>
+              ${stat.description ? `<p class="text-gray-600">${escapeHTML(stat.description)}</p>` : ''}
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    </section>
+  `;
+}
+
+function generateContactHTML(content: any): string {
+  return `
+    <section class="py-20 px-6">
+      <div class="container mx-auto max-w-4xl">
+        <div class="text-center mb-12">
+          <h2 class="text-4xl font-bold mb-4">${escapeHTML(content.heading)}</h2>
+          <p class="text-xl text-gray-600">${escapeHTML(content.description)}</p>
+        </div>
+        <div class="grid md:grid-cols-2 gap-8">
+          <div>
+            ${content.email ? `<p class="mb-4"><strong>Email:</strong> <a href="mailto:${escapeHTML(content.email)}" class="text-blue-600">${escapeHTML(content.email)}</a></p>` : ''}
+            ${content.phone ? `<p class="mb-4"><strong>Phone:</strong> ${escapeHTML(content.phone)}</p>` : ''}
+            ${content.address ? `<p class="mb-4"><strong>Address:</strong> ${escapeHTML(content.address)}</p>` : ''}
+          </div>
+          ${content.showForm ? `
+            <form class="space-y-4">
+              <input type="text" placeholder="Name" class="w-full px-4 py-2 border rounded-lg">
+              <input type="email" placeholder="Email" class="w-full px-4 py-2 border rounded-lg">
+              <textarea placeholder="Message" rows="4" class="w-full px-4 py-2 border rounded-lg"></textarea>
+              <button type="submit" class="w-full px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700">Send Message</button>
+            </form>
+          ` : ''}
+        </div>
+      </div>
+    </section>
+  `;
+}
+
+function generateNewsletterHTML(content: any): string {
+  return `
+    <section class="py-20 px-6 bg-blue-600 text-white">
+      <div class="container mx-auto max-w-2xl text-center">
+        <h2 class="text-3xl font-bold mb-4">${escapeHTML(content.heading)}</h2>
+        <p class="text-lg mb-8">${escapeHTML(content.description)}</p>
+        <form class="flex flex-col sm:flex-row gap-4">
+          <input type="email" placeholder="${escapeHTML(content.placeholder)}" class="flex-1 px-4 py-3 rounded-lg text-gray-900">
+          <button type="submit" class="px-8 py-3 bg-white text-blue-600 rounded-lg font-semibold hover:bg-gray-100">${escapeHTML(content.ctaText)}</button>
+        </form>
+      </div>
+    </section>
+  `;
+}
+
+function generateTeamHTML(content: any): string {
+  return `
+    <section class="py-20 px-6">
+      <div class="container mx-auto max-w-6xl">
+        <div class="text-center mb-16">
+          <h2 class="text-4xl font-bold mb-4">${escapeHTML(content.heading)}</h2>
+          ${content.subheading ? `<p class="text-xl text-gray-600">${escapeHTML(content.subheading)}</p>` : ''}
+        </div>
+        <div class="grid md:grid-cols-${content.columns || 3} gap-8">
+          ${content.members.map((member: any) => `
+            <div class="text-center">
+              <div class="w-32 h-32 rounded-full bg-gray-200 mx-auto mb-4"></div>
+              <h3 class="text-xl font-semibold mb-1">${escapeHTML(member.name)}</h3>
+              <p class="text-gray-600 mb-2">${escapeHTML(member.role)}</p>
+              <p class="text-sm text-gray-500">${escapeHTML(member.bio)}</p>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    </section>
+  `;
 }

@@ -4,11 +4,17 @@
 export { saasLandingTemplate } from './saas-landing';
 export { productLandingTemplate } from './product-landing';
 export { portfolioTemplate } from './portfolio';
+export { agencyTemplate } from './agency';
+export { ecommerceTemplate } from './ecommerce';
+export { blogTemplate } from './blog';
 
 import { WebsiteConfig } from '../types/website-config';
 import { saasLandingTemplate } from './saas-landing';
 import { productLandingTemplate } from './product-landing';
 import { portfolioTemplate } from './portfolio';
+import { agencyTemplate } from './agency';
+import { ecommerceTemplate } from './ecommerce';
+import { blogTemplate } from './blog';
 
 /**
  * Template metadata for UI display
@@ -35,6 +41,13 @@ export const templates: TemplateMetadata[] = [
     config: saasLandingTemplate,
   },
   {
+    id: 'agency',
+    name: 'Digital Agency',
+    description: 'Professional services showcase with team, portfolio, and client testimonials. Ideal for agencies and consultants.',
+    category: 'business',
+    config: agencyTemplate,
+  },
+  {
     id: 'product-landing',
     name: 'Product Landing Page',
     description: 'Showcase a specific product with features, stats, FAQ, and compelling CTAs.',
@@ -42,11 +55,25 @@ export const templates: TemplateMetadata[] = [
     config: productLandingTemplate,
   },
   {
+    id: 'ecommerce',
+    name: 'E-commerce Product',
+    description: 'Conversion-optimized product page with pricing tiers, customer reviews, and detailed features.',
+    category: 'product',
+    config: ecommerceTemplate,
+  },
+  {
     id: 'portfolio',
     name: 'Portfolio',
     description: 'Personal portfolio to showcase your work, skills, and client testimonials.',
     category: 'personal',
     config: portfolioTemplate,
+  },
+  {
+    id: 'blog',
+    name: 'Blog & Content',
+    description: 'Content-focused website for writers, developers, and creators. Includes newsletter and author showcase.',
+    category: 'personal',
+    config: blogTemplate,
   },
 ];
 
