@@ -151,20 +151,20 @@ export function FeaturesGrid({ content }: FeaturesGridProps) {
                     <CardContent className="p-6">
                     {/* Icon with pulse animation */}
                     <motion.div
-                      className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10"
+                      className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-theme-primary/10"
                       whileHover={{ scale: 1.1, rotate: 5 }}
                       transition={{ type: 'spring', stiffness: 400, damping: 10 }}
                     >
-                      <IconComponent className="h-6 w-6 text-primary" />
+                      <IconComponent className="h-6 w-6 text-theme-primary" />
                     </motion.div>
 
                     {/* Title - clean typography */}
-                    <h3 className="mb-2 text-lg font-semibold text-foreground">
+                    <h3 className="font-theme-heading mb-2 text-lg font-semibold text-foreground">
                       {feature.title}
                     </h3>
 
                     {/* Description - subtle gray */}
-                    <p className="text-sm text-muted-foreground leading-relaxed">
+                    <p className="font-theme-body text-sm text-muted-foreground leading-relaxed">
                       {feature.description}
                     </p>
                     </CardContent>

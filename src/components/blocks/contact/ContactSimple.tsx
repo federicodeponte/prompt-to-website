@@ -31,10 +31,10 @@ export function ContactSimple({ content }: ContactSimpleProps) {
         viewport={{ once: true }}
         transition={{ duration: 0.3 }}
       >
-        <h2 className="mb-4 text-3xl font-semibold tracking-tight text-foreground sm:text-4xl lg:text-5xl">
+        <h2 className="font-theme-heading mb-4 text-3xl font-semibold tracking-tight text-foreground sm:text-4xl lg:text-5xl">
           {heading}
         </h2>
-        <p className="text-base text-muted-foreground leading-relaxed">{description}</p>
+        <p className="font-theme-body text-base text-muted-foreground leading-relaxed">{description}</p>
       </motion.div>
 
       {/* Contact Info */}
@@ -54,8 +54,8 @@ export function ContactSimple({ content }: ContactSimpleProps) {
             >
               <Card className="border rounded-theme-card shadow-theme-card">
               <CardContent className="flex flex-col items-center p-6 text-center">
-                <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
-                  <Mail className="h-6 w-6 text-primary" />
+                <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-lg bg-theme-primary/10">
+                  <Mail className="h-6 w-6 text-theme-primary" />
                 </div>
                 <div className="mb-2 font-semibold text-foreground">Email</div>
                 <a
@@ -84,8 +84,8 @@ export function ContactSimple({ content }: ContactSimpleProps) {
             >
               <Card className="border rounded-theme-card shadow-theme-card">
               <CardContent className="flex flex-col items-center p-6 text-center">
-                <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
-                  <Phone className="h-6 w-6 text-primary" />
+                <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-lg bg-theme-primary/10">
+                  <Phone className="h-6 w-6 text-theme-primary" />
                 </div>
                 <div className="mb-2 font-semibold text-foreground">Phone</div>
                 <a
@@ -114,11 +114,11 @@ export function ContactSimple({ content }: ContactSimpleProps) {
             >
               <Card className="border rounded-theme-card shadow-theme-card">
               <CardContent className="flex flex-col items-center p-6 text-center">
-                <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
-                  <MapPin className="h-6 w-6 text-primary" />
+                <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-lg bg-theme-primary/10">
+                  <MapPin className="h-6 w-6 text-theme-primary" />
                 </div>
                 <div className="mb-2 font-semibold text-foreground">Address</div>
-                <p className="text-sm text-muted-foreground">{address}</p>
+                <p className="font-theme-body text-sm text-muted-foreground">{address}</p>
               </CardContent>
             </Card>
             </motion.div>

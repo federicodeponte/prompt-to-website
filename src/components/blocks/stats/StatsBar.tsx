@@ -35,7 +35,7 @@ export function StatsBar({ content }: StatsBarProps) {
               {subheading}
             </Badge>
           )}
-          <h2 className="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
+          <h2 className="font-theme-heading text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
             {heading}
           </h2>
         </motion.div>

@@ -30,10 +30,10 @@ export function FAQGrid({ content }: FAQGridProps) {
     <div className="space-y-12">
       {/* Header */}
       <div className="mx-auto max-w-3xl text-center">
-        <p className="mb-4 text-sm font-semibold uppercase tracking-wide text-primary">
+        <p className="font-theme-body mb-4 text-sm font-semibold uppercase tracking-wide text-theme-primary">
           {subheading}
         </p>
-        <h2 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
+        <h2 className="font-theme-heading text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
           {heading}
         </h2>
       </div>
@@ -59,7 +59,7 @@ export function FAQGrid({ content }: FAQGridProps) {
               <CardTitle className="text-lg">{faq.question}</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-muted-foreground">{faq.answer}</p>
+              <p className="font-theme-body text-muted-foreground">{faq.answer}</p>
             </CardContent>
           </Card>
             </motion.div>

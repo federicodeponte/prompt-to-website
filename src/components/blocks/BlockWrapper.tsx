@@ -29,7 +29,7 @@ export function BlockWrapper({
 }: BlockWrapperProps) {
   const spacingClasses = {
     tight: 'py-8 md:py-12',
-    normal: 'py-12 md:py-16 lg:py-20',
+    normal: 'section-spacing',
     loose: 'py-16 md:py-24 lg:py-32',
   };
 

@@ -42,7 +42,7 @@ export function HeroCentered({ content, theme }: HeroCenteredProps) {
       />
 
       {/* Content - MUCH more whitespace */}
-      <div className="relative z-10 mx-auto max-w-5xl px-6 py-32 text-center sm:py-40 lg:py-48">
+      <div className="relative z-10 mx-auto max-w-5xl px-6 text-center section-spacing">
         {/* Badge - clean and minimal */}
         <motion.div
           variants={fadeInUp}

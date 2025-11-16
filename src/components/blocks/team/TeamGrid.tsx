@@ -55,7 +55,7 @@ export function TeamGrid({ content }: TeamGridProps) {
             {subheading}
           </Badge>
         )}
-        <h2 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl lg:text-5xl">
+        <h2 className="font-theme-heading text-3xl font-semibold tracking-tight text-foreground sm:text-4xl lg:text-5xl">
           {heading}
         </h2>
       </motion.div>
@@ -88,14 +88,14 @@ export function TeamGrid({ content }: TeamGridProps) {
                   </Avatar>
 
                   {/* Name */}
-                  <h3 className="mb-1 text-lg font-semibold text-foreground">{member.name}</h3>
+                  <h3 className="font-theme-heading mb-1 text-lg font-semibold text-foreground">{member.name}</h3>
 
                   {/* Role */}
-                  <p className="mb-3 text-sm font-medium text-primary">{member.role}</p>
+                  <p className="font-theme-body mb-3 text-sm font-medium text-theme-primary">{member.role}</p>
 
                   {/* Bio */}
                   {member.bio && (
-                    <p className="mb-4 text-sm text-muted-foreground leading-relaxed">{member.bio}</p>
+                    <p className="font-theme-body mb-4 text-sm text-muted-foreground leading-relaxed">{member.bio}</p>
                   )}
 
                   {/* Social Links */}

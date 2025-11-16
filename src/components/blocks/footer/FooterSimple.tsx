@@ -20,7 +20,7 @@ export function FooterSimple({ content }: FooterSimpleProps) {
           {/* Logo & Tagline */}
           <div>
             <div className="mb-2 text-xl font-semibold text-foreground">{logo}</div>
-            {tagline && <p className="text-sm text-muted-foreground">{tagline}</p>}
+            {tagline && <p className="font-theme-body text-sm text-muted-foreground">{tagline}</p>}
           </div>
 
           {/* Links */}
@@ -76,7 +76,7 @@ export function FooterSimple({ content }: FooterSimpleProps) {
 
           {/* Copyright */}
           {copyright && (
-            <p className="text-xs text-muted-foreground">{copyright}</p>
+            <p className="font-theme-body text-xs text-muted-foreground">{copyright}</p>
           )}
         </div>
       </div>

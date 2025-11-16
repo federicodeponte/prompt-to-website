@@ -299,4 +299,37 @@
   .shadow-theme-button {
     box-shadow: var(--shadow-theme-button);
   }
+
+  /* Theme color opacity variants (common use cases) */
+  .bg-theme-primary\/5 {
+    background-color: color-mix(in srgb, var(--color-theme-primary) 5%, transparent);
+  }
+
+  .bg-theme-primary\/10 {
+    background-color: color-mix(in srgb, var(--color-theme-primary) 10%, transparent);
+  }
+
+  .bg-theme-primary\/20 {
+    background-color: color-mix(in srgb, var(--color-theme-primary) 20%, transparent);
+  }
+
+  .bg-theme-secondary\/5 {
+    background-color: color-mix(in srgb, var(--color-theme-secondary) 5%, transparent);
+  }
+
+  .bg-theme-secondary\/10 {
+    background-color: color-mix(in srgb, var(--color-theme-secondary) 10%, transparent);
+  }
+
+  .bg-theme-secondary\/20 {
+    background-color: color-mix(in srgb, var(--color-theme-secondary) 20%, transparent);
+  }
+
+  .text-theme-primary\/80 {
+    color: color-mix(in srgb, var(--color-theme-primary) 80%, transparent);
+  }
+
+  .border-theme-primary\/20 {
+    border-color: color-mix(in srgb, var(--color-theme-primary) 20%, transparent);
+  }
 }

@@ -55,7 +55,7 @@ export function HeroGradient({ content, theme }: HeroGradientProps) {
       ))}
 
       {/* Content */}
-      <div className="relative z-10 mx-auto max-w-5xl px-6 py-24 md:py-32 text-center">
+      <div className="relative z-10 mx-auto max-w-5xl px-6 text-center section-spacing">
         {/* Animated Badge */}
         <motion.div
           variants={fadeInUp}
@@ -128,7 +128,7 @@ export function HeroGradient({ content, theme }: HeroGradientProps) {
                 variants={staggerItem}
                 whileHover={{ scale: 1.05 }}
               >
-                <Check className="h-5 w-5 text-primary" aria-hidden="true" />
+                <Check className="h-5 w-5 text-theme-primary" aria-hidden="true" />
                 <span className="text-sm font-medium">{feature}</span>
               </motion.div>
             ))}

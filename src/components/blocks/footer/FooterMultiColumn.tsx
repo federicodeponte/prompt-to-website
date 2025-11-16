@@ -20,7 +20,7 @@ export function FooterMultiColumn({ content }: FooterMultiColumnProps) {
           {/* Logo & Tagline */}
           <div>
             <div className="mb-3 text-xl font-semibold text-foreground">{logo}</div>
-            {tagline && <p className="mb-4 text-sm text-muted-foreground">{tagline}</p>}
+            {tagline && <p className="font-theme-body mb-4 text-sm text-muted-foreground">{tagline}</p>}
             {/* Social Links */}
             {social && (
               <div className="flex gap-4">
@@ -58,7 +58,7 @@ export function FooterMultiColumn({ content }: FooterMultiColumnProps) {
           {/* Link Sections */}
           {sections && sections.length > 0 && sections.map((section, index) => (
             <div key={index}>
-              <h3 className="mb-4 text-sm font-semibold text-foreground">{section.title}</h3>
+              <h3 className="font-theme-heading mb-4 text-sm font-semibold text-foreground">{section.title}</h3>
               <ul className="space-y-3">
                 {section.links && section.links.map((link, linkIndex) => (
                   <li key={linkIndex}>
@@ -80,7 +80,7 @@ export function FooterMultiColumn({ content }: FooterMultiColumnProps) {
           <>
             <Separator className="my-8" />
             <div className="text-center">
-              <p className="text-xs text-muted-foreground">{copyright}</p>
+              <p className="font-theme-body text-xs text-muted-foreground">{copyright}</p>
             </div>
           </>
         )}

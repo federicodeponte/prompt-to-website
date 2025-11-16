@@ -148,7 +148,7 @@ export function PricingComparison({ content, theme }: PricingComparisonProps) {
                       </span>
                       <span className="text-sm text-muted-foreground">/{tier.period}</span>
                     </div>
-                    <p className="text-sm text-muted-foreground px-4">{tier.description}</p>
+                    <p className="font-theme-body text-sm text-muted-foreground px-4">{tier.description}</p>
 
                     <div className="px-4 pt-2">
                       <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}>
@@ -194,7 +194,7 @@ export function PricingComparison({ content, theme }: PricingComparisonProps) {
                     key={tierIndex}
                     className={cn(
                       'text-center',
-                      tier.highlighted && 'bg-primary/5'
+                      tier.highlighted && 'bg-theme-primary/5'
                     )}
                   >
                     {renderFeatureValue(feature.tiers[tier.name])}
@@ -264,14 +264,14 @@ export function PricingComparison({ content, theme }: PricingComparisonProps) {
               <CardContent className="flex-1 flex flex-col p-6 pt-10">
                 {/* Tier header */}
                 <div className="text-center mb-6 pb-6 border-b">
-                  <h3 className="text-2xl font-bold mb-2">{tier.name}</h3>
+                  <h3 className="font-theme-heading text-2xl font-bold mb-2">{tier.name}</h3>
                   <div className="mt-4">
                     <span className="text-5xl font-extrabold bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
                       {tier.price}
                     </span>
                     <span className="text-lg text-muted-foreground">/{tier.period}</span>
                   </div>
-                  <p className="mt-4 text-sm text-muted-foreground">{tier.description}</p>
+                  <p className="font-theme-body mt-4 text-sm text-muted-foreground">{tier.description}</p>
                 </div>
 
                 {/* Features list for this tier */}

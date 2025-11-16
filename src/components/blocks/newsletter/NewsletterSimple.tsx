@@ -28,10 +28,10 @@ export function NewsletterSimple({ content, theme }: NewsletterSimpleProps) {
       viewport={{ once: true }}
       transition={{ duration: 0.3 }}
     >
-      <h2 className="mb-4 text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
+      <h2 className="font-theme-heading mb-4 text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
         {heading}
       </h2>
-      <p className="mb-8 text-base text-muted-foreground leading-relaxed">{description}</p>
+      <p className="font-theme-body mb-8 text-base text-muted-foreground leading-relaxed">{description}</p>
 
       <form className="flex flex-col gap-3 sm:flex-row sm:justify-center">
         <div className="relative flex-1 sm:max-w-md">
@@ -51,7 +51,7 @@ export function NewsletterSimple({ content, theme }: NewsletterSimpleProps) {
         </Button>
       </form>
 
-      <p className="mt-4 text-xs text-muted-foreground">
+      <p className="font-theme-body mt-4 text-xs text-muted-foreground">
         We respect your privacy. Unsubscribe at any time.
       </p>
     </motion.div>

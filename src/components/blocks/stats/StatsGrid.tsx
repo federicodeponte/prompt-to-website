@@ -42,7 +42,7 @@ export function StatsGrid({ content }: StatsGridProps) {
               {subheading}
             </Badge>
           )}
-          <h2 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl lg:text-5xl">
+          <h2 className="font-theme-heading text-3xl font-semibold tracking-tight text-foreground sm:text-4xl lg:text-5xl">
             {heading}
           </h2>
         </motion.div>
@@ -66,7 +66,7 @@ export function StatsGrid({ content }: StatsGridProps) {
             </div>
             <div className="text-base font-medium text-foreground">{stat.label}</div>
             {stat.description && (
-              <p className="mt-1 text-sm text-muted-foreground leading-relaxed">
+              <p className="font-theme-body mt-1 text-sm text-muted-foreground leading-relaxed">
                 {stat.description}
               </p>
             )}

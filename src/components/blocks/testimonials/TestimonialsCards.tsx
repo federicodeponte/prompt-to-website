@@ -79,7 +79,7 @@ export function TestimonialsCards({ content }: TestimonialsCardsProps) {
           </Badge>
         )}
 
-        <h2 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl lg:text-5xl">
+        <h2 className="font-theme-heading text-3xl font-semibold tracking-tight text-foreground sm:text-4xl lg:text-5xl">
           {heading}
         </h2>
       </motion.div>
@@ -112,7 +112,7 @@ export function TestimonialsCards({ content }: TestimonialsCardsProps) {
 
                   {/* Quote */}
                   <blockquote className="mb-6 flex-1">
-                    <p className="text-sm leading-relaxed text-foreground">
+                    <p className="font-theme-body text-sm leading-relaxed text-foreground">
                       "{testimonial.quote}"
                     </p>
                   </blockquote>

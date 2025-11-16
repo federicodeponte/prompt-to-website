@@ -88,7 +88,7 @@ export function PricingSimple({ content, theme }: PricingSimpleProps) {
                 <CardContent className="flex flex-1 flex-col p-6">
                   {/* Tier name and pricing */}
                   <div className="mb-6 text-center">
-                    <h3 className="mb-2 text-lg font-semibold text-foreground">
+                    <h3 className="font-theme-heading mb-2 text-lg font-semibold text-foreground">
                       {tier.name}
                     </h3>
                     <div className="mt-4">
@@ -97,7 +97,7 @@ export function PricingSimple({ content, theme }: PricingSimpleProps) {
                       </span>
                       <span className="text-sm text-muted-foreground">/{tier.period}</span>
                     </div>
-                    <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
+                    <p className="font-theme-body mt-3 text-sm text-muted-foreground leading-relaxed">
                       {tier.description}
                     </p>
                   </div>
@@ -108,7 +108,7 @@ export function PricingSimple({ content, theme }: PricingSimpleProps) {
                       {tier.features.map((feature, featureIndex) => (
                         <li key={featureIndex} className="flex items-start gap-3">
                           <Check
-                            className="mt-0.5 h-4 w-4 flex-shrink-0 text-primary"
+                            className="mt-0.5 h-4 w-4 flex-shrink-0 text-theme-primary"
                             aria-hidden="true"
                           />
                           <span className="text-muted-foreground">{feature}</span>

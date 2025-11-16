@@ -20,10 +20,10 @@ export function TeamList({ content }: TeamListProps) {
     <div className="space-y-12">
       {/* Header */}
       <div className="mx-auto max-w-3xl text-center">
-        <p className="mb-4 text-sm font-semibold uppercase tracking-wide text-primary">
+        <p className="font-theme-body mb-4 text-sm font-semibold uppercase tracking-wide text-theme-primary">
           {subheading}
         </p>
-        <h2 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
+        <h2 className="font-theme-heading text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
           {heading}
         </h2>
       </div>
@@ -52,7 +52,7 @@ export function TeamList({ content }: TeamListProps) {
                     />
                   </div>
                 ) : (
-                  <div className="flex h-32 w-32 items-center justify-center rounded-full bg-primary/10 text-5xl font-bold text-primary">
+                  <div className="flex h-32 w-32 items-center justify-center rounded-full bg-theme-primary/10 text-5xl font-bold text-theme-primary">
                     {member.name.charAt(0)}
                   </div>
                 )}
@@ -61,13 +61,13 @@ export function TeamList({ content }: TeamListProps) {
               {/* Content */}
               <div className="flex-1 text-center md:text-left">
                 {/* Name */}
-                <h3 className="mb-1 text-2xl font-semibold">{member.name}</h3>
+                <h3 className="font-theme-heading mb-1 text-2xl font-semibold">{member.name}</h3>
 
                 {/* Role */}
-                <p className="mb-3 text-base font-medium text-primary">{member.role}</p>
+                <p className="font-theme-body mb-3 text-base font-medium text-theme-primary">{member.role}</p>
 
                 {/* Bio */}
-                <p className="mb-4 text-muted-foreground">{member.bio}</p>
+                <p className="font-theme-body mb-4 text-muted-foreground">{member.bio}</p>
 
                 {/* Social Links */}
                 {member.social && (
@@ -77,7 +77,7 @@ export function TeamList({ content }: TeamListProps) {
                         href={member.social.linkedin}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-muted-foreground transition-colors hover:text-primary"
+                        className="text-muted-foreground transition-colors hover:text-theme-primary"
                         aria-label={`${member.name} on LinkedIn`}
                       >
                         <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -90,7 +90,7 @@ export function TeamList({ content }: TeamListProps) {
                         href={member.social.twitter}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-muted-foreground transition-colors hover:text-primary"
+                        className="text-muted-foreground transition-colors hover:text-theme-primary"
                         aria-label={`${member.name} on Twitter`}
                       >
                         <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -103,7 +103,7 @@ export function TeamList({ content }: TeamListProps) {
                         href={member.social.github}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-muted-foreground transition-colors hover:text-primary"
+                        className="text-muted-foreground transition-colors hover:text-theme-primary"
                         aria-label={`${member.name} on GitHub`}
                       >
                         <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -114,7 +114,7 @@ export function TeamList({ content }: TeamListProps) {
                     {member.social.email && (
                       <a
                         href={`mailto:${member.social.email}`}
-                        className="text-muted-foreground transition-colors hover:text-primary"
+                        className="text-muted-foreground transition-colors hover:text-theme-primary"
                         aria-label={`Email ${member.name}`}
                       >
                         <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">

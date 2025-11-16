@@ -126,7 +126,7 @@ export function FeaturesList({ content }: FeaturesListProps) {
                           whileHover={{ scale: 1.2, rotate: 360 }}
                           transition={springMedium}
                         >
-                          <Check className="h-6 w-6 text-primary" aria-hidden="true" />
+                          <Check className="h-6 w-6 text-theme-primary" aria-hidden="true" />
                         </motion.div>
                         <h3 className={cn("text-3xl font-bold", getGradientTextClasses())}>
                           {feature.title}

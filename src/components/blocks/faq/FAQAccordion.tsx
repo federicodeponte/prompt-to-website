@@ -40,7 +40,7 @@ export function FAQAccordion({ content }: FAQAccordionProps) {
             {subheading}
           </Badge>
         )}
-        <h2 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl lg:text-5xl">
+        <h2 className="font-theme-heading text-3xl font-semibold tracking-tight text-foreground sm:text-4xl lg:text-5xl">
           {heading}
         </h2>
       </motion.div>

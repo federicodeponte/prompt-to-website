@@ -22,27 +22,27 @@ export function ContactSplit({ content }: ContactSplitProps) {
       {/* Form Side */}
       <div className="space-y-8">
         <div>
-          <h2 className="mb-4 text-3xl font-bold tracking-tight sm:text-4xl">
+          <h2 className="font-theme-heading mb-4 text-3xl font-bold tracking-tight sm:text-4xl">
             {heading}
           </h2>
-          <p className="text-lg text-muted-foreground">{description}</p>
+          <p className="font-theme-body text-lg text-muted-foreground">{description}</p>
         </div>
 
         <div className="space-y-4">
           <div className="flex items-center gap-3">
-            <Mail className="h-5 w-5 text-primary" />
-            <a href={`mailto:${email}`} className="hover:text-primary">
+            <Mail className="h-5 w-5 text-theme-primary" />
+            <a href={`mailto:${email}`} className="hover:text-theme-primary">
               {email}
             </a>
           </div>
           <div className="flex items-center gap-3">
-            <Phone className="h-5 w-5 text-primary" />
-            <a href={`tel:${phone}`} className="hover:text-primary">
+            <Phone className="h-5 w-5 text-theme-primary" />
+            <a href={`tel:${phone}`} className="hover:text-theme-primary">
               {phone}
             </a>
           </div>
           <div className="flex items-center gap-3">
-            <MapPin className="h-5 w-5 text-primary" />
+            <MapPin className="h-5 w-5 text-theme-primary" />
             <p>{address}</p>
           </div>
         </div>

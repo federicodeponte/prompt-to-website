@@ -33,12 +33,12 @@ export function CTASimple({ content, theme }: CTASimpleProps) {
     >
       <div className="mx-auto max-w-2xl text-center">
         {/* Heading */}
-        <h2 className="mb-4 text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
+        <h2 className="font-theme-heading mb-4 text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
           {heading}
         </h2>
 
         {/* Description */}
-        <p className="mb-8 text-base text-muted-foreground leading-relaxed sm:text-lg">
+        <p className="font-theme-body mb-8 text-base text-muted-foreground leading-relaxed sm:text-lg">
           {description}
         </p>
 

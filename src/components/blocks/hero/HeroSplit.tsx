@@ -45,7 +45,7 @@ export function HeroSplit({ content, theme }: HeroSplitProps) {
   const opacity = useTransform(scrollY, [0, 300], [1, 0.7]);
 
   return (
-    <div className="grid gap-12 lg:grid-cols-2 lg:gap-16 items-center py-16 md:py-24">
+    <div className="grid gap-12 lg:grid-cols-2 lg:gap-16 items-center section-spacing">
       {/* Text Content */}
       <motion.div
         className={cn('space-y-8', isImageRight ? 'lg:order-1' : 'lg:order-2')}

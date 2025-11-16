@@ -189,7 +189,7 @@ export function TestimonialsCarousel({ content }: TestimonialsCarouselProps) {
 
                   {/* Quote */}
                   <blockquote className="mb-12">
-                    <p className="text-2xl md:text-3xl font-medium text-center leading-relaxed italic text-muted-foreground">
+                    <p className="font-theme-body text-2xl md:text-3xl font-medium text-center leading-relaxed italic text-muted-foreground">
                       "{currentTestimonial.quote}"
                     </p>
                   </blockquote>
@@ -197,7 +197,7 @@ export function TestimonialsCarousel({ content }: TestimonialsCarouselProps) {
                   {/* Author Info */}
                   <div className="flex flex-col items-center gap-6">
                     {/* Avatar */}
-                    <Avatar className="h-16 w-16 border-2 border-primary/20">
+                    <Avatar className="h-16 w-16 border-2 border-theme-primary/20">
                       <AvatarImage
                         src={currentTestimonial.avatar}
                         alt={currentTestimonial.author}
