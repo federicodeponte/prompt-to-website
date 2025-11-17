@@ -13,8 +13,9 @@ import { ManualModePanel } from './ManualModePanel';
 import { ThemeModePanel } from './ThemeModePanel';
 import { PreviewPane } from './PreviewPane';
 import { useUpdateWebsite } from '@/lib/hooks/use-websites';
-import { Save, CheckCircle2, Download } from 'lucide-react';
+import { Save, CheckCircle2, Download, Undo2, Redo2, FileJson } from 'lucide-react';
 import { exportToHTML, downloadHTML } from '@/lib/export/html-exporter';
+import { exportToJSON, downloadJSON } from '@/lib/export/json-exporter';
 
 interface EditorLayoutProps {
   initialConfig: WebsiteConfig;
@@ -41,7 +42,6 @@ export function EditorLayout({ initialConfig, websiteId }: EditorLayoutProps) {
     blocks: initialConfig.blocks || [],
   };
 
-  const [config, setConfig] = useState<WebsiteConfig>(normalizedConfig);
   const [activeMode, setActiveMode] = useState<'ai' | 'manual' | 'theme'>('ai');
   const [lastSaved, setLastSaved] = useState<Date>(new Date());
   const [isSaving, setIsSaving] = useState(false);
@@ -51,6 +51,65 @@ export function EditorLayout({ initialConfig, websiteId }: EditorLayoutProps) {
 
   // Debounce timer ref
   const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Undo/Redo functionality
+  const [config, setConfigInternal] = useState<WebsiteConfig>(normalizedConfig);
+  const [history, setHistory] = useState<WebsiteConfig[]>([normalizedConfig]);
+  const [historyIndex, setHistoryIndex] = useState(0);
+
+  const canUndo = historyIndex > 0;
+  const canRedo = historyIndex < history.length - 1;
+
+  const setConfig = (newConfig: WebsiteConfig) => {
+    setConfigInternal(newConfig);
+
+    // Add to history (remove any "future" states)
+    setHistory(prev => {
+      const newHistory = prev.slice(0, historyIndex + 1);
+      newHistory.push(newConfig);
+
+      // Limit history to 50 items
+      if (newHistory.length > 50) {
+        newHistory.shift();
+        return newHistory;
+      }
+      return newHistory;
+    });
+
+    setHistoryIndex(prev => Math.min(prev + 1, 49));
+  };
+
+  const undo = () => {
+    if (canUndo) {
+      const newIndex = historyIndex - 1;
+      setHistoryIndex(newIndex);
+      setConfigInternal(history[newIndex]);
+
+      // Trigger save with undo state
+      if (saveTimeoutRef.current) {
+        clearTimeout(saveTimeoutRef.current);
+      }
+      saveTimeoutRef.current = setTimeout(() => {
+        handleSave(history[newIndex]);
+      }, 1000);
+    }
+  };
+
+  const redo = () => {
+    if (canRedo) {
+      const newIndex = historyIndex + 1;
+      setHistoryIndex(newIndex);
+      setConfigInternal(history[newIndex]);
+
+      // Trigger save with redo state
+      if (saveTimeoutRef.current) {
+        clearTimeout(saveTimeoutRef.current);
+      }
+      saveTimeoutRef.current = setTimeout(() => {
+        handleSave(history[newIndex]);
+      }, 1000);
+    }
+  };
 
   /**
    * Handle configuration updates from either AI or Manual mode
@@ -107,11 +166,50 @@ export function EditorLayout({ initialConfig, websiteId }: EditorLayoutProps) {
   /**
    * Export website as standalone HTML file
    */
-  const handleExport = () => {
+  const handleExportHTML = () => {
     const html = exportToHTML(config);
     const filename = `${config.metadata.title.toLowerCase().replace(/\s+/g, '-')}.html`;
     downloadHTML(html, filename);
   };
+
+  /**
+   * Export website configuration as JSON
+   */
+  const handleExportJSON = () => {
+    const filename = `${config.metadata.title.toLowerCase().replace(/\s+/g, '-')}-config.json`;
+    downloadJSON(config, filename);
+  };
+
+  /**
+   * Keyboard shortcuts
+   */
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+      const cmdOrCtrl = isMac ? e.metaKey : e.ctrlKey;
+
+      // Cmd/Ctrl + Z: Undo
+      if (cmdOrCtrl && e.key === 'z' && !e.shiftKey) {
+        e.preventDefault();
+        undo();
+      }
+
+      // Cmd/Ctrl + Shift + Z: Redo (also Cmd/Ctrl + Y)
+      if ((cmdOrCtrl && e.key === 'z' && e.shiftKey) || (cmdOrCtrl && e.key === 'y')) {
+        e.preventDefault();
+        redo();
+      }
+
+      // Cmd/Ctrl + S: Save
+      if (cmdOrCtrl && e.key === 's') {
+        e.preventDefault();
+        handleManualSave();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [historyIndex, history]);
 
   /**
    * Cleanup timeout on unmount
@@ -149,25 +247,56 @@ export function EditorLayout({ initialConfig, websiteId }: EditorLayoutProps) {
               </span>
             )}
 
+            {/* Undo/Redo buttons */}
+            <div className="flex items-center gap-1 border-r pr-3">
+              <Button
+                onClick={undo}
+                disabled={!canUndo}
+                variant="ghost"
+                size="sm"
+                title="Undo (Cmd+Z)"
+              >
+                <Undo2 className="h-4 w-4" />
+              </Button>
+              <Button
+                onClick={redo}
+                disabled={!canRedo}
+                variant="ghost"
+                size="sm"
+                title="Redo (Cmd+Shift+Z)"
+              >
+                <Redo2 className="h-4 w-4" />
+              </Button>
+            </div>
+
             {/* Manual save button */}
             <Button
               onClick={handleManualSave}
               disabled={isSaving || isUpdating}
               variant="outline"
               size="sm"
+              title="Save (Cmd+S)"
             >
               <Save className="mr-2 h-4 w-4" />
-              Save Now
+              Save
             </Button>
 
-            {/* Export button */}
+            {/* Export buttons */}
             <Button
-              onClick={handleExport}
+              onClick={handleExportHTML}
               variant="outline"
               size="sm"
             >
               <Download className="mr-2 h-4 w-4" />
               Export HTML
+            </Button>
+            <Button
+              onClick={handleExportJSON}
+              variant="outline"
+              size="sm"
+            >
+              <FileJson className="mr-2 h-4 w-4" />
+              Export JSON
             </Button>
           </div>
         </div>
