@@ -1,16 +1,19 @@
-// ABOUTME: Template gallery component for displaying and selecting templates
-// ABOUTME: Allows filtering by category and creating new websites from templates
+// ABOUTME: Enhanced template gallery with search, filters, and category navigation
+// ABOUTME: Allows filtering by category, searching by name/description, and creating websites
 
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { templates } from '@/lib/templates';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 import { useCreateWebsite } from '@/lib/hooks/use-websites';
 import { useRouter } from 'next/navigation';
 import { TemplateGrid } from './TemplateGrid';
 import { toast } from 'sonner';
+import { Search, X, SlidersHorizontal } from 'lucide-react';
 import type { TemplateMetadata } from '@/lib/templates';
 
 type CategoryFilter = 'all' | 'business' | 'product' | 'personal';
@@ -41,9 +44,36 @@ export interface TemplateGalleryProps {
 export function TemplateGallery({ skipLoadingDelay = false }: TemplateGalleryProps = {}) {
   const [creatingTemplateId, setCreatingTemplateId] = useState<string | null>(null);
   const [isInitialLoading, setIsInitialLoading] = useState(!skipLoadingDelay);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [activeCategory, setActiveCategory] = useState<CategoryFilter>('all');
 
   const { mutate: createWebsite, isPending } = useCreateWebsite();
   const router = useRouter();
+
+  /**
+   * Filter templates based on search query and category
+   * Uses memoization for performance
+   */
+  const filteredTemplates = useMemo(() => {
+    let result = templates;
+
+    // Filter by category
+    if (activeCategory !== 'all') {
+      result = result.filter(template => template.category === activeCategory);
+    }
+
+    // Filter by search query (search in name and description)
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      result = result.filter(template =>
+        template.name.toLowerCase().includes(query) ||
+        template.description.toLowerCase().includes(query) ||
+        template.id.toLowerCase().includes(query)
+      );
+    }
+
+    return result;
+  }, [searchQuery, activeCategory]);
 
   // Simulate initial loading to demonstrate skeleton UI (skippable in tests)
   useEffect(() => {
@@ -123,40 +153,104 @@ export function TemplateGallery({ skipLoadingDelay = false }: TemplateGalleryPro
     }
   };
 
+  /**
+   * Clear search and show all templates
+   */
+  const handleClearSearch = () => {
+    setSearchQuery('');
+  };
+
+  /**
+   * Get result count message
+   */
+  const getResultMessage = () => {
+    const count = filteredTemplates.length;
+    const total = templates.length;
+
+    if (searchQuery.trim()) {
+      return `Found ${count} template${count !== 1 ? 's' : ''} matching "${searchQuery}"`;
+    }
+
+    if (activeCategory !== 'all') {
+      return `Showing ${count} ${activeCategory} template${count !== 1 ? 's' : ''}`;
+    }
+
+    return `Showing all ${total} templates`;
+  };
+
   return (
     <TooltipProvider>
-      <Tabs defaultValue="all" className="space-y-8">
-        {/* Category Tabs */}
-        <TabsList className="grid w-full max-w-2xl mx-auto grid-cols-4 h-auto p-1 bg-muted/50 backdrop-blur-sm">
-          <TabsTrigger value="all" className="text-sm sm:text-base data-[state=active]:bg-background data-[state=active]:shadow-sm transition-all">
-            All Templates
-          </TabsTrigger>
-          <TabsTrigger value="business" className="text-sm sm:text-base data-[state=active]:bg-background data-[state=active]:shadow-sm transition-all">
-            <span className="mr-1.5">💼</span>
-            <span className="hidden sm:inline">Business</span>
-          </TabsTrigger>
-          <TabsTrigger value="product" className="text-sm sm:text-base data-[state=active]:bg-background data-[state=active]:shadow-sm transition-all">
-            <span className="mr-1.5">📦</span>
-            <span className="hidden sm:inline">Product</span>
-          </TabsTrigger>
-          <TabsTrigger value="personal" className="text-sm sm:text-base data-[state=active]:bg-background data-[state=active]:shadow-sm transition-all">
-            <span className="mr-1.5">👤</span>
-            <span className="hidden sm:inline">Personal</span>
-          </TabsTrigger>
-        </TabsList>
+      <div className="space-y-6">
+        {/* Search Bar */}
+        <div className="flex flex-col sm:flex-row gap-4 items-stretch sm:items-center">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              type="text"
+              placeholder="Search templates by name or description..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10 pr-10 h-11 text-base"
+            />
+            {searchQuery && (
+              <Button
+                variant="ghost"
+                size="icon"
+                className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8"
+                onClick={handleClearSearch}
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            )}
+          </div>
+        </div>
 
-        {/* Render TabsContent for each category */}
-        {(['all', 'business', 'product', 'personal'] as const).map((category) => {
-          // Filter templates for this specific category
-          const categoryTemplates = templates.filter((template) => {
-            if (category === 'all') return true;
-            return template.category === category;
-          });
+        {/* Result Count */}
+        <div className="flex items-center justify-between">
+          <p className="text-sm text-muted-foreground">
+            {getResultMessage()}
+          </p>
+          {searchQuery && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleClearSearch}
+              className="text-xs"
+            >
+              Clear search
+            </Button>
+          )}
+        </div>
 
-          return (
+        <Tabs
+          value={activeCategory}
+          onValueChange={(value) => setActiveCategory(value as CategoryFilter)}
+          className="space-y-8"
+        >
+          {/* Category Tabs */}
+          <TabsList className="grid w-full max-w-2xl mx-auto grid-cols-4 h-auto p-1 bg-muted/50 backdrop-blur-sm">
+            <TabsTrigger value="all" className="text-sm sm:text-base data-[state=active]:bg-background data-[state=active]:shadow-sm transition-all">
+              All Templates
+            </TabsTrigger>
+            <TabsTrigger value="business" className="text-sm sm:text-base data-[state=active]:bg-background data-[state=active]:shadow-sm transition-all">
+              <span className="mr-1.5">💼</span>
+              <span className="hidden sm:inline">Business</span>
+            </TabsTrigger>
+            <TabsTrigger value="product" className="text-sm sm:text-base data-[state=active]:bg-background data-[state=active]:shadow-sm transition-all">
+              <span className="mr-1.5">📦</span>
+              <span className="hidden sm:inline">Product</span>
+            </TabsTrigger>
+            <TabsTrigger value="personal" className="text-sm sm:text-base data-[state=active]:bg-background data-[state=active]:shadow-sm transition-all">
+              <span className="mr-1.5">👤</span>
+              <span className="hidden sm:inline">Personal</span>
+            </TabsTrigger>
+          </TabsList>
+
+          {/* Render TabsContent for each category */}
+          {(['all', 'business', 'product', 'personal'] as const).map((category) => (
             <TabsContent key={category} value={category} className="mt-8">
               <TemplateGrid
-                templates={categoryTemplates}
+                templates={filteredTemplates}
                 isLoading={isInitialLoading}
                 isPending={isPending}
                 creatingTemplateId={creatingTemplateId}
@@ -165,9 +259,9 @@ export function TemplateGallery({ skipLoadingDelay = false }: TemplateGalleryPro
                 getCategoryColor={getCategoryColor}
               />
             </TabsContent>
-          );
-        })}
-      </Tabs>
+          ))}
+        </Tabs>
+      </div>
     </TooltipProvider>
   );
 }
