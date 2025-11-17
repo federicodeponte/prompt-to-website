@@ -3,7 +3,7 @@
 
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
@@ -15,7 +15,7 @@ import { PreviewPane } from './PreviewPane';
 import { useUpdateWebsite } from '@/lib/hooks/use-websites';
 import { Save, CheckCircle2, Download, Undo2, Redo2, FileJson } from 'lucide-react';
 import { exportToHTML, downloadHTML } from '@/lib/export/html-exporter';
-import { exportToJSON, downloadJSON } from '@/lib/export/json-exporter';
+import { downloadJSON } from '@/lib/export/json-exporter';
 
 interface EditorLayoutProps {
   initialConfig: WebsiteConfig;
@@ -79,7 +79,7 @@ export function EditorLayout({ initialConfig, websiteId }: EditorLayoutProps) {
     setHistoryIndex(prev => Math.min(prev + 1, 49));
   };
 
-  const undo = () => {
+  const undo = useCallback(() => {
     if (canUndo) {
       const newIndex = historyIndex - 1;
       setHistoryIndex(newIndex);
@@ -93,9 +93,9 @@ export function EditorLayout({ initialConfig, websiteId }: EditorLayoutProps) {
         handleSave(history[newIndex]);
       }, 1000);
     }
-  };
+  }, [canUndo, historyIndex, history]);
 
-  const redo = () => {
+  const redo = useCallback(() => {
     if (canRedo) {
       const newIndex = historyIndex + 1;
       setHistoryIndex(newIndex);
@@ -109,7 +109,7 @@ export function EditorLayout({ initialConfig, websiteId }: EditorLayoutProps) {
         handleSave(history[newIndex]);
       }, 1000);
     }
-  };
+  }, [canRedo, historyIndex, history]);
 
   /**
    * Handle configuration updates from either AI or Manual mode
@@ -155,13 +155,13 @@ export function EditorLayout({ initialConfig, websiteId }: EditorLayoutProps) {
   /**
    * Manual save trigger
    */
-  const handleManualSave = () => {
+  const handleManualSave = useCallback(() => {
     // Clear debounce timer
     if (saveTimeoutRef.current) {
       clearTimeout(saveTimeoutRef.current);
     }
     handleSave();
-  };
+  }, [config, websiteId, updateWebsite]);
 
   /**
    * Export website as standalone HTML file
@@ -209,7 +209,7 @@ export function EditorLayout({ initialConfig, websiteId }: EditorLayoutProps) {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [historyIndex, history]);
+  }, [undo, redo, handleManualSave]);
 
   /**
    * Cleanup timeout on unmount

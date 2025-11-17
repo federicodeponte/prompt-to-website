@@ -3,13 +3,14 @@
 
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
 import { WebsiteConfig } from '@/lib/types/website-config';
 import { cn } from '@/lib/utils';
+import { generateId } from '@/lib/utils/id-generator';
 import { useGenerateWebsite, useEditWebsiteWithAI } from '@/lib/hooks/use-websites';
 
 export interface Message {
@@ -103,14 +104,41 @@ export function AIModePanel({ config, onConfigUpdate }: AIModePanelProps) {
   }, []);
 
   /**
+   * Handle AI errors with helpful messages
+   */
+  const handleAIError = useCallback((error: unknown, action: 'generating' | 'editing') => {
+    console.error(`AI ${action} error:`, error);
+
+    const errorMsg = error instanceof Error ? error.message : `Failed to ${action === 'generating' ? 'generate' : 'edit'} website`;
+    let helpText = '';
+
+    if (errorMsg.includes('API key')) {
+      helpText = '\n\n🔧 Fix: Add your Gemini API key to .env.local\n1. Get a key from https://aistudio.google.com/app/apikey\n2. Create .env.local file\n3. Add: GEMINI_API_KEY=your_key_here\n4. Restart dev server';
+      setApiConfigured(false);
+    } else if (errorMsg.includes('network') || errorMsg.includes('fetch')) {
+      helpText = '\n\n🌐 Network error. Check your internet connection and try again.';
+    } else if (errorMsg.includes('JSON')) {
+      helpText = '\n\n🤖 AI generated invalid response. Try simplifying your prompt.';
+    }
+
+    const errorMessage: Message = {
+      id: generateId(),
+      role: 'system',
+      content: `❌ Error: ${errorMsg}${helpText}`,
+      timestamp: new Date(),
+    };
+    setMessages((prev) => [...prev, errorMessage]);
+  }, []);
+
+  /**
    * Handle sending a new message to AI
    * Uses edit endpoint if website exists, generate endpoint otherwise
    */
-  const handleSend = async () => {
+  const handleSend = useCallback(async () => {
     if (!input.trim() || isPending) return;
 
     const userMessage: Message = {
-      id: Date.now().toString(),
+      id: generateId(),
       role: 'user',
       content: input.trim(),
       timestamp: new Date(),
@@ -135,7 +163,7 @@ export function AIModePanel({ config, onConfigUpdate }: AIModePanelProps) {
 
             // Add success message
             const assistantMessage: Message = {
-              id: (Date.now() + 1).toString(),
+              id: generateId(),
               role: 'assistant',
               content: `✅ I've updated your website based on your request. Check the preview on the right!`,
               timestamp: new Date(),
@@ -162,7 +190,7 @@ export function AIModePanel({ config, onConfigUpdate }: AIModePanelProps) {
             // Add success message
             const blocksCount = data.config.blocks?.length || 0;
             const assistantMessage: Message = {
-              id: (Date.now() + 1).toString(),
+              id: generateId(),
               role: 'assistant',
               content: `🎉 I've generated a ${data.config.template} website with ${blocksCount} blocks based on your request. Check the preview on the right!`,
               timestamp: new Date(),
@@ -175,34 +203,7 @@ export function AIModePanel({ config, onConfigUpdate }: AIModePanelProps) {
         }
       );
     }
-  };
-
-  /**
-   * Handle AI errors with helpful messages
-   */
-  const handleAIError = (error: unknown, action: 'generating' | 'editing') => {
-    console.error(`AI ${action} error:`, error);
-
-    const errorMsg = error instanceof Error ? error.message : `Failed to ${action === 'generating' ? 'generate' : 'edit'} website`;
-    let helpText = '';
-
-    if (errorMsg.includes('API key')) {
-      helpText = '\n\n🔧 Fix: Add your Gemini API key to .env.local\n1. Get a key from https://aistudio.google.com/app/apikey\n2. Create .env.local file\n3. Add: GEMINI_API_KEY=your_key_here\n4. Restart dev server';
-      setApiConfigured(false);
-    } else if (errorMsg.includes('network') || errorMsg.includes('fetch')) {
-      helpText = '\n\n🌐 Network error. Check your internet connection and try again.';
-    } else if (errorMsg.includes('JSON')) {
-      helpText = '\n\n🤖 AI generated invalid response. Try simplifying your prompt.';
-    }
-
-    const errorMessage: Message = {
-      id: (Date.now() + 1).toString(),
-      role: 'system',
-      content: `❌ Error: ${errorMsg}${helpText}`,
-      timestamp: new Date(),
-    };
-    setMessages((prev) => [...prev, errorMessage]);
-  };
+  }, [input, isPending, hasExistingWebsite, config, onConfigUpdate, editWebsite, generateWebsite, handleAIError]);
 
   /**
    * Handle Enter key to send message
