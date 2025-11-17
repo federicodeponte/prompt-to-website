@@ -61,11 +61,11 @@ export function Navigation() {
   }, [loading]);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60 shadow-sm">
-      <div className="container mx-auto flex h-16 items-center px-6">
+    <header className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60 shadow-sm" role="banner">
+      <nav className="container mx-auto flex h-16 items-center px-6" aria-label="Main navigation">
         {/* Logo */}
         <div className="mr-8 flex items-center space-x-2">
-          <Link href="/" className="group flex items-center space-x-3">
+          <Link href="/" className="group flex items-center space-x-3" aria-label="Prompt to Website - Go to homepage">
             <div className="relative flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-primary via-primary to-primary/80 shadow-md ring-1 ring-primary/20 transition-transform group-hover:scale-105">
               <span className="text-lg font-bold text-primary-foreground">P</span>
               <div className="absolute -right-0.5 -top-0.5 h-2 w-2 rounded-full bg-gradient-to-br from-primary/60 to-secondary/60 ring-1 ring-background" />
@@ -77,7 +77,7 @@ export function Navigation() {
         </div>
 
         {/* Desktop Navigation Links */}
-        <nav className="hidden md:flex flex-1 items-center space-x-6 text-sm font-medium">
+        <div className="hidden md:flex flex-1 items-center space-x-6 text-sm font-medium">
           <motion.div whileHover={{ y: -2 }} whileTap={{ scale: 0.95 }}>
             <Link
               href="/#templates"
@@ -120,7 +120,7 @@ export function Navigation() {
               />
             </Link>
           </motion.div>
-        </nav>
+        </div>
 
         {/* Mobile Spacer */}
         <div className="flex-1 md:hidden" />
@@ -137,14 +137,14 @@ export function Navigation() {
             // Authenticated user menu
             <>
               <Button variant="ghost" size="sm" asChild>
-                <Link href="/dashboard">
+                <Link href="/dashboard" aria-label="Go to your project dashboard">
                   <LayoutDashboard className="mr-2 h-4 w-4" />
                   Dashboard
                 </Link>
               </Button>
               <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="outline" size="sm" className="gap-2">
+                  <Button variant="outline" size="sm" className="gap-2" aria-label={`Account menu for ${user.email}`}>
                     <User className="h-4 w-4" />
                     <span className="max-w-[150px] truncate">{user.email}</span>
                   </Button>
@@ -174,10 +174,10 @@ export function Navigation() {
             // Not authenticated
             <>
               <Button variant="ghost" size="sm" asChild>
-                <Link href="/login">Login</Link>
+                <Link href="/login" aria-label="Log in to your account">Login</Link>
               </Button>
               <Button size="sm" asChild>
-                <Link href="/signup">Get Started</Link>
+                <Link href="/signup" aria-label="Sign up for a new account">Get Started</Link>
               </Button>
             </>
           )}
@@ -186,7 +186,7 @@ export function Navigation() {
         {/* Mobile Menu Sheet */}
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger asChild className="md:hidden">
-            <Button variant="ghost" size="icon">
+            <Button variant="ghost" size="icon" aria-label="Open mobile navigation menu">
               <Menu className="h-5 w-5" />
               <span className="sr-only">Toggle menu</span>
             </Button>
@@ -262,10 +262,10 @@ export function Navigation() {
                 ) : (
                   <>
                     <Button variant="outline" className="w-full" asChild>
-                      <Link href="/login" onClick={() => setOpen(false)}>Login</Link>
+                      <Link href="/login" onClick={() => setOpen(false)} aria-label="Log in to your account">Login</Link>
                     </Button>
                     <Button className="w-full" asChild>
-                      <Link href="/signup" onClick={() => setOpen(false)}>Get Started</Link>
+                      <Link href="/signup" onClick={() => setOpen(false)} aria-label="Sign up for a new account">Get Started</Link>
                     </Button>
                   </>
                 )}
@@ -273,7 +273,7 @@ export function Navigation() {
             </nav>
           </SheetContent>
         </Sheet>
-      </div>
+      </nav>
     </header>
   );
 }

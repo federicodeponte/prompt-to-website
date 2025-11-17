@@ -188,7 +188,11 @@ export default function DashboardPage() {
                 Manage your website configurations and export them for deployment
               </p>
             </div>
-            <Button onClick={() => router.push('/editor/demo')} size="lg">
+            <Button
+              onClick={() => router.push('/editor/demo')}
+              size="lg"
+              aria-label="Create a new website project"
+            >
               <Plus className="mr-2 h-4 w-4" />
               New Project
             </Button>
@@ -224,11 +228,22 @@ export default function DashboardPage() {
               </CardDescription>
             </CardHeader>
             <CardContent className="flex flex-col gap-3">
-              <Button size="lg" className="w-full" onClick={() => router.push('/editor/demo')}>
+              <Button
+                size="lg"
+                className="w-full"
+                onClick={() => router.push('/editor/demo')}
+                aria-label="Create your first website with AI assistance"
+              >
                 <Sparkles className="mr-2 h-4 w-4" />
                 Create with AI
               </Button>
-              <Button size="lg" variant="outline" className="w-full" onClick={() => router.push('/#templates')}>
+              <Button
+                size="lg"
+                variant="outline"
+                className="w-full"
+                onClick={() => router.push('/#templates')}
+                aria-label="Browse professional website templates"
+              >
                 <Palette className="mr-2 h-4 w-4" />
                 Browse Templates
               </Button>
@@ -243,8 +258,17 @@ export default function DashboardPage() {
               return (
                 <Card
                   key={website.id}
-                  className="group flex flex-col hover:shadow-xl transition-all cursor-pointer"
+                  className="group flex flex-col hover:shadow-xl transition-all cursor-pointer focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2"
                   onClick={() => router.push(`/editor/${website.id}`)}
+                  tabIndex={0}
+                  role="article"
+                  aria-label={`${website.label} project, ${blockCount} blocks, last updated ${format(new Date(website.updated_at), 'MMM d, yyyy')}`}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      router.push(`/editor/${website.id}`);
+                    }
+                  }}
                 >
                   <CardHeader className="pb-4">
                     <div className="flex items-start justify-between">
@@ -261,9 +285,14 @@ export default function DashboardPage() {
                       </div>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
-                          <Button variant="ghost" size="icon" className="h-8 w-8 opacity-0 group-hover:opacity-100">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8 opacity-0 group-hover:opacity-100 focus:opacity-100 focus:ring-2 focus:ring-primary focus:ring-offset-1"
+                            aria-label={`Actions for ${website.label}`}
+                          >
                             <MoreVertical className="h-4 w-4" />
-                            <span className="sr-only">Actions</span>
+                            <span className="sr-only">Actions for {website.label}</span>
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
@@ -319,7 +348,12 @@ export default function DashboardPage() {
                   </CardContent>
 
                   <CardFooter className="pt-4">
-                    <Button className="w-full" variant="outline" onClick={(e) => { e.stopPropagation(); router.push(`/editor/${website.id}`); }}>
+                    <Button
+                      className="w-full"
+                      variant="outline"
+                      onClick={(e) => { e.stopPropagation(); router.push(`/editor/${website.id}`); }}
+                      aria-label={`Open ${website.label} in editor`}
+                    >
                       Open Project
                     </Button>
                   </CardFooter>

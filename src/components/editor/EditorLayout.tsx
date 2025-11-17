@@ -374,6 +374,7 @@ export function EditorLayout({ initialConfig, websiteId }: EditorLayoutProps) {
                 }
               }}
               className="gap-2"
+              aria-label="Return to dashboard"
             >
               <ArrowLeft className="h-4 w-4" />
               <span className="hidden sm:inline">Dashboard</span>
@@ -413,6 +414,7 @@ export function EditorLayout({ initialConfig, websiteId }: EditorLayoutProps) {
                 variant="ghost"
                 size="sm"
                 title="Undo (Cmd+Z)"
+                aria-label="Undo last change"
               >
                 <Undo2 className="h-4 w-4" />
               </Button>
@@ -422,6 +424,7 @@ export function EditorLayout({ initialConfig, websiteId }: EditorLayoutProps) {
                 variant="ghost"
                 size="sm"
                 title="Redo (Cmd+Shift+Z)"
+                aria-label="Redo last undone change"
               >
                 <Redo2 className="h-4 w-4" />
               </Button>
@@ -434,6 +437,7 @@ export function EditorLayout({ initialConfig, websiteId }: EditorLayoutProps) {
               variant="outline"
               size="sm"
               title="Save (Cmd+S)"
+              aria-label="Save current changes manually"
             >
               <Save className="mr-2 h-4 w-4" />
               Save
@@ -444,6 +448,7 @@ export function EditorLayout({ initialConfig, websiteId }: EditorLayoutProps) {
               onClick={handleExportHTML}
               variant="outline"
               size="sm"
+              aria-label="Export website as standalone HTML file"
             >
               <Download className="mr-2 h-4 w-4" />
               Export HTML
@@ -452,6 +457,7 @@ export function EditorLayout({ initialConfig, websiteId }: EditorLayoutProps) {
               onClick={handleExportJSON}
               variant="outline"
               size="sm"
+              aria-label="Export website configuration as JSON file"
             >
               <FileJson className="mr-2 h-4 w-4" />
               Export JSON
@@ -463,6 +469,7 @@ export function EditorLayout({ initialConfig, websiteId }: EditorLayoutProps) {
               variant="outline"
               size="sm"
               title={`Open command palette (${formatKeyCombo('mod+k')})`}
+              aria-label="Open command palette for quick actions"
             >
               <CommandIcon className="mr-2 h-4 w-4" />
               Commands
