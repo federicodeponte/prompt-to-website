@@ -90,7 +90,7 @@ export interface WebsiteMetadata {
 
 export interface WebsiteConfig {
   version: string; // "1.0"
-  template: "saas-landing" | "product-landing" | "portfolio" | "custom";
+  template: "saas-landing" | "product-landing" | "portfolio" | "agency" | "ecommerce" | "blog" | "restaurant" | "event" | "course" | "app-download" | "custom";
   theme: WebsiteTheme;
   blocks: Block[];
   metadata: WebsiteMetadata;
