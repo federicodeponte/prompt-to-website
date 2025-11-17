@@ -39,11 +39,13 @@ import {
   Code,
   Palette,
   Calendar,
+  Share2,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
 import { Website } from '@/lib/types/website-config';
 import { templates } from '@/lib/templates';
+import { ExportModal } from '@/components/export/ExportModal';
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -53,6 +55,8 @@ export default function DashboardPage() {
 
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [websiteToDelete, setWebsiteToDelete] = useState<Website | null>(null);
+  const [exportModalOpen, setExportModalOpen] = useState(false);
+  const [websiteToExport, setWebsiteToExport] = useState<Website | null>(null);
 
   /**
    * Handle project deletion with confirmation
@@ -107,21 +111,11 @@ export default function DashboardPage() {
   };
 
   /**
-   * Export project as JSON
+   * Open export modal for selected project
    */
-  const handleExportJSON = (website: Website) => {
-    const dataStr = JSON.stringify(website.config, null, 2);
-    const dataUri = `data:application/json;charset=utf-8,${encodeURIComponent(dataStr)}`;
-    const exportFileDefaultName = `${website.label.toLowerCase().replace(/\s+/g, '-')}.json`;
-
-    const linkElement = document.createElement('a');
-    linkElement.setAttribute('href', dataUri);
-    linkElement.setAttribute('download', exportFileDefaultName);
-    linkElement.click();
-
-    toast.success('Exported as JSON', {
-      description: `Downloaded ${exportFileDefaultName}`,
-    });
+  const handleExport = (website: Website) => {
+    setWebsiteToExport(website);
+    setExportModalOpen(true);
   };
 
   /**
@@ -249,9 +243,9 @@ export default function DashboardPage() {
                             Duplicate
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
-                          <DropdownMenuItem onClick={(e) => { e.stopPropagation(); handleExportJSON(website); }}>
-                            <FileJson className="mr-2 h-4 w-4" />
-                            Export JSON
+                          <DropdownMenuItem onClick={(e) => { e.stopPropagation(); handleExport(website); }}>
+                            <Share2 className="mr-2 h-4 w-4" />
+                            Export & Share
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
                           <DropdownMenuItem
@@ -320,6 +314,15 @@ export default function DashboardPage() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Export Modal */}
+      {websiteToExport && (
+        <ExportModal
+          website={websiteToExport}
+          open={exportModalOpen}
+          onOpenChange={setExportModalOpen}
+        />
+      )}
     </div>
   );
 }
