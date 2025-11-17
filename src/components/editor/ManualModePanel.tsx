@@ -1,5 +1,5 @@
 // ABOUTME: Manual mode panel with form-based editor for website configuration
-// ABOUTME: Allows direct manipulation of blocks, theme, and metadata
+// ABOUTME: Allows direct manipulation of blocks, theme, and metadata with drag-and-drop reordering
 
 'use client';
 
@@ -10,6 +10,23 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { WebsiteConfig, Block, BlockType } from '@/lib/types/website-config';
 import { cn } from '@/lib/utils';
 import { Plus, GripVertical, Trash2, Eye, EyeOff } from 'lucide-react';
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from '@dnd-kit/core';
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 
 interface ManualModePanelProps {
   config: WebsiteConfig;
@@ -17,10 +34,148 @@ interface ManualModePanelProps {
 }
 
 /**
+ * SortableBlockCard - A draggable block card component
+ */
+interface SortableBlockCardProps {
+  block: Block;
+  index: number;
+  selectedBlockId: string | null;
+  expandedBlocks: Set<string>;
+  totalBlocks: number;
+  onToggleExpansion: (blockId: string) => void;
+  onRemove: (blockId: string) => void;
+  onMoveUp: (index: number) => void;
+  onMoveDown: (index: number) => void;
+}
+
+function SortableBlockCard({
+  block,
+  index,
+  selectedBlockId,
+  expandedBlocks,
+  totalBlocks,
+  onToggleExpansion,
+  onRemove,
+  onMoveUp,
+  onMoveDown,
+}: SortableBlockCardProps) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: block.id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+  };
+
+  return (
+    <div ref={setNodeRef} style={style}>
+      <Card
+        className={cn(
+          'transition-colors',
+          selectedBlockId === block.id && 'ring-2 ring-primary',
+          isDragging && 'shadow-lg ring-2 ring-primary/50'
+        )}
+      >
+        <CardHeader className="pb-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <button
+                className="cursor-grab active:cursor-grabbing touch-none"
+                {...attributes}
+                {...listeners}
+              >
+                <GripVertical className="h-4 w-4 text-muted-foreground hover:text-foreground transition-colors" />
+              </button>
+              <div>
+                <CardTitle className="text-sm">
+                  {block.type.charAt(0).toUpperCase() + block.type.slice(1)}
+                  {block.variant && ` (${block.variant})`}
+                </CardTitle>
+                <CardDescription className="text-xs">
+                  ID: {block.id}
+                </CardDescription>
+              </div>
+            </div>
+            <div className="flex items-center gap-1">
+              <Button
+                size="icon"
+                variant="ghost"
+                className="h-8 w-8"
+                onClick={() => onToggleExpansion(block.id)}
+              >
+                {expandedBlocks.has(block.id) ? (
+                  <EyeOff className="h-4 w-4" />
+                ) : (
+                  <Eye className="h-4 w-4" />
+                )}
+              </Button>
+              <Button
+                size="icon"
+                variant="ghost"
+                className="h-8 w-8"
+                onClick={() => onRemove(block.id)}
+              >
+                <Trash2 className="h-4 w-4 text-destructive" />
+              </Button>
+            </div>
+          </div>
+        </CardHeader>
+
+        {expandedBlocks.has(block.id) && (
+          <CardContent className="space-y-3">
+            {/* Block controls */}
+            <div className="flex gap-2">
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => onMoveUp(index)}
+                disabled={index === 0}
+                className="flex-1"
+              >
+                Move Up
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => onMoveDown(index)}
+                disabled={index === totalBlocks - 1}
+                className="flex-1"
+              >
+                Move Down
+              </Button>
+            </div>
+
+            {/* Block content editor */}
+            <div className="rounded-md border bg-muted/50 p-3">
+              <p className="text-xs text-muted-foreground mb-2">
+                Block Configuration
+              </p>
+              <pre className="text-xs overflow-auto">
+                {JSON.stringify(block.content, null, 2)}
+              </pre>
+              <p className="mt-2 text-xs text-muted-foreground italic">
+                Visual editor coming soon...
+              </p>
+            </div>
+          </CardContent>
+        )}
+      </Card>
+    </div>
+  );
+}
+
+/**
  * ManualModePanel provides a form-based interface for direct config editing
  *
  * Architecture:
- * - Block list with add/remove/reorder capabilities
+ * - Block list with drag-and-drop reordering
  * - Theme customization form
  * - Metadata editing
  * - Visual block preview/edit toggles
@@ -29,6 +184,7 @@ interface ManualModePanelProps {
  * - Single Responsibility: Configuration form management
  * - Composition: Uses Card components for block items
  * - Separation of Concerns: Block editing handled in dedicated components
+ * - Accessibility: Keyboard support for drag-and-drop
  */
 export function ManualModePanel({ config, onConfigUpdate }: ManualModePanelProps) {
   const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
@@ -36,6 +192,18 @@ export function ManualModePanel({ config, onConfigUpdate }: ManualModePanelProps
 
   // Ensure blocks is always an array (safety check for race conditions)
   const blocks = config.blocks || [];
+
+  // Configure drag-and-drop sensors
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8, // 8px movement required before drag starts
+      },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
 
   /**
    * Toggle block expansion for editing
@@ -316,6 +484,29 @@ export function ManualModePanel({ config, onConfigUpdate }: ManualModePanelProps
     onConfigUpdate(newConfig);
   };
 
+  /**
+   * Handle drag end - reorder blocks based on drag result
+   */
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+
+    if (!over || active.id === over.id) {
+      return;
+    }
+
+    const oldIndex = blocks.findIndex((block) => block.id === active.id);
+    const newIndex = blocks.findIndex((block) => block.id === over.id);
+
+    const newBlocks = arrayMove(blocks, oldIndex, newIndex);
+
+    const newConfig: WebsiteConfig = {
+      ...config,
+      blocks: newBlocks,
+    };
+
+    onConfigUpdate(newConfig);
+  };
+
   return (
     <div className="flex h-full flex-col">
       {/* Header with actions */}
@@ -339,7 +530,7 @@ export function ManualModePanel({ config, onConfigUpdate }: ManualModePanelProps
         </div>
       </div>
 
-      {/* Blocks list */}
+      {/* Blocks list with drag-and-drop */}
       <ScrollArea className="flex-1">
         <div className="space-y-2 p-4">
           {blocks.length === 0 ? (
@@ -355,93 +546,33 @@ export function ManualModePanel({ config, onConfigUpdate }: ManualModePanelProps
               </CardContent>
             </Card>
           ) : (
-            blocks.map((block, index) => (
-              <Card
-                key={block.id}
-                className={cn(
-                  'transition-colors',
-                  selectedBlockId === block.id && 'ring-2 ring-primary'
-                )}
+            <DndContext
+              sensors={sensors}
+              collisionDetection={closestCenter}
+              onDragEnd={handleDragEnd}
+            >
+              <SortableContext
+                items={blocks.map(b => b.id)}
+                strategy={verticalListSortingStrategy}
               >
-                <CardHeader className="pb-3">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <GripVertical className="h-4 w-4 text-muted-foreground cursor-move" />
-                      <div>
-                        <CardTitle className="text-sm">
-                          {block.type.charAt(0).toUpperCase() + block.type.slice(1)}
-                          {block.variant && ` (${block.variant})`}
-                        </CardTitle>
-                        <CardDescription className="text-xs">
-                          ID: {block.id}
-                        </CardDescription>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        className="h-8 w-8"
-                        onClick={() => toggleBlockExpansion(block.id)}
-                      >
-                        {expandedBlocks.has(block.id) ? (
-                          <EyeOff className="h-4 w-4" />
-                        ) : (
-                          <Eye className="h-4 w-4" />
-                        )}
-                      </Button>
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        className="h-8 w-8"
-                        onClick={() => handleRemoveBlock(block.id)}
-                      >
-                        <Trash2 className="h-4 w-4 text-destructive" />
-                      </Button>
-                    </div>
-                  </div>
-                </CardHeader>
-
-                {expandedBlocks.has(block.id) && (
-                  <CardContent className="space-y-3">
-                    {/* Block controls */}
-                    <div className="flex gap-2">
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => handleMoveBlockUp(index)}
-                        disabled={index === 0}
-                        className="flex-1"
-                      >
-                        Move Up
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => handleMoveBlockDown(index)}
-                        disabled={index === blocks.length - 1}
-                        className="flex-1"
-                      >
-                        Move Down
-                      </Button>
-                    </div>
-
-                    {/* Block content editor */}
-                    <div className="rounded-md border bg-muted/50 p-3">
-                      <p className="text-xs text-muted-foreground mb-2">
-                        Block Configuration
-                      </p>
-                      <pre className="text-xs overflow-auto">
-                        {JSON.stringify(block.content, null, 2)}
-                      </pre>
-                      <p className="mt-2 text-xs text-muted-foreground italic">
-                        Visual editor coming soon...
-                      </p>
-                    </div>
-                  </CardContent>
-                )}
-              </Card>
-            ))
+                <div className="space-y-2">
+                  {blocks.map((block, index) => (
+                    <SortableBlockCard
+                      key={block.id}
+                      block={block}
+                      index={index}
+                      selectedBlockId={selectedBlockId}
+                      expandedBlocks={expandedBlocks}
+                      totalBlocks={blocks.length}
+                      onToggleExpansion={toggleBlockExpansion}
+                      onRemove={handleRemoveBlock}
+                      onMoveUp={handleMoveBlockUp}
+                      onMoveDown={handleMoveBlockDown}
+                    />
+                  ))}
+                </div>
+              </SortableContext>
+            </DndContext>
           )}
         </div>
       </ScrollArea>
