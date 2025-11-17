@@ -1,767 +1,433 @@
-# 🚀 WEEKLY SESSION PLAN: Prompt-to-Website
-## From C- to Production Excellence
+# 🚀 Weekly Session Plan - Making Prompt-to-Website Next Level
 
-**Current State**: Beautiful landing page with broken flows (Grade: C-)
-**Target State**: Full-featured, production-ready SaaS (Grade: A)
-**Timeline**: 7 Days (Nov 17-24, 2025)
-**Estimated Effort**: 30-40 hours total
+**Duration:** 7 Days  
+**Goal:** Transform from functional MVP to polished, professional, production-ready application  
+**Focus:** UX improvements, accessibility, mobile responsiveness, and user delight
 
 ---
 
-## 📊 CURRENT STATE ANALYSIS
+## 📋 **SESSION 1: Critical Navigation & Auth UX (Day 1 - Monday)**
 
-### ✅ What's Already Built (Foundation - 65%)
-- **UI Components** (A+): shadcn/ui, Framer Motion, responsive design
-- **Landing Page** (A): Professional hero, features, FAQ, templates
-- **AI Integration** (A+): Gemini 2.5 Flash, structured prompts, validation
-- **Error Handling** (A+): Centralized messages, toast notifications
-- **Storage** (A): IndexedDB with localStorage fallback
-- **Testing** (B): Vitest + Playwright setup, some coverage
-- **Build Pipeline** (A): Next.js 16, Turbopack, Vercel deployment
+**Duration:** 3-4 hours  
+**Priority:** 🚨 **CRITICAL**
 
-### 🚨 Critical Gaps (35% Missing)
-- **Authentication** (0%): No login, signup, or user management
-- **Dashboard** (0%): No user homepage or project management
-- **Navigation** (D): Broken links to non-existent pages
-- **Template System** (C): Previews broken, incomplete data
-- **Export/Share** (0%): No way to publish or export sites
-- **Monetization** (0%): No pricing, billing, or limits
-- **Analytics** (0%): No tracking or monitoring
-- **SEO** (D): Missing meta tags, sitemaps
-
----
-
-## 🎯 STRATEGIC GOALS
-
-### Week 1 Objectives (Critical Path)
-1. **Make ALL navigation work** - No more 404s
-2. **Complete end-to-end user flow** - Signup → Create → Export
-3. **Production-ready experience** - Polish + performance
-4. **Monetization foundation** - Pricing page + limits
-
-### Success Metrics
-- ✅ Zero 404 errors on deployed site
-- ✅ User can complete full flow without auth
-- ✅ Template previews load correctly
-- ✅ Export functionality works
-- ✅ Lighthouse score > 90
-- ✅ Production grade jumps from C- to A-
-
----
-
-## 📅 DAILY SESSION BREAKDOWN
-
----
-
-## SESSION 8: NAVIGATION & AUTH FOUNDATION (Mon, Nov 18)
-**Duration**: 4-5 hours
-**Priority**: 🔴 CRITICAL
-**Goal**: Fix all broken navigation + add auth stub pages
+### Objectives
+Fix fundamental navigation and authentication UX issues that cause user confusion and abandonment.
 
 ### Tasks
 
-#### 1. Fix Navigation Links (30 min) 🔴 CRITICAL
-**Files to modify:**
+#### 1.1 Fix Authentication State in Navigation Header (60 min)
+- [ ] Update `Navigation.tsx` to show user state
+- [ ] Add user dropdown menu with email and logout
+- [ ] Show "Dashboard" link when authenticated
+- [ ] Hide "Login/Signup" when authenticated
+- [ ] Add loading state skeleton for auth check
+
+**Files to Edit:**
 - `src/components/layout/Navigation.tsx`
-- `src/app/layout.tsx`
+- Add user avatar/profile component
 
-**Changes:**
-```typescript
-// Fix template link
-<Link href="/#templates">Templates</Link>
-
-// Fix editor link
-<Link href="/editor/demo">Try Demo</Link>
-
-// Fix features/pricing anchors
-<Link href="/#features">Features</Link>
-<Link href="/#pricing">Pricing</Link>
-```
-
-**Verification**: All nav links work, no 404s
+**Acceptance Criteria:**
+- Header shows different content for logged-in vs logged-out users
+- Logout button works and redirects to homepage
+- User email visible in header
+- No flash of incorrect state during auth check
 
 ---
 
-#### 2. Create Authentication Stub Pages (1.5 hours) 🔴 CRITICAL
-**New files to create:**
-- `src/app/login/page.tsx`
-- `src/app/signup/page.tsx`
-- `src/components/auth/LoginForm.tsx` (stub)
-- `src/components/auth/SignupForm.tsx` (stub)
+#### 1.2 Add Editor Navigation & Breadcrumbs (90 min)
+- [ ] Add "Back to Dashboard" button in editor header
+- [ ] Add breadcrumb navigation: \`Home > Dashboard > Edit: [Project Name]\`
+- [ ] Make website title editable inline
+- [ ] Add unsaved changes indicator
 
-**Implementation**:
-```typescript
-// Simple "Coming Soon" or functional forms
-// Options:
-// A) "Join Waitlist" with email collection
-// B) Direct to /editor/demo for now
-// C) Basic email/password forms (no backend yet)
-```
+**Files to Edit:**
+- `src/components/editor/EditorLayout.tsx`
+- Create `src/components/ui/breadcrumb.tsx` (shadcn component)
 
-**Recommended**: Option B - redirect to demo, collect emails via landing page
+**Acceptance Criteria:**
+- Can navigate back to dashboard from editor
+- Breadcrumb shows current location
+- Clear visual hierarchy in header
 
 ---
 
-#### 3. Add Editor Base Route (30 min)
-**New file:**
-- `src/app/editor/page.tsx`
+#### 1.3 Add Navigation to Dashboard (30 min)
+- [ ] Add Navigation header to dashboard page
+- [ ] Add breadcrumb: \`Home > Dashboard\`
+- [ ] Ensure consistent layout across all pages
 
-**Implementation**:
-```typescript
-// Redirect to demo or show project list
-redirect('/editor/demo')
-// OR show "Your Projects" if auth implemented
-```
-
----
-
-#### 4. Fix Template Images (1.5 hours) 🟡 HIGH
-**Investigation steps:**
-1. Check if images exist in `/public/templates/`
-2. Verify image paths in template data
-3. Generate placeholder images if missing
-4. Update template data with correct paths
-
-**Files to check:**
-- `src/lib/templates/index.ts`
-- `src/components/template-gallery/TemplateGallery.tsx`
-
-**Quick fix**: Use gradient placeholders or Unsplash API for temp images
-
----
-
-#### 5. Custom 404 Page (45 min)
-**New file:**
-- `src/app/not-found.tsx`
-
-**Features:**
-- Branded design matching site
-- Helpful navigation links
-- Search or suggestions
-- Analytics tracking (which pages 404)
-
----
-
-### Session 8 Deliverables
-- ✅ All navigation links work
-- ✅ Auth pages exist (no 404s)
-- ✅ Template previews load
-- ✅ Custom 404 page
-- ✅ Grade improvement: C- → C+
-
----
-
-## SESSION 9: USER DASHBOARD & PROJECT MANAGEMENT (Tue, Nov 19)
-**Duration**: 5-6 hours
-**Priority**: 🟡 HIGH
-**Goal**: Create dashboard for managing websites
-
-### Tasks
-
-#### 1. Dashboard Layout (2 hours)
-**New files:**
-- `src/app/dashboard/page.tsx`
-- `src/app/dashboard/layout.tsx`
-- `src/components/dashboard/DashboardNav.tsx`
-- `src/components/dashboard/ProjectCard.tsx`
-- `src/components/dashboard/StatsOverview.tsx`
-
-**Features**:
-- Header with user info (or "Guest" for now)
-- Project grid/list view toggle
-- Search and filters
-- "New Project" CTA
-- Recent activity
-
----
-
-#### 2. Project List Integration (2 hours)
-**Files to modify:**
+**Files to Edit:**
 - `src/app/dashboard/page.tsx`
 
-**Use existing hooks:**
-- `useWebsites()` from `src/lib/hooks/use-websites.ts`
-
-**Features**:
-- Display saved projects from IndexedDB
-- Click to open in editor
-- Delete/duplicate actions
-- Sort by date/name
-- Empty state for new users
+**Success Metrics:**
+- All pages have consistent navigation
+- User never feels "trapped"
+- Can navigate to any section from anywhere
 
 ---
 
-#### 3. Project Actions (1.5 hours)
-**Components to create:**
-- `src/components/dashboard/ProjectActions.tsx`
-- `src/components/dashboard/DeleteConfirmDialog.tsx`
+## 📋 **SESSION 2: Accessibility Foundation (Day 2 - Tuesday)**
 
-**Actions**:
-- Edit (→ `/editor/[id]`)
-- Duplicate
-- Export
-- Delete (with confirmation)
-- Share (coming soon)
+**Duration:** 4-5 hours  
+**Priority:** 🚨 **CRITICAL**
 
----
-
-#### 4. Empty States & Loading (45 min)
-**Components:**
-- `src/components/dashboard/EmptyState.tsx`
-- `src/components/dashboard/ProjectSkeleton.tsx`
-
-**UX polish**:
-- Beautiful empty state for new users
-- Skeleton loaders while fetching
-- Error states with retry
-
----
-
-### Session 9 Deliverables
-- ✅ Functional dashboard at `/dashboard`
-- ✅ Display projects from storage
-- ✅ CRUD operations work
-- ✅ Polish & loading states
-- ✅ Grade: C+ → B-
-
----
-
-## SESSION 10: EXPORT & SHARE FUNCTIONALITY (Wed, Nov 20)
-**Duration**: 5-6 hours
-**Priority**: 🟡 HIGH
-**Goal**: Users can export and share their websites
+### Objectives
+Make the application usable for keyboard-only users and screen reader users.
 
 ### Tasks
 
-#### 1. Export HTML Feature (2.5 hours)
-**New files:**
-- `src/lib/export/html-generator.ts`
-- `src/lib/export/css-bundler.ts`
-- `src/components/editor/ExportButton.tsx`
-- `src/components/editor/ExportDialog.tsx`
+#### 2.1 Add Keyboard Navigation (120 min)
+- [ ] Add keyboard handlers to dashboard project cards
+- [ ] Add keyboard handlers to template cards
+- [ ] Ensure all dropdowns close with Escape key
+- [ ] Add visible focus states to all interactive elements
+- [ ] Test tab order through entire app
 
-**Implementation**:
-```typescript
-// Generate standalone HTML file with:
-// - Inline CSS (Tailwind compiled)
-// - All content from WebsiteConfig
-// - Optional: include fonts, optimize images
-// - Output: downloadable .zip or single .html
-```
+**Files to Edit:**
+- `src/app/dashboard/page.tsx`
+- `src/components/template-gallery/TemplateGrid.tsx`
+- `src/styles/globals.css` (add focus ring utilities)
 
-**Features**:
-- Export as HTML + CSS
-- Preview before download
-- Include/exclude analytics
-- Customizable footer attribution
-
----
-
-#### 2. Hosting Integration (2 hours)
-**Options** (pick one for MVP):
-A) **Vercel Blob Storage** (easiest)
-B) **Cloudflare Pages** (free tier)
-C) **GitHub Pages** (via API)
-D) **Custom subdomain** (prompt-to-website.vercel.app/u/[id])
-
-**Recommended**: Option D - subdomain hosting
-
-**New files:**
-- `src/app/u/[id]/page.tsx` (public site viewer)
-- `src/lib/hosting/deploy.ts`
-
----
-
-#### 3. Share Links (1 hour)
-**Features:**
-- Generate shareable link
-- Public preview (read-only)
-- Copy link button
-- QR code generation
-- Social sharing (Twitter, LinkedIn)
-
-**Components:**
-- `src/components/editor/ShareDialog.tsx`
-- `src/components/editor/ShareButton.tsx`
-
----
-
-#### 4. Preview Mode Enhancements (30 min)
-**Files to modify:**
-- `src/app/preview/page.tsx`
-
-**Add**:
-- Mobile/tablet/desktop preview toggle
-- Responsive iframe viewer
-- Screenshot capture
-- Performance metrics
-
----
-
-### Session 10 Deliverables
-- ✅ Export HTML works
-- ✅ Public sharing links
-- ✅ Hosted preview at /u/[id]
-- ✅ Enhanced preview mode
-- ✅ Grade: B- → B
-
----
-
-## SESSION 11: TEMPLATE SYSTEM OVERHAUL (Thu, Nov 21)
-**Duration**: 4-5 hours
-**Priority**: 🟡 MEDIUM
-**Goal**: Production-quality template library
-
-### Tasks
-
-#### 1. Template Data Expansion (2 hours)
-**Files to modify:**
-- `src/lib/templates/index.ts`
-
-**Add 15+ high-quality templates**:
-- 5 business templates (corporate, startup, agency, etc.)
-- 5 product templates (SaaS, app, tool, etc.)
-- 5 personal templates (portfolio, blog, resume, etc.)
-
-**Each template needs:**
-- Realistic preview image (generate with screenshots or Figma)
-- Complete WebsiteConfig JSON
-- Category, tags, description
-- Difficulty level
-- Use case
-
----
-
-#### 2. Template Preview Images (1.5 hours)
-**Methods**:
-A) Use Playwright to screenshot each template
-B) Design in Figma and export
-C) Use existing screenshots from demos
-
-**New files:**
-- `scripts/generate-template-previews.ts` (automation)
-- Store in `/public/templates/previews/`
-
----
-
-#### 3. Template Filtering & Search (1 hour)
-**Files to modify:**
-- `src/components/template-gallery/TemplateGallery.tsx`
-
-**Features**:
-- Full-text search
-- Multi-select category filters
-- Sort by: popular, recent, name
-- Tags/keywords
-- "Start from blank" option
-
----
-
-#### 4. Template Preview Modal (1 hour)
-**New components:**
-- `src/components/template-gallery/TemplatePreviewDialog.tsx`
-
-**Features**:
-- Full-screen preview
-- Responsive preview (mobile/desktop)
-- "Use Template" CTA
-- Live demo link
-- Template details sidebar
-
----
-
-### Session 11 Deliverables
-- ✅ 15+ production templates
-- ✅ All preview images load
-- ✅ Advanced filtering/search
-- ✅ Preview modal polish
-- ✅ Grade: B → B+
-
----
-
-## SESSION 12: MONETIZATION & LIMITS (Fri, Nov 22)
-**Duration**: 4-5 hours
-**Priority**: 🟢 MEDIUM
-**Goal**: Pricing page + usage limits foundation
-
-### Tasks
-
-#### 1. Pricing Page (2.5 hours)
-**New file:**
-- `src/app/pricing/page.tsx`
-- `src/components/pricing/PricingTable.tsx`
-- `src/components/pricing/PricingFAQ.tsx`
-
-**Tiers** (example):
-- **Free**: 3 websites, export HTML, community support
-- **Pro** ($9/mo): 25 websites, custom domain, priority support
-- **Business** ($29/mo): Unlimited, team collaboration, white-label
-
-**Features**:
-- Feature comparison table
-- Toggle monthly/annual billing
-- "Most Popular" badge
-- CTAs for each tier
-- FAQ section
-
----
-
-#### 2. Usage Limits System (1.5 hours)
-**New files:**
-- `src/lib/limits/usage-tracker.ts`
-- `src/lib/limits/tier-config.ts`
-
-**Implementation**:
-```typescript
-interface UsageLimits {
-  maxWebsites: number;
-  maxExports: number;
-  canCustomDomain: boolean;
-  canRemoveBranding: boolean;
-  supportLevel: 'community' | 'email' | 'priority';
+**Focus Ring Pattern:**
+\`\`\`css
+.focus-visible:focus {
+  @apply ring-2 ring-primary ring-offset-2 outline-none;
 }
-
-// Track in IndexedDB or localStorage for now
-// Later: move to Supabase with auth
-```
+\`\`\`
 
 ---
 
-#### 3. Limit Enforcement UI (1 hour)
-**Components:**
-- `src/components/limits/UpgradeDialog.tsx`
-- `src/components/limits/UsageBar.tsx`
+#### 2.2 Add ARIA Labels & Semantic HTML (120 min)
+- [ ] Add \`aria-label\` to all icon-only buttons
+- [ ] Add \`aria-describedby\` to form inputs
+- [ ] Add \`role\` attributes where needed
+- [ ] Add \`sr-only\` labels for context
+- [ ] Convert clickable divs to buttons or links
 
-**Show when**:
-- User hits website limit
-- Trying to use pro features
-- On dashboard (usage overview)
-
----
-
-### Session 12 Deliverables
-- ✅ Pricing page complete
-- ✅ Usage limits defined
-- ✅ Upgrade prompts work
-- ✅ Foundation for billing
-- ✅ Grade: B+ → A-
+**Priority Files:**
+- `src/app/dashboard/page.tsx` (project cards)
+- `src/components/template-gallery/TemplateGrid.tsx`
+- `src/components/editor/ManualModePanel.tsx` (block cards)
+- All form components
 
 ---
 
-## SESSION 13: SEO & PERFORMANCE (Sat, Nov 23)
-**Duration**: 4-5 hours
-**Priority**: 🟢 MEDIUM
-**Goal**: Lighthouse score > 90, proper SEO
+#### 2.3 Run Accessibility Audit (30 min)
+- [ ] Run Lighthouse accessibility audit
+- [ ] Test with screen reader (NVDA/JAWS/VoiceOver)
+- [ ] Keyboard-only navigation test
+- [ ] Document remaining issues
+
+**Target Score:** Lighthouse Accessibility 90+
+
+---
+
+## 📋 **SESSION 3: Mobile Responsiveness (Day 3 - Wednesday)**
+
+**Duration:** 4-5 hours  
+**Priority:** ⚠️ **HIGH PRIORITY**
+
+### Objectives
+Make editor and all pages fully functional on mobile devices.
 
 ### Tasks
 
-#### 1. SEO Meta Tags (1.5 hours)
-**Files to modify:**
-- `src/app/layout.tsx`
-- `src/app/page.tsx`
-- `src/app/editor/[id]/page.tsx`
+#### 3.1 Responsive Editor Layout (180 min)
+- [ ] Add mobile breakpoint detection hook
+- [ ] Create tabbed layout for mobile (Edit | Preview)
+- [ ] Optimize Manual Mode panel for mobile
+- [ ] Make command palette mobile-friendly
+- [ ] Ensure all buttons are tap-friendly (44x44px min)
 
-**Add to every page**:
-```typescript
-export const metadata: Metadata = {
-  title: 'Page Title | Prompt to Website',
-  description: 'Description...',
-  openGraph: {
-    title: '...',
-    description: '...',
-    images: ['/og-image.png'],
-  },
-  twitter: {
-    card: 'summary_large_image',
-  },
-};
-```
-
-**Create**:
-- `public/og-image.png` (1200x630)
-- `public/robots.txt`
-- `public/sitemap.xml`
+**New Hook:**
+Create \`src/lib/hooks/use-media-query.ts\`
 
 ---
 
-#### 2. Performance Optimization (2 hours)
-**Image optimization**:
-- Use Next.js Image component everywhere
-- Add blur placeholders
-- Lazy load below fold
-- WebP format
-
-**Code splitting**:
-- Dynamic imports for heavy components
-- Route-based splitting (already done by Next.js)
-- Tree shaking verification
-
-**Bundle analysis**:
-```bash
-npm run build -- --profile
-# Check for large dependencies
-```
+#### 3.2 Mobile Navigation & Homepage (90 min)
+- [ ] Add hamburger menu for mobile navigation
+- [ ] Optimize homepage hero for mobile
+- [ ] Fix template gallery grid on mobile
+- [ ] Test all touch interactions
 
 ---
 
-#### 3. Accessibility Audit (1 hour)
-**Tools**:
-- Lighthouse (built into Chrome DevTools)
-- axe DevTools
-- Keyboard navigation testing
-
-**Fix**:
-- Alt text for all images
-- ARIA labels for interactive elements
-- Focus visible styles
-- Skip to content link
-- Semantic HTML
+#### 3.3 Mobile Testing (30 min)
+- [ ] Test on iPhone SE (375px)
+- [ ] Test on iPad (768px)
+- [ ] Verify horizontal scrolling
+- [ ] Test all gestures and touch targets
 
 ---
 
-#### 4. Analytics Integration (30 min)
-**Options**:
-- Google Analytics 4
-- Plausible (privacy-friendly)
-- Vercel Analytics (easiest)
+## 📋 **SESSION 4: Loading States & Error Handling (Day 4 - Thursday)**
 
-**Track**:
-- Page views
-- Button clicks (CTAs)
-- Template selections
-- Export actions
-- 404 errors
+**Duration:** 3-4 hours  
+**Priority:** ⚠️ **HIGH PRIORITY**
 
----
-
-### Session 13 Deliverables
-- ✅ Lighthouse score > 90
-- ✅ SEO meta tags complete
-- ✅ Accessibility AA compliance
-- ✅ Analytics tracking
-- ✅ Grade: A- → A
-
----
-
-## SESSION 14: POLISH & PRODUCTION LAUNCH (Sun, Nov 24)
-**Duration**: 5-6 hours
-**Priority**: 🔴 CRITICAL
-**Goal**: Final polish + production launch
+### Objectives
+Improve perceived performance and error recovery UX.
 
 ### Tasks
 
-#### 1. Final Bug Fixes (1.5 hours)
-**Test every flow:**
-- Landing page → Template selection → Editor → Export
-- Navigation (all links)
-- Mobile responsiveness
-- Error states
-- Loading states
-- Form validation
+#### 4.1 AI Loading States (90 min)
+- [ ] Add progress indicator during AI generation
+- [ ] Show "Generating..." message with time estimate
+- [ ] Add skeleton UI for preview pane
+- [ ] Add streaming response visualization (optional)
 
-**Fix any issues found**
-
----
-
-#### 2. Production Checklist (1 hour)
-- [ ] Environment variables set in Vercel
-- [ ] Error tracking configured (Sentry)
-- [ ] Analytics configured
-- [ ] Custom domain (if applicable)
-- [ ] SSL certificate
-- [ ] Monitoring alerts
-- [ ] Backup strategy for user data
-- [ ] Terms of Service + Privacy Policy pages
+**Files to Edit:**
+- `src/components/editor/AIModePanel.tsx`
+- `src/components/editor/PreviewPane.tsx`
 
 ---
 
-#### 3. Documentation (1.5 hours)
-**Create**:
-- `README.md` (comprehensive)
-- `CONTRIBUTING.md` (if open source)
-- `CHANGELOG.md`
-- User guide / Help center (basic)
+#### 4.2 Loading Skeletons Everywhere (60 min)
+- [ ] Add skeleton to login/signup during auth check
+- [ ] Add skeleton to editor during initial load
+- [ ] Add skeleton to template gallery
+- [ ] Use Suspense boundaries where possible
 
 ---
 
-#### 4. Launch Preparation (1.5 hours)
-**Marketing assets**:
-- Landing page copy refinement
-- Social media posts
-- Product Hunt submission (optional)
-- Launch email/announcement
-
-**Monitoring**:
-- Set up error alerts
-- Performance monitoring
-- User feedback form
+#### 4.3 Improve Error Handling (60 min)
+- [ ] Add user-friendly error page (hide technical details in production)
+- [ ] Add actionable recovery steps to error messages
+- [ ] Add "Undo" action to delete confirmations
+- [ ] Improve toast notification duration and actions
 
 ---
 
-#### 5. Deploy & Monitor (30 min)
-```bash
-# Final production deploy
-npm run build
-vercel --prod
+## 📋 **SESSION 5: Onboarding & Empty States (Day 5 - Friday)**
 
-# Monitor for first hour
-- Check analytics dashboard
-- Watch error logs
-- Test from different devices/browsers
-```
+**Duration:** 4-5 hours  
+**Priority:** ⚠️ **HIGH PRIORITY**
 
----
+### Objectives
+Reduce user abandonment by improving first-time experience.
 
-### Session 14 Deliverables
-- ✅ All bugs fixed
-- ✅ Production checklist complete
-- ✅ Deployed to production
-- ✅ Monitoring active
-- ✅ **Grade: A (95%+)**
+### Tasks
 
----
+#### 5.1 Dashboard Empty State Redesign (90 min)
+- [ ] Add welcome message for new users
+- [ ] Create interactive onboarding wizard
+- [ ] Add example prompts and template suggestions
+- [ ] Add "Quick Start" tutorial overlay
 
-## 📈 PROGRESS TRACKING
-
-### Grade Progression
-```
-Current:  C- (65%) ██████████░░░░░░░░░░
-Session 8:  C+ (72%) ███████████░░░░░░░░░
-Session 9:  B- (78%) ████████████░░░░░░░░
-Session 10: B  (82%) █████████████░░░░░░░
-Session 11: B+ (87%) ██████████████░░░░░░
-Session 12: A- (92%) ███████████████░░░░░
-Session 13: A  (95%) ████████████████░░░░
-Session 14: A  (98%) ████████████████████
-```
-
-### Feature Completion
-```
-Navigation:      0% → 100% ████████████████████
-Auth Flow:       0% → 80%  ████████████████░░░░
-Dashboard:       0% → 100% ████████████████████
-Templates:      40% → 100% ████████████████████
-Export:          0% → 90%  ██████████████████░░
-Monetization:    0% → 70%  ██████████████░░░░░░
-SEO:            20% → 95%  ███████████████████░
-Performance:    70% → 95%  ███████████████████░
-```
+**Wizard Flow:**
+1. "Welcome! What type of website?" (Business, Product, Personal)
+2. Show filtered templates based on choice
+3. "Choose template or start with AI"
+4. If AI: Pre-fill example prompt
+5. Navigate to editor with context
 
 ---
 
-## 🛠️ TOOLS & SETUP
-
-### Required Tools
-- **Code Editor**: VS Code with extensions (ESLint, Prettier, Tailwind IntelliSense)
-- **Browser**: Chrome DevTools + Extensions (React DevTools, Lighthouse)
-- **Design**: Figma (for template previews) OR Playwright screenshots
-- **Testing**: Playwright UI mode (`npm run test:e2e:ui`)
-- **Monitoring**: Vercel Dashboard + Analytics
-
-### Commands Reference
-```bash
-# Development
-npm run dev              # Local dev server
-npm run build            # Production build
-npm run test             # Run unit tests
-npm run test:e2e:ui      # E2E tests with UI
-npm run lint             # ESLint check
-
-# Deployment
-vercel                   # Preview deploy
-vercel --prod            # Production deploy
-
-# Analysis
-npm run build -- --profile  # Bundle analysis
-lighthouse https://...      # Performance audit
-```
+#### 5.2 AI Mode Onboarding (90 min)
+- [ ] Add welcome message to AI panel for new projects
+- [ ] Show 3 example prompts as quick-start buttons
+- [ ] Add "What can I ask?" info tooltip
+- [ ] Add progressive disclosure for advanced features
 
 ---
 
-## 🚨 RISK MITIGATION
-
-### High-Risk Areas
-1. **Template Image Generation** - Could take longer than planned
-   - **Mitigation**: Use placeholders initially, add real images incrementally
-
-2. **Export HTML Complexity** - CSS compilation tricky
-   - **Mitigation**: Start with simple export, enhance later
-
-3. **Hosting Integration** - Third-party API issues
-   - **Mitigation**: Use simple subdomain hosting first
-
-### Scope Creep Prevention
-- ✅ Focus on critical path (Sessions 8-10)
-- ✅ Nice-to-haves go in Session 11+
-- ✅ Can skip Session 13-14 if time-constrained
-- ✅ Minimum viable: Complete through Session 10 = B grade
+#### 5.3 Template Gallery Preview Images (90 min)
+- [ ] Generate preview screenshots for all 10 templates
+- [ ] Add preview images to template metadata
+- [ ] Add hover effect to enlarge preview
+- [ ] Optimize images with \`next/image\`
 
 ---
 
-## 📊 SUCCESS CRITERIA
-
-### Must-Have (Critical)
-- ✅ No 404 errors on live site
-- ✅ User can create, edit, and export a website
-- ✅ Template previews work correctly
-- ✅ Mobile responsive throughout
-- ✅ Performance: Lighthouse > 80
-
-### Should-Have (Important)
-- ✅ Dashboard for project management
-- ✅ 15+ quality templates
-- ✅ Pricing page exists
-- ✅ SEO meta tags complete
-- ✅ Analytics tracking
-
-### Nice-to-Have (Optional)
-- ⚪ Authentication fully implemented
-- ⚪ Payment integration
-- ⚪ Collaboration features
-- ⚪ Custom domains
-- ⚪ Advanced export options
+#### 5.4 Interactive Tutorial (60 min)
+- [ ] Add first-time user tutorial overlay
+- [ ] Use \`localStorage\` to track completion
+- [ ] Add "Skip Tutorial" option
+- [ ] Highlight key features: AI mode, Manual mode, Export
 
 ---
 
-## 🎯 FINAL TARGET
+## 📋 **SESSION 6: Polish & Visual Design (Day 6 - Saturday)**
 
-**By End of Week:**
-- **Grade**: A (95%+)
-- **Production Ready**: ✅ Yes
-- **User Flow**: Complete end-to-end
-- **Performance**: Lighthouse > 90
-- **SEO**: Fully optimized
-- **Monetization**: Foundation ready
-- **Launch Status**: LIVE 🚀
+**Duration:** 3-4 hours  
+**Priority:** 🔧 **MEDIUM PRIORITY**
 
----
+### Objectives
+Add visual polish and improve overall aesthetic.
 
-## 📝 NOTES
+### Tasks
 
-### Session Flexibility
-- Sessions can be split or combined based on progress
-- If ahead of schedule: Add Session 15 (Advanced Features)
-- If behind: Focus on Sessions 8-10 only
-
-### Advanced Features (Future Sessions)
-- **Session 15**: AI Chat Mode (conversational editing)
-- **Session 16**: Collaboration & Sharing
-- **Session 17**: Advanced Components (forms, animations)
-- **Session 18**: Mobile App Builder
-- **Session 19**: White-label Solution
-- **Session 20**: API & Integrations
-
-### Community Feedback
-After launch, prioritize based on user feedback:
-1. Most requested features
-2. Biggest pain points
-3. Performance issues
-4. Bug reports
+#### 6.1 Improve Form Validation (60 min)
+- [ ] Strengthen password requirements (8+ chars, complexity)
+- [ ] Add real-time validation feedback
+- [ ] Show password strength indicator
+- [ ] Add helpful error messages
 
 ---
 
-**END OF WEEKLY PLAN**
+#### 6.2 Fix Homepage Footer Links (30 min)
+- [ ] Remove non-existent links or add placeholder pages
+- [ ] Update footer to link to real sections
+- [ ] Add sitemap
 
-*Last Updated: November 17, 2025*
-*Created by: Claude Code*
-*Status: Ready for Execution*
+---
+
+#### 6.3 Add Command Palette to All Pages (60 min)
+- [ ] Add "Commands" button to Navigation header
+- [ ] Show Cmd+K hint in footer globally
+- [ ] Add first-time tooltip
+
+---
+
+#### 6.4 Improve Toast Notifications (60 min)
+- [ ] Add action buttons to toasts (Undo, View, etc.)
+- [ ] Increase duration for actionable toasts
+- [ ] Add toast for successful saves
+- [ ] Group similar toasts
+
+---
+
+#### 6.5 Color Contrast Audit (30 min)
+- [ ] Run WebAIM contrast checker on all color combinations
+- [ ] Fix failing combinations
+- [ ] Ensure WCAG AA compliance (4.5:1 ratio)
+
+---
+
+## 📋 **SESSION 7: Testing, Documentation & Launch Prep (Day 7 - Sunday)**
+
+**Duration:** 4-5 hours  
+**Priority:** ✅ **POLISH & LAUNCH**
+
+### Objectives
+Comprehensive testing, documentation updates, and production deployment.
+
+### Tasks
+
+#### 7.1 Comprehensive Testing (120 min)
+- [ ] Run full accessibility audit (Lighthouse, WAVE, axe)
+- [ ] Keyboard-only navigation test (entire app)
+- [ ] Screen reader test (VoiceOver/NVDA)
+- [ ] Cross-browser testing (Chrome, Safari, Firefox, Edge)
+- [ ] Mobile testing (iOS Safari, Android Chrome)
+- [ ] User flow testing (signup → create → edit → export)
+
+---
+
+#### 7.2 Update Documentation (60 min)
+- [ ] Update README with new features
+- [ ] Add ACCESSIBILITY.md guide
+- [ ] Update DEPLOYMENT.md if needed
+- [ ] Add CHANGELOG.md
+
+---
+
+#### 7.3 Performance Optimization (60 min)
+- [ ] Run Lighthouse performance audit
+- [ ] Optimize images (use \`next/image\`)
+- [ ] Add loading="lazy" to images
+- [ ] Check bundle size
+- [ ] Add font preloading
+- [ ] Enable Vercel Analytics & Speed Insights
+
+**Target Metrics:**
+- Lighthouse Performance: 90+
+- First Contentful Paint: < 1.5s
+- Largest Contentful Paint: < 2.5s
+- Cumulative Layout Shift: < 0.1
+
+---
+
+#### 7.4 Production Deployment (60 min)
+- [ ] Review environment variables
+- [ ] Configure Supabase production project
+- [ ] Set up Google OAuth credentials
+- [ ] Deploy to Vercel
+- [ ] Test production deployment
+- [ ] Monitor for errors (Sentry/LogRocket)
+
+---
+
+#### 7.5 Create Announcement & Launch Plan (30 min)
+- [ ] Prepare Product Hunt launch post
+- [ ] Create demo video/GIFs
+- [ ] Write launch tweet thread
+- [ ] Prepare Reddit post (r/webdev, r/SideProject)
+- [ ] Update personal portfolio/LinkedIn
+
+---
+
+## 🎯 **Success Criteria for the Week**
+
+### Critical Fixes Completed ✅
+- [ ] Authentication state visible in navigation
+- [ ] Editor has back navigation
+- [ ] Keyboard navigation works everywhere
+- [ ] ARIA labels on all interactive elements
+- [ ] Mobile-responsive editor
+- [ ] Loading states everywhere
+- [ ] User-friendly error messages
+
+### High Priority Features ✅
+- [ ] Onboarding wizard for new users
+- [ ] AI loading progress indicators
+- [ ] Template preview images
+- [ ] Empty state improvements
+- [ ] Toast notification actions
+
+### Quality Metrics ✅
+- Lighthouse Accessibility: **90+**
+- Lighthouse Performance: **90+**
+- Mobile responsiveness: **375px+**
+- Cross-browser compatibility: **All major browsers**
+- WCAG AA compliance: **Passing**
+
+---
+
+## 📊 **UX Audit Summary**
+
+Based on comprehensive UX audit, the following issues were identified:
+
+### 🚨 Critical Issues
+1. Authentication state not visible in navigation
+2. Missing navigation out of editor/dashboard
+3. Accessibility barriers (ARIA labels, keyboard navigation)
+4. Editor unusable on mobile devices
+5. Missing loading states cause perceived performance issues
+
+### ⚠️ High Priority Issues
+6. Empty state user abandonment risk
+7. No progress indicator during AI generation
+8. Generic error messages with no recovery actions
+9. Mobile responsiveness issues across all pages
+10. Missing loading skeletons
+
+### 🔧 Medium Priority Issues
+11. Weak password validation
+12. Color contrast accessibility issues
+13. Command palette not discoverable
+14. Toast notifications lack action buttons
+15. Homepage footer has broken links
+16. Template gallery lacks visual previews
+
+---
+
+## 💡 **Additional Resources**
+
+### Tools
+- **Accessibility:** Lighthouse, WAVE, axe DevTools
+- **Contrast:** WebAIM Contrast Checker
+- **Screen Readers:** NVDA (Windows), VoiceOver (Mac)
+- **Mobile Testing:** BrowserStack, Chrome DevTools Device Mode
+- **Performance:** Lighthouse, WebPageTest, Vercel Speed Insights
+
+### Documentation
+- WCAG 2.1 Guidelines: https://www.w3.org/WAI/WCAG21/quickref/
+- shadcn/ui Accessibility: https://ui.shadcn.com/docs/components/
+- Next.js Best Practices: https://nextjs.org/docs
+- Vercel Deployment: https://vercel.com/docs
+
+---
+
+**This plan transforms the application from functional to exceptional. Each session builds on the previous one, creating a polished, professional, production-ready product. Let's make it next level! 🚀**
