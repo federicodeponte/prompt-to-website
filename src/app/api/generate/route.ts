@@ -4,6 +4,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { WebsiteConfig } from '@/lib/types/website-config';
+import { validateWebsiteConfig } from '@/lib/validation/website-schema';
+import { loggers } from '@/lib/utils/logger';
+import { getErrorMessage } from '@/lib/utils/error-handler';
 
 // Mark as dynamic route to prevent build-time execution
 export const dynamic = 'force-dynamic';
@@ -116,26 +119,23 @@ Example structure:
  * Returns: { config: WebsiteConfig }
  */
 export async function POST(request: NextRequest) {
+  let prompt: string | undefined;
+  let template: string | undefined;
+
   try {
     const body = await request.json();
-    const { prompt, template } = body as {
+    ({ prompt, template } = body as {
       prompt: string;
       template?: string;
-    };
+    });
 
     // Validation
     if (!prompt || typeof prompt !== 'string') {
-      return NextResponse.json(
-        { error: 'Missing or invalid prompt' },
-        { status: 400 }
-      );
+      return NextResponse.json(getErrorMessage('MISSING_PROMPT'), { status: 400 });
     }
 
     if (!process.env.GEMINI_API_KEY) {
-      return NextResponse.json(
-        { error: 'Gemini API key not configured' },
-        { status: 500 }
-      );
+      return NextResponse.json(getErrorMessage('MISSING_API_KEY'), { status: 500 });
     }
 
     // Initialize Gemini AI (done here to avoid build-time execution)
@@ -167,26 +167,47 @@ export async function POST(request: NextRequest) {
     const text = response.text();
 
     // Parse JSON response
-    let config: WebsiteConfig;
+    let parsedData: unknown;
     try {
-      config = JSON.parse(text);
-    } catch {
-      console.error('Failed to parse Gemini response as JSON:', text);
+      parsedData = JSON.parse(text);
+      loggers.ai.debug('Successfully parsed Gemini response');
+    } catch (error) {
+      loggers.ai.error('Failed to parse AI response', error);
+
       return NextResponse.json(
-        { error: 'AI generated invalid JSON response', details: text.substring(0, 200) },
+        {
+          ...getErrorMessage('AI_PARSING_FAILED'),
+          details: process.env.NODE_ENV === 'development' ? text.substring(0, 200) : undefined,
+        },
         { status: 500 }
       );
     }
 
-    // Validate config structure
-    if (!config.version || !config.template || !config.theme || !config.blocks || !config.metadata) {
+    // Validate with Zod schema
+    const validationResult = validateWebsiteConfig(parsedData);
+
+    if (!validationResult.success) {
+      loggers.ai.error('AI generated invalid configuration', { error: validationResult.error });
+
       return NextResponse.json(
-        { error: 'AI generated incomplete configuration', details: config },
+        {
+          ...getErrorMessage('AI_VALIDATION_FAILED'),
+          details: process.env.NODE_ENV === 'development' ? validationResult.error : undefined,
+          issues: process.env.NODE_ENV === 'development' ? validationResult.details : undefined,
+        },
         { status: 500 }
       );
     }
 
-    // Add unique IDs to blocks if missing
+    // Type-safe validated config
+    const config: WebsiteConfig = validationResult.data;
+
+    loggers.ai.info('Successfully generated and validated website config', {
+      template: config.template,
+      blockCount: config.blocks?.length || 0,
+    });
+
+    // Add unique IDs to blocks if missing (defensive programming)
     config.blocks = config.blocks.map((block, index) => ({
       ...block,
       id: block.id || `${block.type}-${index + 1}`,
@@ -194,11 +215,12 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ config });
   } catch (error) {
-    console.error('Unexpected error in POST /api/generate:', error);
+    loggers.ai.error('Unexpected error during generation', error);
+
     return NextResponse.json(
       {
-        error: 'Internal server error',
-        details: error instanceof Error ? error.message : 'Unknown error',
+        ...getErrorMessage('AI_PARSING_FAILED'),
+        details: process.env.NODE_ENV === 'development' && error instanceof Error ? error.message : undefined,
       },
       { status: 500 }
     );

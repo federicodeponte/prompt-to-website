@@ -12,6 +12,8 @@ import { WebsiteConfig } from '@/lib/types/website-config';
 import { cn } from '@/lib/utils';
 import { generateId } from '@/lib/utils/id-generator';
 import { useGenerateWebsite, useEditWebsiteWithAI } from '@/lib/hooks/use-websites';
+import { APIError } from '@/lib/types/api-responses';
+import { toast } from 'sonner';
 
 export interface Message {
   id: string;
@@ -75,25 +77,9 @@ export function AIModePanel({ config, onConfigUpdate }: AIModePanelProps) {
   useEffect(() => {
     async function checkAPI() {
       try {
-        const response = await fetch('/api/generate', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ prompt: '__health_check__' }),
-        });
-
-        if (response.status === 400) {
-          // Expected response for health check (missing prompt is OK)
-          setApiConfigured(true);
-        } else if (response.status === 500) {
-          const data = await response.json();
-          if (data.error?.includes('API key')) {
-            setApiConfigured(false);
-          } else {
-            setApiConfigured(true);
-          }
-        } else {
-          setApiConfigured(true);
-        }
+        const response = await fetch('/api/health');
+        const data = await response.json();
+        setApiConfigured(data.configured);
       } catch (error) {
         console.error('API health check failed:', error);
         setApiConfigured(false);
@@ -104,30 +90,63 @@ export function AIModePanel({ config, onConfigUpdate }: AIModePanelProps) {
   }, []);
 
   /**
-   * Handle AI errors with helpful messages
+   * Handle AI errors with helpful messages and toast notifications
    */
   const handleAIError = useCallback((error: unknown, action: 'generating' | 'editing') => {
     console.error(`AI ${action} error:`, error);
 
-    const errorMsg = error instanceof Error ? error.message : `Failed to ${action === 'generating' ? 'generate' : 'edit'} website`;
-    let helpText = '';
+    // Check if this is our enhanced APIError with suggestions
+    if (error instanceof APIError) {
+      // Show error message in chat
+      const errorMessage: Message = {
+        id: generateId(),
+        role: 'system',
+        content: `❌ ${error.title}: ${error.message}`,
+        timestamp: new Date(),
+      };
+      setMessages((prev) => [...prev, errorMessage]);
 
-    if (errorMsg.includes('API key')) {
-      helpText = '\n\n🔧 Fix: Add your Gemini API key to .env.local\n1. Get a key from https://aistudio.google.com/app/apikey\n2. Create .env.local file\n3. Add: GEMINI_API_KEY=your_key_here\n4. Restart dev server';
-      setApiConfigured(false);
-    } else if (errorMsg.includes('network') || errorMsg.includes('fetch')) {
-      helpText = '\n\n🌐 Network error. Check your internet connection and try again.';
-    } else if (errorMsg.includes('JSON')) {
-      helpText = '\n\n🤖 AI generated invalid response. Try simplifying your prompt.';
+      // Show toast with suggestions
+      toast.error(error.title, {
+        description: (
+          <div className="space-y-2">
+            <p className="font-medium">{error.message}</p>
+            {error.suggestions.length > 0 && (
+              <div className="text-xs">
+                <p className="font-semibold mb-1">Suggestions:</p>
+                <ul className="list-disc list-inside space-y-0.5">
+                  {error.suggestions.map((suggestion, idx) => (
+                    <li key={idx}>{suggestion}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+        ),
+        duration: 10000, // 10 seconds to read suggestions
+      });
+
+      // Update API configured status if it's an API key error
+      if (error.message.includes('API key')) {
+        setApiConfigured(false);
+      }
+    } else {
+      // Fallback for non-APIError errors
+      const errorMsg = error instanceof Error ? error.message : `Failed to ${action === 'generating' ? 'generate' : 'edit'} website`;
+
+      const errorMessage: Message = {
+        id: generateId(),
+        role: 'system',
+        content: `❌ Error: ${errorMsg}`,
+        timestamp: new Date(),
+      };
+      setMessages((prev) => [...prev, errorMessage]);
+
+      toast.error('Error', {
+        description: errorMsg,
+        duration: 5000,
+      });
     }
-
-    const errorMessage: Message = {
-      id: generateId(),
-      role: 'system',
-      content: `❌ Error: ${errorMsg}${helpText}`,
-      timestamp: new Date(),
-    };
-    setMessages((prev) => [...prev, errorMessage]);
   }, []);
 
   /**

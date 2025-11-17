@@ -1,44 +1,48 @@
 // ABOUTME: React Query hooks for website CRUD operations
-// ABOUTME: Uses localStorage for MVP (no backend required)
+// ABOUTME: Uses IndexedDB with localStorage fallback (no backend required)
 
 'use client';
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Website, WebsiteConfig } from '@/lib/types/website-config';
-import { websiteStorage } from '@/lib/storage/local-storage';
+import { websiteStorage } from '@/lib/storage/storage';
+import {
+  APIError,
+  isAPIErrorResponse,
+  GenerateSuccessResponse,
+  EditSuccessResponse,
+} from '@/lib/types/api-responses';
 
 /**
- * Fetch all websites from localStorage
+ * Fetch all websites from storage (IndexedDB with localStorage fallback)
  */
 async function fetchWebsites(): Promise<Website[]> {
-  // Simulate async for React Query compatibility
-  return Promise.resolve(websiteStorage.getAll());
+  return await websiteStorage.getAll();
 }
 
 /**
- * Fetch a single website by ID from localStorage
+ * Fetch a single website by ID from storage
  */
 async function fetchWebsite(id: string): Promise<Website> {
-  const website = websiteStorage.getById(id);
+  const website = await websiteStorage.getById(id);
   if (!website) {
     throw new Error('Website not found');
   }
-  return Promise.resolve(website);
+  return website;
 }
 
 /**
- * Create a new website in localStorage
+ * Create a new website in storage
  */
 async function createWebsite(data: {
   label: string;
   config: WebsiteConfig;
 }): Promise<Website> {
-  const website = websiteStorage.create(data.label, data.config);
-  return Promise.resolve(website);
+  return await websiteStorage.create(data.label, data.config);
 }
 
 /**
- * Update a website in localStorage
+ * Update a website in storage
  */
 async function updateWebsite(data: {
   id: string;
@@ -47,68 +51,109 @@ async function updateWebsite(data: {
   prompt_history?: string[];
 }): Promise<Website> {
   const { id, ...updates } = data;
-  const website = websiteStorage.update(id, updates);
+  const website = await websiteStorage.update(id, updates);
 
   if (!website) {
     throw new Error('Website not found');
   }
 
-  return Promise.resolve(website);
+  return website;
 }
 
 /**
- * Delete a website from localStorage
+ * Delete a website from storage
  */
 async function deleteWebsite(id: string): Promise<void> {
-  const success = websiteStorage.delete(id);
+  const success = await websiteStorage.delete(id);
   if (!success) {
     throw new Error('Website not found');
   }
-  return Promise.resolve();
 }
 
 /**
  * Generate website from AI prompt
  * NOTE: Still uses API endpoint for Gemini AI generation
+ *
+ * Throws APIError with full error details (message, suggestions) on failure
  */
 async function generateWebsite(data: {
   prompt: string;
   template?: string;
-}): Promise<{ config: WebsiteConfig }> {
+}): Promise<GenerateSuccessResponse> {
+  const startTime = performance.now();
+
   const response = await fetch('/api/generate', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data),
   });
 
+  const duration = performance.now() - startTime;
+
   if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.error || 'Failed to generate website');
+    const errorData = await response.json();
+
+    // Check if response matches our enhanced error format
+    if (isAPIErrorResponse(errorData)) {
+      // Throw APIError with full details (preserves suggestions, details, etc.)
+      throw new APIError(errorData);
+    }
+
+    // Fallback for unexpected error format
+    throw new Error(errorData.error || errorData.message || 'Failed to generate website');
   }
 
-  return response.json();
+  const successData = await response.json();
+
+  // Log performance in development
+  if (process.env.NODE_ENV === 'development') {
+    console.log(`[AI Generation] Completed in ${duration.toFixed(0)}ms`);
+  }
+
+  return successData;
 }
 
 /**
  * Edit website configuration with AI
  * NOTE: Uses API endpoint for Gemini AI editing
+ *
+ * Throws APIError with full error details (message, suggestions) on failure
  */
 async function editWebsiteWithAI(data: {
   config: WebsiteConfig;
   instruction: string;
-}): Promise<{ config: WebsiteConfig }> {
+}): Promise<EditSuccessResponse> {
+  const startTime = performance.now();
+
   const response = await fetch('/api/edit', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data),
   });
 
+  const duration = performance.now() - startTime;
+
   if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.error || 'Failed to edit website');
+    const errorData = await response.json();
+
+    // Check if response matches our enhanced error format
+    if (isAPIErrorResponse(errorData)) {
+      // Throw APIError with full details (preserves suggestions, details, etc.)
+      throw new APIError(errorData);
+    }
+
+    // Fallback for unexpected error format
+    throw new Error(errorData.error || errorData.message || 'Failed to edit website');
   }
 
-  return response.json();
+  const successData = await response.json();
+
+  // Log performance in development
+  if (process.env.NODE_ENV === 'development') {
+    console.log(`[AI Editing] Completed in ${duration.toFixed(0)}ms`);
+  }
+
+  return successData;
 }
 
 /**

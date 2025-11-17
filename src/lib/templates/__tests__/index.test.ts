@@ -32,8 +32,14 @@ describe('Template utilities', () => {
   describe('getAllTemplates', () => {
     it('should return all templates', () => {
       const allTemplates = getAllTemplates();
-      expect(allTemplates).toHaveLength(3);
+      // Dynamic check - should match actual template count
+      expect(allTemplates.length).toBeGreaterThan(0);
       expect(allTemplates).toEqual(templates);
+      // Verify we have the core templates
+      const templateIds = allTemplates.map(t => t.id);
+      expect(templateIds).toContain('saas-landing');
+      expect(templateIds).toContain('product-landing');
+      expect(templateIds).toContain('portfolio');
     });
 
     it('should return templates with required metadata', () => {
@@ -52,7 +58,10 @@ describe('Template utilities', () => {
   describe('getTemplatesByCategory', () => {
     it('should return all templates when category is "all"', () => {
       const filtered = getTemplatesByCategory('all');
-      expect(filtered).toHaveLength(3);
+      const allTemplates = getAllTemplates();
+      // Should return same count as getAllTemplates()
+      expect(filtered).toHaveLength(allTemplates.length);
+      expect(filtered).toEqual(allTemplates);
     });
 
     it('should return only business templates', () => {

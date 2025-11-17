@@ -3,7 +3,8 @@
 
 'use client';
 
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import { useRouter } from 'next/navigation';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
@@ -13,9 +14,12 @@ import { ManualModePanel } from './ManualModePanel';
 import { ThemeModePanel } from './ThemeModePanel';
 import { PreviewPane } from './PreviewPane';
 import { useUpdateWebsite } from '@/lib/hooks/use-websites';
-import { Save, CheckCircle2, Download, Undo2, Redo2, FileJson } from 'lucide-react';
+import { Save, CheckCircle2, Download, Undo2, Redo2, FileJson, Home, Command as CommandIcon } from 'lucide-react';
 import { exportToHTML, downloadHTML } from '@/lib/export/html-exporter';
 import { downloadJSON } from '@/lib/export/json-exporter';
+import { useKeyboardShortcuts, formatKeyCombo } from '@/lib/hooks/use-keyboard-shortcuts';
+import { CommandPalette, type Command } from '@/components/command-palette/CommandPalette';
+import { DebugPanel } from '@/components/debug';
 
 interface EditorLayoutProps {
   initialConfig: WebsiteConfig;
@@ -59,6 +63,10 @@ export function EditorLayout({ initialConfig, websiteId }: EditorLayoutProps) {
 
   const canUndo = historyIndex > 0;
   const canRedo = historyIndex < history.length - 1;
+
+  // Command Palette state
+  const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
+  const router = useRouter();
 
   const setConfig = (newConfig: WebsiteConfig) => {
     setConfigInternal(newConfig);
@@ -181,35 +189,140 @@ export function EditorLayout({ initialConfig, websiteId }: EditorLayoutProps) {
   };
 
   /**
-   * Keyboard shortcuts
+   * Command Palette - Available commands
    */
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
-      const cmdOrCtrl = isMac ? e.metaKey : e.ctrlKey;
+  const commands: Command[] = useMemo(() => [
+    // Editor Actions
+    {
+      id: 'save',
+      label: 'Save',
+      description: 'Save current changes',
+      icon: Save,
+      category: 'Editor',
+      shortcut: formatKeyCombo('mod+s'),
+      action: handleManualSave,
+    },
+    {
+      id: 'undo',
+      label: 'Undo',
+      description: 'Undo last change',
+      icon: Undo2,
+      category: 'Editor',
+      shortcut: formatKeyCombo('mod+z'),
+      action: undo,
+      enabled: canUndo,
+    },
+    {
+      id: 'redo',
+      label: 'Redo',
+      description: 'Redo last undone change',
+      icon: Redo2,
+      category: 'Editor',
+      shortcut: formatKeyCombo('mod+shift+z'),
+      action: redo,
+      enabled: canRedo,
+    },
 
-      // Cmd/Ctrl + Z: Undo
-      if (cmdOrCtrl && e.key === 'z' && !e.shiftKey) {
-        e.preventDefault();
-        undo();
-      }
+    // Export Actions
+    {
+      id: 'export-html',
+      label: 'Export as HTML',
+      description: 'Download website as standalone HTML file',
+      icon: Download,
+      category: 'Export',
+      action: handleExportHTML,
+    },
+    {
+      id: 'export-json',
+      label: 'Export as JSON',
+      description: 'Download website configuration as JSON',
+      icon: FileJson,
+      category: 'Export',
+      action: handleExportJSON,
+    },
 
-      // Cmd/Ctrl + Shift + Z: Redo (also Cmd/Ctrl + Y)
-      if ((cmdOrCtrl && e.key === 'z' && e.shiftKey) || (cmdOrCtrl && e.key === 'y')) {
-        e.preventDefault();
-        redo();
-      }
+    // Mode Switching
+    {
+      id: 'mode-ai',
+      label: 'Switch to AI Mode',
+      description: 'Edit with AI assistant',
+      icon: CommandIcon,
+      category: 'Modes',
+      action: () => setActiveMode('ai'),
+      enabled: activeMode !== 'ai',
+    },
+    {
+      id: 'mode-manual',
+      label: 'Switch to Manual Mode',
+      description: 'Edit with form controls',
+      category: 'Modes',
+      action: () => setActiveMode('manual'),
+      enabled: activeMode !== 'manual',
+    },
+    {
+      id: 'mode-theme',
+      label: 'Switch to Theme Mode',
+      description: 'Customize colors and fonts',
+      category: 'Modes',
+      action: () => setActiveMode('theme'),
+      enabled: activeMode !== 'theme',
+    },
 
-      // Cmd/Ctrl + S: Save
-      if (cmdOrCtrl && e.key === 's') {
-        e.preventDefault();
-        handleManualSave();
-      }
-    };
+    // Navigation
+    {
+      id: 'nav-home',
+      label: 'Go to Home',
+      description: 'Return to homepage',
+      icon: Home,
+      category: 'Navigation',
+      action: () => router.push('/'),
+      shortcut: 'G H',
+    },
+  ], [
+    handleManualSave,
+    undo,
+    redo,
+    canUndo,
+    canRedo,
+    handleExportHTML,
+    handleExportJSON,
+    activeMode,
+    router,
+  ]);
 
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [undo, redo, handleManualSave]);
+  /**
+   * Keyboard shortcuts using the hook
+   */
+  useKeyboardShortcuts([
+    {
+      key: 'mod+k',
+      callback: () => setCommandPaletteOpen(true),
+      description: 'Open command palette',
+    },
+    {
+      key: 'mod+z',
+      callback: undo,
+      description: 'Undo',
+      enabled: canUndo,
+    },
+    {
+      key: 'mod+shift+z',
+      callback: redo,
+      description: 'Redo',
+      enabled: canRedo,
+    },
+    {
+      key: 'mod+y',
+      callback: redo,
+      description: 'Redo (alternative)',
+      enabled: canRedo,
+    },
+    {
+      key: 'mod+s',
+      callback: handleManualSave,
+      description: 'Save',
+    },
+  ]);
 
   /**
    * Cleanup timeout on unmount
@@ -223,9 +336,17 @@ export function EditorLayout({ initialConfig, websiteId }: EditorLayoutProps) {
   }, []);
 
   return (
-    <div className="flex h-screen flex-col">
-      {/* Header */}
-      <header className="border-b bg-background px-6 py-4">
+    <>
+      {/* Command Palette */}
+      <CommandPalette
+        open={commandPaletteOpen}
+        onClose={() => setCommandPaletteOpen(false)}
+        commands={commands}
+      />
+
+      <div className="flex h-screen flex-col">
+        {/* Header */}
+        <header className="border-b bg-background px-6 py-4">
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold">Website Editor</h1>
@@ -298,6 +419,17 @@ export function EditorLayout({ initialConfig, websiteId }: EditorLayoutProps) {
               <FileJson className="mr-2 h-4 w-4" />
               Export JSON
             </Button>
+
+            {/* Command Palette Trigger */}
+            <Button
+              onClick={() => setCommandPaletteOpen(true)}
+              variant="outline"
+              size="sm"
+              title={`Open command palette (${formatKeyCombo('mod+k')})`}
+            >
+              <CommandIcon className="mr-2 h-4 w-4" />
+              Commands
+            </Button>
           </div>
         </div>
       </header>
@@ -365,6 +497,10 @@ export function EditorLayout({ initialConfig, websiteId }: EditorLayoutProps) {
           <PreviewPane config={config} />
         </Panel>
       </PanelGroup>
-    </div>
+
+      {/* Development-only debug panel */}
+      <DebugPanel config={config} />
+      </div>
+    </>
   );
 }

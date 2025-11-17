@@ -1,26 +1,11 @@
 // ABOUTME: Main website renderer component that converts WebsiteConfig JSON to React components
-// ABOUTME: Implements Factory pattern for block type to component mapping
+// ABOUTME: Implements Factory pattern for block type to component mapping with lazy loading
 
 'use client';
 
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import { WebsiteConfig, Block } from '@/lib/types/website-config';
 import { mergeWithDefaults } from '@/lib/theme/defaults';
-import { HeroBlock } from '../blocks/hero';
-import { FeaturesBlock } from '../blocks/features';
-import { PricingBlock } from '../blocks/pricing';
-import { TestimonialsBlock } from '../blocks/testimonials';
-import { CTABlock } from '../blocks/cta';
-import { FooterBlock } from '../blocks/footer';
-import { FAQBlock } from '../blocks/faq';
-import { StatsBlock } from '../blocks/stats';
-import { ContactBlock } from '../blocks/contact';
-import { NewsletterBlock } from '../blocks/newsletter';
-import { TeamBlock } from '../blocks/team';
-import { LogoCloudBlock } from '../blocks/logo-cloud/LogoCloudBlock';
-import { GalleryBlock } from '../blocks/gallery/GalleryBlock';
-import { ProcessBlock } from '../blocks/process/ProcessBlock';
-import { VideoBlock } from '../blocks/video/VideoBlock';
 import {
   isHeroContent,
   isFeaturesContent,
@@ -39,6 +24,38 @@ import {
   isVideoContent,
 } from '@/lib/types/block-content';
 
+/**
+ * Lazy-loaded block components
+ * Reduces initial bundle size by loading blocks only when needed
+ */
+const HeroBlock = lazy(() => import('../blocks/hero').then(m => ({ default: m.HeroBlock })));
+const FeaturesBlock = lazy(() => import('../blocks/features').then(m => ({ default: m.FeaturesBlock })));
+const PricingBlock = lazy(() => import('../blocks/pricing').then(m => ({ default: m.PricingBlock })));
+const TestimonialsBlock = lazy(() => import('../blocks/testimonials').then(m => ({ default: m.TestimonialsBlock })));
+const CTABlock = lazy(() => import('../blocks/cta').then(m => ({ default: m.CTABlock })));
+const FooterBlock = lazy(() => import('../blocks/footer').then(m => ({ default: m.FooterBlock })));
+const FAQBlock = lazy(() => import('../blocks/faq').then(m => ({ default: m.FAQBlock })));
+const StatsBlock = lazy(() => import('../blocks/stats').then(m => ({ default: m.StatsBlock })));
+const ContactBlock = lazy(() => import('../blocks/contact').then(m => ({ default: m.ContactBlock })));
+const NewsletterBlock = lazy(() => import('../blocks/newsletter').then(m => ({ default: m.NewsletterBlock })));
+const TeamBlock = lazy(() => import('../blocks/team').then(m => ({ default: m.TeamBlock })));
+const LogoCloudBlock = lazy(() => import('../blocks/logo-cloud/LogoCloudBlock').then(m => ({ default: m.LogoCloudBlock })));
+const GalleryBlock = lazy(() => import('../blocks/gallery/GalleryBlock').then(m => ({ default: m.GalleryBlock })));
+const ProcessBlock = lazy(() => import('../blocks/process/ProcessBlock').then(m => ({ default: m.ProcessBlock })));
+const VideoBlock = lazy(() => import('../blocks/video/VideoBlock').then(m => ({ default: m.VideoBlock })));
+
+/**
+ * Loading fallback component
+ * Displays while lazy components are loading
+ */
+function BlockLoadingFallback() {
+  return (
+    <div className="w-full py-12 flex items-center justify-center">
+      <div className="animate-pulse text-muted-foreground">Loading...</div>
+    </div>
+  );
+}
+
 interface WebsiteRendererProps {
   config: WebsiteConfig;
 }
@@ -50,13 +67,15 @@ interface WebsiteRendererProps {
  * - Applies global theme via CSS custom properties
  * - Maps each block to its corresponding component using Factory pattern
  * - Ensures type safety through discriminated unions and type guards
+ * - Memoized to prevent unnecessary re-renders when config hasn't changed
  *
  * Principles:
  * - Single Responsibility: Only responsible for rendering the config
  * - Open/Closed: Easy to add new block types without modifying existing code
  * - Dependency Inversion: Depends on Block abstractions, not concrete implementations
+ * - Performance: React.memo prevents re-renders when config is unchanged
  */
-export function WebsiteRenderer({ config }: WebsiteRendererProps) {
+function WebsiteRendererComponent({ config }: WebsiteRendererProps) {
   // Merge user theme with defaults to ensure all properties exist
   const theme = mergeWithDefaults(config.theme);
   const blocks = config.blocks || [];
@@ -64,6 +83,7 @@ export function WebsiteRenderer({ config }: WebsiteRendererProps) {
   /**
    * Render a single block based on its type
    * Uses type guards to ensure type safety and proper component selection
+   * Each block is wrapped in Suspense for lazy loading
    */
   const renderBlock = (block: Block) => {
     const { type, settings } = block;
@@ -75,12 +95,13 @@ export function WebsiteRenderer({ config }: WebsiteRendererProps) {
         case 'hero':
           if (isHeroContent(content)) {
             return (
-              <HeroBlock
-                key={block.id}
-                content={content}
-                settings={settings}
-                theme={{ primaryColor: theme.colors.primary }}
-              />
+              <Suspense key={block.id} fallback={<BlockLoadingFallback />}>
+                <HeroBlock
+                  content={content}
+                  settings={settings}
+                  theme={{ primaryColor: theme.colors.primary }}
+                />
+              </Suspense>
             );
           }
           break;
@@ -88,11 +109,12 @@ export function WebsiteRenderer({ config }: WebsiteRendererProps) {
         case 'features':
           if (isFeaturesContent(content)) {
             return (
-              <FeaturesBlock
-                key={block.id}
-                content={content}
-                settings={settings}
-              />
+              <Suspense key={block.id} fallback={<BlockLoadingFallback />}>
+                <FeaturesBlock
+                  content={content}
+                  settings={settings}
+                />
+              </Suspense>
             );
           }
           break;
@@ -100,12 +122,13 @@ export function WebsiteRenderer({ config }: WebsiteRendererProps) {
         case 'pricing':
           if (isPricingContent(content)) {
             return (
-              <PricingBlock
-                key={block.id}
-                content={content}
-                settings={settings}
-                theme={{ primaryColor: theme.colors.primary }}
-              />
+              <Suspense key={block.id} fallback={<BlockLoadingFallback />}>
+                <PricingBlock
+                  content={content}
+                  settings={settings}
+                  theme={{ primaryColor: theme.colors.primary }}
+                />
+              </Suspense>
             );
           }
           break;
@@ -113,11 +136,12 @@ export function WebsiteRenderer({ config }: WebsiteRendererProps) {
         case 'testimonials':
           if (isTestimonialsContent(content)) {
             return (
-              <TestimonialsBlock
-                key={block.id}
-                content={content}
-                settings={settings}
-              />
+              <Suspense key={block.id} fallback={<BlockLoadingFallback />}>
+                <TestimonialsBlock
+                  content={content}
+                  settings={settings}
+                />
+              </Suspense>
             );
           }
           break;
@@ -125,12 +149,13 @@ export function WebsiteRenderer({ config }: WebsiteRendererProps) {
         case 'cta':
           if (isCTAContent(content)) {
             return (
-              <CTABlock
-                key={block.id}
-                content={content}
-                settings={settings}
-                theme={{ primaryColor: theme.colors.primary }}
-              />
+              <Suspense key={block.id} fallback={<BlockLoadingFallback />}>
+                <CTABlock
+                  content={content}
+                  settings={settings}
+                  theme={{ primaryColor: theme.colors.primary }}
+                />
+              </Suspense>
             );
           }
           break;
@@ -138,11 +163,12 @@ export function WebsiteRenderer({ config }: WebsiteRendererProps) {
         case 'footer':
           if (isFooterContent(content)) {
             return (
-              <FooterBlock
-                key={block.id}
-                content={content}
-                settings={settings}
-              />
+              <Suspense key={block.id} fallback={<BlockLoadingFallback />}>
+                <FooterBlock
+                  content={content}
+                  settings={settings}
+                />
+              </Suspense>
             );
           }
           break;
@@ -150,11 +176,12 @@ export function WebsiteRenderer({ config }: WebsiteRendererProps) {
         case 'faq':
           if (isFAQContent(content)) {
             return (
-              <FAQBlock
-                key={block.id}
-                content={content}
-                settings={settings}
-              />
+              <Suspense key={block.id} fallback={<BlockLoadingFallback />}>
+                <FAQBlock
+                  content={content}
+                  settings={settings}
+                />
+              </Suspense>
             );
           }
           break;
@@ -162,11 +189,12 @@ export function WebsiteRenderer({ config }: WebsiteRendererProps) {
         case 'stats':
           if (isStatsContent(content)) {
             return (
-              <StatsBlock
-                key={block.id}
-                content={content}
-                settings={settings}
-              />
+              <Suspense key={block.id} fallback={<BlockLoadingFallback />}>
+                <StatsBlock
+                  content={content}
+                  settings={settings}
+                />
+              </Suspense>
             );
           }
           break;
@@ -174,11 +202,12 @@ export function WebsiteRenderer({ config }: WebsiteRendererProps) {
         case 'contact':
           if (isContactContent(content)) {
             return (
-              <ContactBlock
-                key={block.id}
-                content={content}
-                settings={settings}
-              />
+              <Suspense key={block.id} fallback={<BlockLoadingFallback />}>
+                <ContactBlock
+                  content={content}
+                  settings={settings}
+                />
+              </Suspense>
             );
           }
           break;
@@ -186,12 +215,13 @@ export function WebsiteRenderer({ config }: WebsiteRendererProps) {
         case 'newsletter':
           if (isNewsletterContent(content)) {
             return (
-              <NewsletterBlock
-                key={block.id}
-                content={content}
-                settings={settings}
-                theme={{ primaryColor: theme.colors.primary }}
-              />
+              <Suspense key={block.id} fallback={<BlockLoadingFallback />}>
+                <NewsletterBlock
+                  content={content}
+                  settings={settings}
+                  theme={{ primaryColor: theme.colors.primary }}
+                />
+              </Suspense>
             );
           }
           break;
@@ -199,11 +229,12 @@ export function WebsiteRenderer({ config }: WebsiteRendererProps) {
         case 'team':
           if (isTeamContent(content)) {
             return (
-              <TeamBlock
-                key={block.id}
-                content={content}
-                settings={settings}
-              />
+              <Suspense key={block.id} fallback={<BlockLoadingFallback />}>
+                <TeamBlock
+                  content={content}
+                  settings={settings}
+                />
+              </Suspense>
             );
           }
           break;
@@ -211,11 +242,12 @@ export function WebsiteRenderer({ config }: WebsiteRendererProps) {
         case 'logo-cloud':
           if (isLogoCloudContent(content)) {
             return (
-              <LogoCloudBlock
-                key={block.id}
-                content={content}
-                settings={settings}
-              />
+              <Suspense key={block.id} fallback={<BlockLoadingFallback />}>
+                <LogoCloudBlock
+                  content={content}
+                  settings={settings}
+                />
+              </Suspense>
             );
           }
           break;
@@ -223,11 +255,12 @@ export function WebsiteRenderer({ config }: WebsiteRendererProps) {
         case 'gallery':
           if (isGalleryContent(content)) {
             return (
-              <GalleryBlock
-                key={block.id}
-                content={content}
-                settings={settings}
-              />
+              <Suspense key={block.id} fallback={<BlockLoadingFallback />}>
+                <GalleryBlock
+                  content={content}
+                  settings={settings}
+                />
+              </Suspense>
             );
           }
           break;
@@ -235,11 +268,12 @@ export function WebsiteRenderer({ config }: WebsiteRendererProps) {
         case 'process':
           if (isProcessContent(content)) {
             return (
-              <ProcessBlock
-                key={block.id}
-                content={content}
-                settings={settings}
-              />
+              <Suspense key={block.id} fallback={<BlockLoadingFallback />}>
+                <ProcessBlock
+                  content={content}
+                  settings={settings}
+                />
+              </Suspense>
             );
           }
           break;
@@ -247,11 +281,12 @@ export function WebsiteRenderer({ config }: WebsiteRendererProps) {
         case 'video':
           if (isVideoContent(content)) {
             return (
-              <VideoBlock
-                key={block.id}
-                content={content}
-                settings={settings}
-              />
+              <Suspense key={block.id} fallback={<BlockLoadingFallback />}>
+                <VideoBlock
+                  content={content}
+                  settings={settings}
+                />
+              </Suspense>
             );
           }
           break;
@@ -309,3 +344,9 @@ export function WebsiteRenderer({ config }: WebsiteRendererProps) {
     </div>
   );
 }
+
+/**
+ * Memoized WebsiteRenderer to prevent unnecessary re-renders
+ * Only re-renders when config reference changes (shallow comparison)
+ */
+export const WebsiteRenderer = React.memo(WebsiteRendererComponent);

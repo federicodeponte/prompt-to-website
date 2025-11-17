@@ -4,6 +4,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { WebsiteConfig } from '@/lib/types/website-config';
+import { validateWebsiteConfig } from '@/lib/validation/website-schema';
+import { loggers } from '@/lib/utils/logger';
+import { getErrorMessage } from '@/lib/utils/error-handler';
 
 // Mark as dynamic route to prevent build-time execution
 export const dynamic = 'force-dynamic';
@@ -111,33 +114,25 @@ Return ONLY valid JSON, no extra text, no markdown code blocks.`;
  * Returns: { config: WebsiteConfig }
  */
 export async function POST(request: NextRequest) {
+  let instruction: string | undefined;
+  let config: WebsiteConfig | undefined;
+
   try {
     const body = await request.json();
-    const { config, instruction } = body as {
-      config: WebsiteConfig;
-      instruction: string;
-    };
+    instruction = body.instruction as string;
+    config = body.config as WebsiteConfig;
 
     // Validation
     if (!config || typeof config !== 'object') {
-      return NextResponse.json(
-        { error: 'Missing or invalid config' },
-        { status: 400 }
-      );
+      return NextResponse.json(getErrorMessage('MISSING_CONFIG'), { status: 400 });
     }
 
     if (!instruction || typeof instruction !== 'string') {
-      return NextResponse.json(
-        { error: 'Missing or invalid instruction' },
-        { status: 400 }
-      );
+      return NextResponse.json(getErrorMessage('MISSING_INSTRUCTION'), { status: 400 });
     }
 
     if (!process.env.GEMINI_API_KEY) {
-      return NextResponse.json(
-        { error: 'Gemini API key not configured' },
-        { status: 500 }
-      );
+      return NextResponse.json(getErrorMessage('MISSING_API_KEY'), { status: 500 });
     }
 
     // Initialize Gemini AI (done here to avoid build-time execution)
@@ -172,30 +167,51 @@ Make sure all block types are from this list: hero, features, pricing, testimoni
     const text = response.text();
 
     // Parse JSON response
-    let editedConfig: WebsiteConfig;
+    let parsedData: unknown;
     try {
       // Extract JSON from response (handle any markdown formatting)
       const jsonMatch = text.match(/\{[\s\S]*\}/);
       const jsonString = jsonMatch ? jsonMatch[0] : text;
 
-      editedConfig = JSON.parse(jsonString);
-    } catch {
-      console.error('Failed to parse Gemini edit response as JSON:', text);
+      parsedData = JSON.parse(jsonString);
+      loggers.ai.debug('Successfully parsed Gemini edit response');
+    } catch (error) {
+      loggers.ai.error('Failed to parse AI edit response', error);
+
       return NextResponse.json(
-        { error: 'AI generated invalid JSON response', details: text.substring(0, 200) },
+        {
+          ...getErrorMessage('AI_PARSING_FAILED'),
+          details: process.env.NODE_ENV === 'development' ? text.substring(0, 200) : undefined,
+        },
         { status: 500 }
       );
     }
 
-    // Validate edited config structure
-    if (!editedConfig.version || !editedConfig.template || !editedConfig.theme || !editedConfig.blocks || !editedConfig.metadata) {
+    // Validate with Zod schema
+    const validationResult = validateWebsiteConfig(parsedData);
+
+    if (!validationResult.success) {
+      loggers.ai.error('AI edit generated invalid configuration', { error: validationResult.error });
+
       return NextResponse.json(
-        { error: 'AI generated incomplete configuration', details: editedConfig },
+        {
+          ...getErrorMessage('AI_VALIDATION_FAILED'),
+          details: process.env.NODE_ENV === 'development' ? validationResult.error : undefined,
+          issues: process.env.NODE_ENV === 'development' ? validationResult.details : undefined,
+        },
         { status: 500 }
       );
     }
 
-    // Ensure block IDs exist (add if missing)
+    // Type-safe validated config
+    const editedConfig: WebsiteConfig = validationResult.data;
+
+    loggers.ai.info('Successfully edited and validated website config', {
+      instruction: instruction.substring(0, 100),
+      blockCount: editedConfig.blocks?.length || 0,
+    });
+
+    // Ensure block IDs exist (add if missing - defensive programming)
     editedConfig.blocks = editedConfig.blocks.map((block, index) => ({
       ...block,
       id: block.id || `${block.type}-${index + 1}`,
@@ -203,11 +219,12 @@ Make sure all block types are from this list: hero, features, pricing, testimoni
 
     return NextResponse.json({ config: editedConfig });
   } catch (error) {
-    console.error('Unexpected error in POST /api/edit:', error);
+    loggers.ai.error('Unexpected error during editing', error);
+
     return NextResponse.json(
       {
-        error: 'Internal server error',
-        details: error instanceof Error ? error.message : 'Unknown error',
+        ...getErrorMessage('AI_PARSING_FAILED'),
+        details: process.env.NODE_ENV === 'development' && error instanceof Error ? error.message : undefined,
       },
       { status: 500 }
     );

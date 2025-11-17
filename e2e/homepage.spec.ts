@@ -11,11 +11,11 @@ test.describe('Homepage', () => {
   });
 
   test('should display all template categories', async ({ page }) => {
-    // Check for category filter buttons
-    await expect(page.getByRole('button', { name: /all templates/i })).toBeVisible();
-    await expect(page.getByRole('button', { name: /business/i })).toBeVisible();
-    await expect(page.getByRole('button', { name: /product/i })).toBeVisible();
-    await expect(page.getByRole('button', { name: /personal/i })).toBeVisible();
+    // Check for category filter tabs
+    await expect(page.getByRole('tab', { name: /all templates/i })).toBeVisible();
+    await expect(page.getByRole('tab', { name: /business/i })).toBeVisible();
+    await expect(page.getByRole('tab', { name: /product/i })).toBeVisible();
+    await expect(page.getByRole('tab', { name: /personal/i })).toBeVisible();
   });
 
   test('should display at least 3 templates', async ({ page }) => {
@@ -26,17 +26,23 @@ test.describe('Homepage', () => {
   });
 
   test('should filter templates by category', async ({ page }) => {
-    // Click Business filter
-    await page.getByRole('button', { name: /💼 business/i }).click();
+    // Click Business filter tab
+    await page.getByRole('tab', { name: /💼 business/i }).click();
 
-    // Should show SaaS template
+    // Wait for tab content to be visible
+    await page.waitForTimeout(500);
+
+    // Should show SaaS template (business category)
     await expect(page.getByText('SaaS Landing Page').first()).toBeVisible();
 
     // Should NOT show Portfolio (personal category)
     await expect(page.getByText('Portfolio').first()).not.toBeVisible();
 
-    // Click back to All
-    await page.getByRole('button', { name: /all templates/i }).click();
+    // Click back to All tab
+    await page.getByRole('tab', { name: /all templates/i }).click();
+
+    // Wait for tab content to be visible
+    await page.waitForTimeout(500);
 
     // Now Portfolio should be visible again
     await expect(page.getByText('Portfolio').first()).toBeVisible();

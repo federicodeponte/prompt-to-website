@@ -3,7 +3,7 @@
 
 'use client';
 
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useMemo } from 'react';
 import { WebsiteConfig } from '@/lib/types/website-config';
 import { WebsiteRenderer } from '@/components/renderer';
 import { Button } from '@/components/ui/button';
@@ -47,8 +47,9 @@ export function PreviewPane({ config }: PreviewPaneProps) {
 
   /**
    * Get viewport dimensions based on selected size
+   * Memoized to prevent recalculation on every render
    */
-  const getViewportClass = () => {
+  const viewportClass = useMemo(() => {
     switch (viewport) {
       case 'mobile':
         return 'max-w-[375px]';
@@ -58,7 +59,24 @@ export function PreviewPane({ config }: PreviewPaneProps) {
       default:
         return 'w-full';
     }
-  };
+  }, [viewport]);
+
+  /**
+   * Viewport size label
+   * Memoized to prevent string creation on every render
+   */
+  const viewportLabel = useMemo(() => {
+    switch (viewport) {
+      case 'desktop':
+        return 'Desktop View (100%)';
+      case 'tablet':
+        return 'Tablet View (768px)';
+      case 'mobile':
+        return 'Mobile View (375px)';
+      default:
+        return '';
+    }
+  }, [viewport]);
 
   return (
     <div className="flex h-full flex-col bg-muted">
@@ -125,7 +143,7 @@ export function PreviewPane({ config }: PreviewPaneProps) {
         ref={scrollRef}
         className="flex-1 overflow-auto p-4"
       >
-        <div className={cn('mx-auto transition-all duration-300', getViewportClass())}>
+        <div className={cn('mx-auto transition-all duration-300', viewportClass)}>
           <div className="rounded-lg border bg-background shadow-lg overflow-hidden">
             {/* Render website directly */}
             <div key={key}>
@@ -136,9 +154,7 @@ export function PreviewPane({ config }: PreviewPaneProps) {
           {/* Viewport size indicator */}
           <div className="mt-4 text-center">
             <p className="text-xs text-muted-foreground">
-              {viewport === 'desktop' && 'Desktop View (100%)'}
-              {viewport === 'tablet' && 'Tablet View (768px)'}
-              {viewport === 'mobile' && 'Mobile View (375px)'}
+              {viewportLabel}
             </p>
           </div>
         </div>
