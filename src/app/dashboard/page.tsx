@@ -3,9 +3,10 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useWebsites, useDeleteWebsite, useCreateWebsite } from '@/lib/hooks/use-websites';
+import { useAuth } from '@/components/auth/AuthProvider';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -48,9 +49,39 @@ import { Navigation } from '@/components/layout/Navigation';
 
 export default function DashboardPage() {
   const router = useRouter();
+  const { user, loading: authLoading } = useAuth();
   const { data: websites, isLoading } = useWebsites();
   const { mutate: deleteWebsite, isPending: isDeleting } = useDeleteWebsite();
   const { mutate: createWebsite, isPending: isCreating } = useCreateWebsite();
+
+  // Auth guard - redirect to login if not authenticated
+  useEffect(() => {
+    if (!authLoading && !user) {
+      router.push('/login');
+    }
+  }, [user, authLoading, router]);
+
+  // Show loading while checking auth
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
+        <Navigation />
+        <div className="container mx-auto px-6 py-24">
+          <div className="flex items-center justify-center">
+            <div className="text-center">
+              <Skeleton className="h-8 w-48 mx-auto mb-4" />
+              <Skeleton className="h-4 w-64 mx-auto" />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Don't render if not authenticated (will redirect)
+  if (!user) {
+    return null;
+  }
 
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [websiteToDelete, setWebsiteToDelete] = useState<Website | null>(null);

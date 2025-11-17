@@ -56,6 +56,9 @@ export function EditorLayout({ initialConfig, websiteId }: EditorLayoutProps) {
   // Debounce timer ref
   const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
+  // Track if there are unsaved changes
+  const hasUnsavedChanges = saveTimeoutRef.current !== null;
+
   // Undo/Redo functionality
   const [config, setConfigInternal] = useState<WebsiteConfig>(normalizedConfig);
   const [history, setHistory] = useState<WebsiteConfig[]>([normalizedConfig]);
@@ -353,7 +356,19 @@ export function EditorLayout({ initialConfig, websiteId }: EditorLayoutProps) {
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => router.push('/dashboard')}
+              onClick={() => {
+                if (hasUnsavedChanges) {
+                  if (window.confirm('You have unsaved changes. Do you want to save before leaving?')) {
+                    handleManualSave();
+                    // Wait for save to complete
+                    setTimeout(() => router.push('/dashboard'), 1000);
+                  } else {
+                    router.push('/dashboard');
+                  }
+                } else {
+                  router.push('/dashboard');
+                }
+              }}
               className="gap-2"
             >
               <ArrowLeft className="h-4 w-4" />

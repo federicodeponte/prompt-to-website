@@ -20,6 +20,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Menu, User, LogOut, LayoutDashboard, Settings } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useAuth } from '@/components/auth/AuthProvider';
+import { toast } from 'sonner';
 
 export function Navigation() {
   const [open, setOpen] = useState(false);
@@ -30,8 +31,12 @@ export function Navigation() {
     try {
       await signOut();
       router.push('/');
+      toast.success('Logged out successfully');
     } catch (error) {
       console.error('Sign out error:', error);
+      toast.error('Failed to log out', {
+        description: 'Please check your connection and try again.',
+      });
     }
   };
 
@@ -218,8 +223,8 @@ export function Navigation() {
                   <>
                     <div className="px-4 py-2 text-sm text-muted-foreground">
                       <div className="flex items-center gap-2">
-                        <User className="h-4 w-4" />
-                        <span className="truncate">{user.email}</span>
+                        <User className="h-4 w-4 flex-shrink-0" />
+                        <span className="truncate max-w-[200px]">{user.email || 'User'}</span>
                       </div>
                     </div>
                     <Button
