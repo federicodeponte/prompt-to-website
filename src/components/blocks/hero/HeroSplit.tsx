@@ -11,7 +11,7 @@ import { Badge } from '@/components/ui/badge';
 import { HeroContentSplit } from '@/lib/types/block-content';
 import { cn } from '@/lib/utils';
 import { ArrowRight, Sparkles } from 'lucide-react';
-import { spring, springMedium, fadeInUp, cardHover } from '@/lib/animations';
+import { spring, fadeInUp } from '@/lib/animations';
 import { getGradientTextClasses, getShimmerClasses, getFloatingClasses } from '@/lib/visual-effects';
 
 interface HeroSplitProps {
@@ -25,7 +25,7 @@ interface HeroSplitProps {
  * Premium split hero with modern animations and glassmorphism
  * Features: Staggered entrance, hover effects, badge, gradient accents
  */
-export function HeroSplit({ content, theme }: HeroSplitProps) {
+export function HeroSplit({ content }: HeroSplitProps) {
   const {
     heading,
     subheading,

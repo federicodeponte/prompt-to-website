@@ -11,7 +11,18 @@ const eslintConfig = defineConfig([
     ".next/**",
     "out/**",
     "build/**",
+    "dist/**",
     "next-env.d.ts",
+    // Dependencies
+    "node_modules/**",
+    // Temporary audit/test scripts (not production code)
+    "audit-screenshots.js",
+    "check-sonner.js",
+    "debug-components.js",
+    "devils-advocate-audit.js",
+    "docs/archived-scripts/**",
+    // Generated/minified files
+    "*.min.js",
   ]),
 ]);
 

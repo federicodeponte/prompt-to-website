@@ -20,7 +20,7 @@ interface CTASimpleProps {
  * Clean, minimal CTA with shadcn/ui design
  * Design principles: Whitespace, subtle background, professional typography
  */
-export function CTASimple({ content, theme }: CTASimpleProps) {
+export function CTASimple({ content }: CTASimpleProps) {
   const { heading, description, ctaPrimary, ctaSecondary } = content;
 
   return (

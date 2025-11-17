@@ -24,7 +24,7 @@ interface HeroGradientProps {
  * Premium gradient hero with animated mesh background
  * Features: Gradient mesh, floating particles, animated features, premium typography
  */
-export function HeroGradient({ content, theme }: HeroGradientProps) {
+export function HeroGradient({ content }: HeroGradientProps) {
   const { heading, subheading, description, ctaPrimary, features } = content;
 
   // Parallax effect on background

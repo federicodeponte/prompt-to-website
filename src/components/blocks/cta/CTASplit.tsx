@@ -21,7 +21,7 @@ interface CTASplitProps {
  * Premium split CTA with animations and image hover effects
  * Features: Slide-in animations, image parallax, gradient borders
  */
-export function CTASplit({ content, theme }: CTASplitProps) {
+export function CTASplit({ content }: CTASplitProps) {
   const { heading, description, ctaPrimary, image, imageAlt } = content;
 
   return (

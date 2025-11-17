@@ -24,7 +24,7 @@ interface HeroCenteredProps {
  * Clean, minimal hero section inspired by shadcn/ui blocks and modern SaaS
  * Design principles: Maximum whitespace, subtle colors, large typography, professional
  */
-export function HeroCentered({ content, theme }: HeroCenteredProps) {
+export function HeroCentered({ content }: HeroCenteredProps) {
   const { heading, subheading, ctaPrimary, ctaSecondary } = content;
 
   // Parallax effect on background
