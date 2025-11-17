@@ -102,7 +102,7 @@ export interface Website {
   user_id?: string;
   label: string;
   config: WebsiteConfig;
-  prompt_history: string[];
+  prompt_history?: string[];
   created_at: string;
   updated_at: string;
 }

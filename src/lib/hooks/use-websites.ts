@@ -1,11 +1,11 @@
 // ABOUTME: React Query hooks for website CRUD operations
-// ABOUTME: Uses IndexedDB with localStorage fallback (no backend required)
+// ABOUTME: Uses Supabase backend with real-time database and auth
 
 'use client';
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Website, WebsiteConfig } from '@/lib/types/website-config';
-import { websiteStorage } from '@/lib/storage/storage';
+import { createClient } from '@/lib/supabase/client';
 import {
   APIError,
   isAPIErrorResponse,
@@ -14,35 +14,66 @@ import {
 } from '@/lib/types/api-responses';
 
 /**
- * Fetch all websites from storage (IndexedDB with localStorage fallback)
+ * Fetch all websites for the authenticated user from Supabase
  */
 async function fetchWebsites(): Promise<Website[]> {
-  return await websiteStorage.getAll();
+  const supabase = createClient();
+
+  const { data, error } = await supabase
+    .from('websites')
+    .select('*')
+    .order('updated_at', { ascending: false });
+
+  if (error) throw error;
+  return data as unknown as Website[];
 }
 
 /**
- * Fetch a single website by ID from storage
+ * Fetch a single website by ID from Supabase
  */
 async function fetchWebsite(id: string): Promise<Website> {
-  const website = await websiteStorage.getById(id);
-  if (!website) {
-    throw new Error('Website not found');
-  }
-  return website;
+  const supabase = createClient();
+
+  const { data, error } = await supabase
+    .from('websites')
+    .select('*')
+    .eq('id', id)
+    .single();
+
+  if (error) throw error;
+  if (!data) throw new Error('Website not found');
+
+  return data as unknown as Website;
 }
 
 /**
- * Create a new website in storage
+ * Create a new website in Supabase
  */
 async function createWebsite(data: {
   label: string;
   config: WebsiteConfig;
 }): Promise<Website> {
-  return await websiteStorage.create(data.label, data.config);
+  const supabase = createClient();
+
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error('You must be logged in to create a website');
+
+  const { data: website, error } = await supabase
+    .from('websites')
+    .insert({
+      user_id: user.id,
+      label: data.label,
+      config: data.config as any, // JSONB type
+    })
+    .select()
+    .single();
+
+  if (error) throw error;
+  return website as unknown as Website;
 }
 
 /**
- * Update a website in storage
+ * Update a website in Supabase
  */
 async function updateWebsite(data: {
   id: string;
@@ -50,24 +81,35 @@ async function updateWebsite(data: {
   config?: WebsiteConfig;
   prompt_history?: string[];
 }): Promise<Website> {
+  const supabase = createClient();
+
   const { id, ...updates } = data;
-  const website = await websiteStorage.update(id, updates);
 
-  if (!website) {
-    throw new Error('Website not found');
-  }
+  const { data: website, error } = await supabase
+    .from('websites')
+    .update(updates as any)
+    .eq('id', id)
+    .select()
+    .single();
 
-  return website;
+  if (error) throw error;
+  if (!website) throw new Error('Website not found');
+
+  return website as unknown as Website;
 }
 
 /**
- * Delete a website from storage
+ * Delete a website from Supabase
  */
 async function deleteWebsite(id: string): Promise<void> {
-  const success = await websiteStorage.delete(id);
-  if (!success) {
-    throw new Error('Website not found');
-  }
+  const supabase = createClient();
+
+  const { error } = await supabase
+    .from('websites')
+    .delete()
+    .eq('id', id);
+
+  if (error) throw error;
 }
 
 /**

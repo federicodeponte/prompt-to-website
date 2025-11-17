@@ -1,25 +1,46 @@
-// ABOUTME: Login page stub - redirects to demo editor until auth is implemented
-// ABOUTME: Professional placeholder with clear messaging
+// ABOUTME: Login page with Supabase authentication
+// ABOUTME: Email/password login with automatic redirect to dashboard
 
 'use client';
 
-import { useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { useAuth } from '@/components/auth/AuthProvider';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowRight, Sparkles } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { toast } from 'sonner';
+import { Sparkles, Loader2 } from 'lucide-react';
 
 export default function LoginPage() {
   const router = useRouter();
+  const { signIn, user } = useAuth();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    // Auto-redirect after 3 seconds
-    const timer = setTimeout(() => {
-      router.push('/editor/demo');
-    }, 3000);
+  // Redirect if already logged in
+  if (user) {
+    router.push('/dashboard');
+    return null;
+  }
 
-    return () => clearTimeout(timer);
-  }, [router]);
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      await signIn(email, password);
+      toast.success('Welcome back!');
+      router.push('/dashboard');
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Failed to sign in');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-background to-muted/20 p-4">
@@ -28,36 +49,72 @@ export default function LoginPage() {
           <div className="mx-auto w-16 h-16 rounded-full bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center mb-4">
             <Sparkles className="w-8 h-8 text-primary-foreground" />
           </div>
-          <CardTitle className="text-2xl">Authentication Coming Soon</CardTitle>
+          <CardTitle className="text-2xl">Welcome Back</CardTitle>
           <CardDescription className="text-base">
-            User authentication is currently under development. For now, try our demo editor!
+            Sign in to your account to continue building websites with AI
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="bg-muted/50 rounded-lg p-4 space-y-2">
-            <p className="text-sm text-muted-foreground">
-              <strong className="text-foreground">What you can do now:</strong>
-            </p>
-            <ul className="text-sm text-muted-foreground space-y-1 ml-4 list-disc">
-              <li>Try the demo editor with AI-powered website generation</li>
-              <li>Explore templates and features</li>
-              <li>Export your designs</li>
-            </ul>
+
+        <form onSubmit={handleSubmit}>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="you@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                disabled={loading}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="password">Password</Label>
+              <Input
+                id="password"
+                type="password"
+                placeholder="••••••••"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                disabled={loading}
+              />
+            </div>
+
+            <Button
+              type="submit"
+              className="w-full"
+              size="lg"
+              disabled={loading}
+            >
+              {loading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Signing in...
+                </>
+              ) : (
+                'Sign In'
+              )}
+            </Button>
+          </CardContent>
+        </form>
+
+        <CardFooter className="flex flex-col space-y-4">
+          <div className="text-sm text-center text-muted-foreground">
+            Don't have an account?{' '}
+            <Link href="/signup" className="text-primary hover:underline">
+              Sign up
+            </Link>
           </div>
 
-          <Button
-            onClick={() => router.push('/editor/demo')}
-            className="w-full"
-            size="lg"
-          >
-            Go to Demo Editor
-            <ArrowRight className="ml-2 h-4 w-4" />
-          </Button>
-
-          <p className="text-xs text-center text-muted-foreground">
-            Redirecting automatically in 3 seconds...
-          </p>
-        </CardContent>
+          <div className="text-center">
+            <Link href="/editor/demo" className="text-sm text-muted-foreground hover:text-foreground">
+              Or try the demo →
+            </Link>
+          </div>
+        </CardFooter>
       </Card>
     </div>
   );
