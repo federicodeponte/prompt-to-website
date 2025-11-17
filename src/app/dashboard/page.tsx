@@ -44,6 +44,7 @@ import { format } from 'date-fns';
 import { Website } from '@/lib/types/website-config';
 import { templates } from '@/lib/templates';
 import { ExportModal } from '@/components/export/ExportModal';
+import { Navigation } from '@/components/layout/Navigation';
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -143,7 +144,10 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
-      {/* Header */}
+      {/* Navigation */}
+      <Navigation />
+
+      {/* Page Header */}
       <div className="border-b bg-background/80 backdrop-blur-xl">
         <div className="container mx-auto px-6 py-6">
           <div className="flex items-center justify-between">

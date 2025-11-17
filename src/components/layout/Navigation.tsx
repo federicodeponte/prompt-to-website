@@ -1,17 +1,39 @@
-// ABOUTME: Main navigation header component
-// ABOUTME: Professional SaaS-style navigation with logo, menu, and auth buttons
+// ABOUTME: Main navigation header component with authentication state
+// ABOUTME: Shows different navigation based on user login status
 
 'use client';
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
-import { Menu } from 'lucide-react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Menu, User, LogOut, LayoutDashboard, Settings } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useAuth } from '@/components/auth/AuthProvider';
 
 export function Navigation() {
   const [open, setOpen] = useState(false);
+  const { user, loading, signOut } = useAuth();
+  const router = useRouter();
+
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      router.push('/');
+    } catch (error) {
+      console.error('Sign out error:', error);
+    }
+  };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60 shadow-sm">
@@ -80,15 +102,60 @@ export function Navigation() {
 
         {/* Desktop Right Side Actions */}
         <div className="hidden md:flex items-center space-x-4">
-          <Button variant="ghost" size="sm" asChild>
-            <Link href="/dashboard">Dashboard</Link>
-          </Button>
-          <Button variant="ghost" size="sm" asChild>
-            <Link href="/login">Login</Link>
-          </Button>
-          <Button size="sm" asChild>
-            <Link href="/signup">Get Started</Link>
-          </Button>
+          {loading ? (
+            // Loading skeleton
+            <>
+              <Skeleton className="h-9 w-20" />
+              <Skeleton className="h-9 w-24" />
+            </>
+          ) : user ? (
+            // Authenticated user menu
+            <>
+              <Button variant="ghost" size="sm" asChild>
+                <Link href="/dashboard">
+                  <LayoutDashboard className="mr-2 h-4 w-4" />
+                  Dashboard
+                </Link>
+              </Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="sm" className="gap-2">
+                    <User className="h-4 w-4" />
+                    <span className="max-w-[150px] truncate">{user.email}</span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56">
+                  <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link href="/dashboard" className="cursor-pointer">
+                      <LayoutDashboard className="mr-2 h-4 w-4" />
+                      Dashboard
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem disabled>
+                    <Settings className="mr-2 h-4 w-4" />
+                    Settings
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer text-destructive focus:text-destructive">
+                    <LogOut className="mr-2 h-4 w-4" />
+                    Log out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </>
+          ) : (
+            // Not authenticated
+            <>
+              <Button variant="ghost" size="sm" asChild>
+                <Link href="/login">Login</Link>
+              </Button>
+              <Button size="sm" asChild>
+                <Link href="/signup">Get Started</Link>
+              </Button>
+            </>
+          )}
         </div>
 
         {/* Mobile Menu Sheet */}
@@ -131,21 +198,52 @@ export function Navigation() {
                 <span>💰</span>
                 <span>Pricing</span>
               </Link>
-              <Link
-                href="/dashboard"
-                onClick={() => setOpen(false)}
-                className="flex items-center space-x-2 rounded-lg px-4 py-3 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground"
-              >
-                <span>📊</span>
-                <span>Dashboard</span>
-              </Link>
+              {user && (
+                <Link
+                  href="/dashboard"
+                  onClick={() => setOpen(false)}
+                  className="flex items-center space-x-2 rounded-lg px-4 py-3 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground"
+                >
+                  <LayoutDashboard className="h-4 w-4" />
+                  <span>Dashboard</span>
+                </Link>
+              )}
               <div className="border-t pt-4 mt-4 space-y-2">
-                <Button variant="outline" className="w-full" asChild>
-                  <Link href="/login" onClick={() => setOpen(false)}>Login</Link>
-                </Button>
-                <Button className="w-full" asChild>
-                  <Link href="/signup" onClick={() => setOpen(false)}>Get Started</Link>
-                </Button>
+                {loading ? (
+                  <>
+                    <Skeleton className="h-10 w-full" />
+                    <Skeleton className="h-10 w-full" />
+                  </>
+                ) : user ? (
+                  <>
+                    <div className="px-4 py-2 text-sm text-muted-foreground">
+                      <div className="flex items-center gap-2">
+                        <User className="h-4 w-4" />
+                        <span className="truncate">{user.email}</span>
+                      </div>
+                    </div>
+                    <Button
+                      variant="outline"
+                      className="w-full justify-start"
+                      onClick={() => {
+                        setOpen(false);
+                        handleSignOut();
+                      }}
+                    >
+                      <LogOut className="mr-2 h-4 w-4" />
+                      Log out
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Button variant="outline" className="w-full" asChild>
+                      <Link href="/login" onClick={() => setOpen(false)}>Login</Link>
+                    </Button>
+                    <Button className="w-full" asChild>
+                      <Link href="/signup" onClick={() => setOpen(false)}>Get Started</Link>
+                    </Button>
+                  </>
+                )}
               </div>
             </nav>
           </SheetContent>

@@ -14,7 +14,7 @@ import { ManualModePanel } from './ManualModePanel';
 import { ThemeModePanel } from './ThemeModePanel';
 import { PreviewPane } from './PreviewPane';
 import { useUpdateWebsite } from '@/lib/hooks/use-websites';
-import { Save, CheckCircle2, Download, Undo2, Redo2, FileJson, Home, Command as CommandIcon } from 'lucide-react';
+import { Save, CheckCircle2, Download, Undo2, Redo2, FileJson, Home, Command as CommandIcon, ArrowLeft } from 'lucide-react';
 import { exportToHTML, downloadHTML } from '@/lib/export/html-exporter';
 import { downloadJSON } from '@/lib/export/json-exporter';
 import { useKeyboardShortcuts, formatKeyCombo } from '@/lib/hooks/use-keyboard-shortcuts';
@@ -348,11 +348,24 @@ export function EditorLayout({ initialConfig, websiteId }: EditorLayoutProps) {
         {/* Header */}
         <header className="border-b bg-background px-6 py-4">
         <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold">Website Editor</h1>
-            <p className="text-sm text-muted-foreground">
-              ID: {websiteId}
-            </p>
+          <div className="flex items-center gap-4">
+            {/* Back to Dashboard button */}
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => router.push('/dashboard')}
+              className="gap-2"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              <span className="hidden sm:inline">Dashboard</span>
+            </Button>
+            <div className="border-l h-8" />
+            <div>
+              <h1 className="text-2xl font-bold">Website Editor</h1>
+              <p className="text-sm text-muted-foreground">
+                ID: {websiteId}
+              </p>
+            </div>
           </div>
           <div className="flex items-center gap-3">
             {/* Save status indicator */}
