@@ -1,0 +1,13 @@
+# Robots.txt for Prompt to Website
+
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /editor/
+Disallow: /dashboard/
+
+# Sitemap
+Sitemap: https://prompt-to-website.vercel.app/sitemap.xml
+
+# Crawl delay
+Crawl-delay: 10
