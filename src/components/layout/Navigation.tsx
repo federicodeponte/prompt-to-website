@@ -81,6 +81,9 @@ export function Navigation() {
         {/* Desktop Right Side Actions */}
         <div className="hidden md:flex items-center space-x-4">
           <Button variant="ghost" size="sm" asChild>
+            <Link href="/dashboard">Dashboard</Link>
+          </Button>
+          <Button variant="ghost" size="sm" asChild>
             <Link href="/login">Login</Link>
           </Button>
           <Button size="sm" asChild>
@@ -127,6 +130,14 @@ export function Navigation() {
               >
                 <span>💰</span>
                 <span>Pricing</span>
+              </Link>
+              <Link
+                href="/dashboard"
+                onClick={() => setOpen(false)}
+                className="flex items-center space-x-2 rounded-lg px-4 py-3 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground"
+              >
+                <span>📊</span>
+                <span>Dashboard</span>
               </Link>
               <div className="border-t pt-4 mt-4 space-y-2">
                 <Button variant="outline" className="w-full" asChild>
