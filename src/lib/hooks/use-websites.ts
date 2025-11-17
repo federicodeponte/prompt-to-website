@@ -6,6 +6,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Website, WebsiteConfig } from '@/lib/types/website-config';
 import { createClient } from '@/lib/supabase/client';
+import { Database } from '@/lib/supabase/database.types';
 import {
   APIError,
   isAPIErrorResponse,
@@ -25,6 +26,9 @@ async function fetchWebsites(): Promise<Website[]> {
     .order('updated_at', { ascending: false });
 
   if (error) throw error;
+
+  // Type adapter: Database types use Json, we transform to WebsiteConfig at boundary
+  // This maintains separation of concerns - database layer stays generic
   return data as unknown as Website[];
 }
 
@@ -43,6 +47,7 @@ async function fetchWebsite(id: string): Promise<Website> {
   if (error) throw error;
   if (!data) throw new Error('Website not found');
 
+  // Type adapter: Transform Json to WebsiteConfig at data access boundary
   return data as unknown as Website;
 }
 
@@ -63,12 +68,13 @@ async function createWebsite(data: {
     .insert({
       user_id: user.id,
       label: data.label,
-      config: data.config as any, // JSONB type
+      config: data.config as unknown as Database['public']['Tables']['websites']['Insert']['config'],
     })
     .select()
     .single();
 
   if (error) throw error;
+  // Type adapter: Transform Json to WebsiteConfig at data access boundary
   return website as unknown as Website;
 }
 
@@ -87,7 +93,7 @@ async function updateWebsite(data: {
 
   const { data: website, error } = await supabase
     .from('websites')
-    .update(updates as any)
+    .update(updates as unknown as Database['public']['Tables']['websites']['Update'])
     .eq('id', id)
     .select()
     .single();
@@ -95,6 +101,7 @@ async function updateWebsite(data: {
   if (error) throw error;
   if (!website) throw new Error('Website not found');
 
+  // Type adapter: Transform Json to WebsiteConfig at data access boundary
   return website as unknown as Website;
 }
 

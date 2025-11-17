@@ -1,5 +1,14 @@
 // ABOUTME: TypeScript types for Supabase database schema
-// ABOUTME: Auto-generated types for type-safe database queries
+// ABOUTME: Auto-generated base types - DO NOT import application types here
+//
+// ⚠️ IMPORTANT: This file should match Supabase-generated types.
+// If you need to extend these types with application-specific types,
+// do NOT modify this file directly. Instead:
+// 1. Keep this file as Json types (matches database JSONB)
+// 2. Transform at the data access layer (use-websites.ts)
+// 3. Or create a separate database.types.override.ts file
+//
+// Regenerate with: supabase gen types typescript
 
 export type Json =
   | string

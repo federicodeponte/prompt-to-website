@@ -183,6 +183,26 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Sanitize metadata fields that might be invalid
+    if (typeof parsedData === 'object' && parsedData !== null && 'metadata' in parsedData) {
+      // Type guard: We've verified parsedData is an object with 'metadata' property
+      const untypedData = parsedData as Record<string, unknown>;
+      const metadata = untypedData.metadata;
+
+      if (metadata && typeof metadata === 'object' && metadata !== null) {
+        const metadataObj = metadata as Record<string, unknown>;
+
+        // Clean up favicon - remove if not a valid URL
+        if (metadataObj.favicon && typeof metadataObj.favicon === 'string' && !metadataObj.favicon.startsWith('http')) {
+          metadataObj.favicon = '';
+        }
+        // Clean up ogImage - remove if not a valid URL
+        if (metadataObj.ogImage && typeof metadataObj.ogImage === 'string' && !metadataObj.ogImage.startsWith('http')) {
+          metadataObj.ogImage = '';
+        }
+      }
+    }
+
     // Validate with Zod schema
     const validationResult = validateWebsiteConfig(parsedData);
 

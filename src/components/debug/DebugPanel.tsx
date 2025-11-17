@@ -57,18 +57,17 @@ type TabType = 'config' | 'validation' | 'ai-request' | 'ai-response' | 'perform
  *
  * Only renders in development mode (process.env.NODE_ENV === 'development')
  */
-export function DebugPanel({
+/**
+ * DebugPanelContent - Internal component with hooks
+ * Separated to comply with React Rules of Hooks
+ */
+function DebugPanelContent({
   config,
   validationErrors = [],
   aiRequestData,
   aiResponseData,
   performanceMetrics,
 }: DebugPanelProps) {
-  // Don't render in production
-  if (process.env.NODE_ENV !== 'development') {
-    return null;
-  }
-
   const [isOpen, setIsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<TabType>('config');
   const [copiedSection, setCopiedSection] = useState<string | null>(null);
@@ -328,6 +327,23 @@ export function DebugPanel({
       </Card>
     </div>
   );
+}
+
+/**
+ * DebugPanel - Public wrapper component
+ *
+ * Handles environment check before rendering to comply with Rules of Hooks.
+ * Hooks must be called unconditionally - this wrapper ensures the early return
+ * happens before any hooks are called in DebugPanelContent.
+ */
+export function DebugPanel(props: DebugPanelProps) {
+  // Early return BEFORE any hooks are called
+  if (process.env.NODE_ENV !== 'development') {
+    return null;
+  }
+
+  // Only render content component in development
+  return <DebugPanelContent {...props} />;
 }
 
 /**

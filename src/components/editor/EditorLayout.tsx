@@ -87,6 +87,29 @@ export function EditorLayout({ initialConfig, websiteId }: EditorLayoutProps) {
     setHistoryIndex(prev => Math.min(prev + 1, 49));
   };
 
+  /**
+   * Save configuration to database
+   */
+  const handleSave = useCallback((configToSave: WebsiteConfig = config) => {
+    setIsSaving(true);
+    updateWebsite(
+      {
+        id: websiteId,
+        config: configToSave,
+      },
+      {
+        onSuccess: () => {
+          setLastSaved(new Date());
+          setIsSaving(false);
+        },
+        onError: (error) => {
+          console.error('Failed to save:', error);
+          setIsSaving(false);
+        },
+      }
+    );
+  }, [config, websiteId, updateWebsite]);
+
   const undo = useCallback(() => {
     if (canUndo) {
       const newIndex = historyIndex - 1;
@@ -101,7 +124,7 @@ export function EditorLayout({ initialConfig, websiteId }: EditorLayoutProps) {
         handleSave(history[newIndex]);
       }, 1000);
     }
-  }, [canUndo, historyIndex, history]);
+  }, [canUndo, historyIndex, history, handleSave]);
 
   const redo = useCallback(() => {
     if (canRedo) {
@@ -117,7 +140,7 @@ export function EditorLayout({ initialConfig, websiteId }: EditorLayoutProps) {
         handleSave(history[newIndex]);
       }, 1000);
     }
-  }, [canRedo, historyIndex, history]);
+  }, [canRedo, historyIndex, history, handleSave]);
 
   /**
    * Handle configuration updates from either AI or Manual mode
@@ -138,29 +161,6 @@ export function EditorLayout({ initialConfig, websiteId }: EditorLayoutProps) {
   };
 
   /**
-   * Save configuration to database
-   */
-  const handleSave = (configToSave: WebsiteConfig = config) => {
-    setIsSaving(true);
-    updateWebsite(
-      {
-        id: websiteId,
-        config: configToSave,
-      },
-      {
-        onSuccess: () => {
-          setLastSaved(new Date());
-          setIsSaving(false);
-        },
-        onError: (error) => {
-          console.error('Failed to save:', error);
-          setIsSaving(false);
-        },
-      }
-    );
-  };
-
-  /**
    * Manual save trigger
    */
   const handleManualSave = useCallback(() => {
@@ -169,24 +169,24 @@ export function EditorLayout({ initialConfig, websiteId }: EditorLayoutProps) {
       clearTimeout(saveTimeoutRef.current);
     }
     handleSave();
-  }, [config, websiteId, updateWebsite]);
+  }, [handleSave]);
 
   /**
    * Export website as standalone HTML file
    */
-  const handleExportHTML = () => {
+  const handleExportHTML = useCallback(() => {
     const html = exportToHTML(config);
     const filename = `${config.metadata.title.toLowerCase().replace(/\s+/g, '-')}.html`;
     downloadHTML(html, filename);
-  };
+  }, [config]);
 
   /**
    * Export website configuration as JSON
    */
-  const handleExportJSON = () => {
+  const handleExportJSON = useCallback(() => {
     const filename = `${config.metadata.title.toLowerCase().replace(/\s+/g, '-')}-config.json`;
     downloadJSON(config, filename);
-  };
+  }, [config]);
 
   /**
    * Command Palette - Available commands

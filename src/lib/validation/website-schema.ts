@@ -107,8 +107,8 @@ export const websiteMetadataSchema = z.object({
   title: z.string().min(1, 'Title is required').max(100, 'Title must be less than 100 characters'),
   description: z.string().min(1, 'Description is required').max(300, 'Description must be less than 300 characters'),
   author: z.string().optional(),
-  favicon: z.string().url('Favicon must be a valid URL').optional().or(z.literal('')),
-  ogImage: z.string().url('OG Image must be a valid URL').optional().or(z.literal('')),
+  favicon: z.union([z.string().url('Favicon must be a valid URL'), z.literal(''), z.undefined()]).optional(),
+  ogImage: z.union([z.string().url('OG Image must be a valid URL'), z.literal(''), z.undefined()]).optional(),
 });
 
 /**

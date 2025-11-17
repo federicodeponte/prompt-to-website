@@ -190,7 +190,7 @@ export function TestimonialsCarousel({ content }: TestimonialsCarouselProps) {
                   {/* Quote */}
                   <blockquote className="mb-12">
                     <p className="font-theme-body text-2xl md:text-3xl font-medium text-center leading-relaxed italic text-muted-foreground">
-                      "{currentTestimonial.quote}"
+                      &ldquo;{currentTestimonial.quote}&rdquo;
                     </p>
                   </blockquote>
 

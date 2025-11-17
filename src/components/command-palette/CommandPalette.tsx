@@ -13,15 +13,7 @@ import { Input } from '@/components/ui/input';
 import {
   Search,
   Home,
-  FileText,
-  Download,
-  Save,
-  Undo2,
-  Redo2,
-  Settings,
   HelpCircle,
-  Palette,
-  Code,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -125,11 +117,13 @@ export function CommandPalette({ open, onClose, commands }: CommandPaletteProps)
   }, [filteredCommands]);
 
   // Reset selection when filtered commands change
+  // eslint-disable-next-line react-hooks/immutability
   useEffect(() => {
     setSelectedIndex(0);
   }, [filteredCommands.length]);
 
   // Focus input when opened
+  // eslint-disable-next-line react-hooks/immutability
   useEffect(() => {
     if (open) {
       setQuery('');

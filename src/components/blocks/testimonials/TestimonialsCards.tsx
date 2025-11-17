@@ -113,7 +113,7 @@ export function TestimonialsCards({ content }: TestimonialsCardsProps) {
                   {/* Quote */}
                   <blockquote className="mb-6 flex-1">
                     <p className="font-theme-body text-sm leading-relaxed text-foreground">
-                      "{testimonial.quote}"
+                      &ldquo;{testimonial.quote}&rdquo;
                     </p>
                   </blockquote>
 
