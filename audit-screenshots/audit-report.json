@@ -1,0 +1,130 @@
+{
+  "timestamp": "2025-11-17T16:46:26.968Z",
+  "grade": "F",
+  "reasoning": "Multiple critical failures preventing core functionality",
+  "statistics": {
+    "totalErrors": 8,
+    "totalWarnings": 0,
+    "criticalIssues": 8,
+    "minorIssues": 0,
+    "workingFeatures": 0
+  },
+  "criticalIssues": [
+    "[homepage] [CONSOLE ERROR] Failed to load resource: the server responded with a status of 404 ()",
+    "[homepage] [CONSOLE ERROR] Failed to load resource: the server responded with a status of 404 ()",
+    "[editor] [CONSOLE ERROR] Failed to load resource: the server responded with a status of 404 ()",
+    "[templates] [CONSOLE ERROR] Failed to load resource: the server responded with a status of 404 ()",
+    "[aiMode] [CONSOLE ERROR] Failed to load resource: the server responded with a status of 404 ()",
+    "[aiMode] [CONSOLE ERROR] Failed to load resource: the server responded with a status of 404 ()",
+    "[templateInteraction] [CONSOLE ERROR] Failed to load resource: the server responded with a status of 404 ()",
+    "[notFound] [CONSOLE ERROR] Failed to load resource: the server responded with a status of 404 ()"
+  ],
+  "minorIssues": [],
+  "workingFeatures": [],
+  "detailedResults": {
+    "homepage": {
+      "url": "https://prompt-to-website-kxwgiux78-federico-de-pontes-projects.vercel.app",
+      "screenshot": "/home/federicodeponte/prompt-to-website/audit-screenshots/homepage.png",
+      "consoleErrors": [
+        "[CONSOLE ERROR] Failed to load resource: the server responded with a status of 404 ()",
+        "[CONSOLE ERROR] Failed to load resource: the server responded with a status of 404 ()"
+      ],
+      "consoleWarnings": [],
+      "networkErrors": [],
+      "elements": {
+        "buttons": 40,
+        "inputs": 0,
+        "links": 15
+      },
+      "loadTime": 996,
+      "pageTitle": "Prompt to Website - Build Beautiful Websites with AI",
+      "visible": true
+    },
+    "editor": {
+      "url": "https://prompt-to-website-kxwgiux78-federico-de-pontes-projects.vercel.app/editor",
+      "screenshot": "/home/federicodeponte/prompt-to-website/audit-screenshots/editor.png",
+      "consoleErrors": [
+        "[CONSOLE ERROR] Failed to load resource: the server responded with a status of 404 ()"
+      ],
+      "consoleWarnings": [],
+      "networkErrors": [],
+      "elements": {
+        "buttons": 0,
+        "inputs": 0,
+        "links": 0
+      },
+      "loadTime": 692,
+      "pageTitle": "Prompt to Website - Build Beautiful Websites with AI",
+      "visible": true
+    },
+    "templates": {
+      "url": "https://prompt-to-website-kxwgiux78-federico-de-pontes-projects.vercel.app/templates",
+      "screenshot": "/home/federicodeponte/prompt-to-website/audit-screenshots/templates.png",
+      "consoleErrors": [
+        "[CONSOLE ERROR] Failed to load resource: the server responded with a status of 404 ()"
+      ],
+      "consoleWarnings": [],
+      "networkErrors": [],
+      "elements": {
+        "buttons": 0,
+        "inputs": 0,
+        "links": 0
+      },
+      "loadTime": 654,
+      "pageTitle": "Prompt to Website - Build Beautiful Websites with AI",
+      "visible": true
+    },
+    "aiMode": {
+      "url": "https://prompt-to-website-kxwgiux78-federico-de-pontes-projects.vercel.app",
+      "screenshot": "/home/federicodeponte/prompt-to-website/audit-screenshots/ai-mode.png",
+      "consoleErrors": [
+        "[CONSOLE ERROR] Failed to load resource: the server responded with a status of 404 ()",
+        "[CONSOLE ERROR] Failed to load resource: the server responded with a status of 404 ()"
+      ],
+      "consoleWarnings": [],
+      "networkErrors": [],
+      "elements": {
+        "buttons": 40,
+        "inputs": 0,
+        "links": 15
+      },
+      "loadTime": 1207,
+      "pageTitle": "Prompt to Website - Build Beautiful Websites with AI",
+      "visible": true
+    },
+    "templateInteraction": {
+      "url": "https://prompt-to-website-kxwgiux78-federico-de-pontes-projects.vercel.app/templates",
+      "screenshot": "/home/federicodeponte/prompt-to-website/audit-screenshots/template-interaction.png",
+      "consoleErrors": [
+        "[CONSOLE ERROR] Failed to load resource: the server responded with a status of 404 ()"
+      ],
+      "consoleWarnings": [],
+      "networkErrors": [],
+      "elements": {
+        "buttons": 0,
+        "inputs": 0,
+        "links": 0
+      },
+      "loadTime": 679,
+      "pageTitle": "Prompt to Website - Build Beautiful Websites with AI",
+      "visible": true
+    },
+    "notFound": {
+      "url": "https://prompt-to-website-kxwgiux78-federico-de-pontes-projects.vercel.app/this-does-not-exist",
+      "screenshot": "/home/federicodeponte/prompt-to-website/audit-screenshots/404-page.png",
+      "consoleErrors": [
+        "[CONSOLE ERROR] Failed to load resource: the server responded with a status of 404 ()"
+      ],
+      "consoleWarnings": [],
+      "networkErrors": [],
+      "elements": {
+        "buttons": 0,
+        "inputs": 0,
+        "links": 0
+      },
+      "loadTime": 595,
+      "pageTitle": "Prompt to Website - Build Beautiful Websites with AI",
+      "visible": true
+    }
+  }
+}
