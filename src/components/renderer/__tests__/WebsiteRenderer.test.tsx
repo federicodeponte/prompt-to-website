@@ -100,6 +100,17 @@ describe('WebsiteRenderer', () => {
 
   it('should apply different theme colors', () => {
     const customTheme = {
+      colors: {
+        primary: '#ff0000',
+        secondary: '#00ff00',
+        background: '#000000',
+        text: '#ffffff',
+        muted: '#cccccc',
+      },
+      fonts: {
+        heading: 'Arial',
+        body: 'Helvetica',
+      },
     };
 
     const config: WebsiteConfig = {

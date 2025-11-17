@@ -2,10 +2,16 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { renderHook, waitFor } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import React from 'react';
-import { useWebsites, useCreateWebsite, useUpdateWebsite, useDeleteWebsite } from '../use-websites';
-import { Website } from '@/lib/types/website-config';
+import {
+  useWebsites,
+  useWebsite,
+  useCreateWebsite,
+  useUpdateWebsite,
+  useDeleteWebsite,
+  useGenerateWebsite
+} from '../use-websites';
+import { Website, WebsiteConfig } from '@/lib/types/website-config';
 import { defaultTheme } from '@/lib/theme/defaults';
-import * as api from '@/lib/api/websites-api';
 
 // Mock localStorage
 const localStorageMock = (() => {
