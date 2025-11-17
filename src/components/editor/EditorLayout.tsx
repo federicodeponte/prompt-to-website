@@ -14,7 +14,7 @@ import { ManualModePanel } from './ManualModePanel';
 import { ThemeModePanel } from './ThemeModePanel';
 import { PreviewPane } from './PreviewPane';
 import { useUpdateWebsite } from '@/lib/hooks/use-websites';
-import { Save, CheckCircle2, Download, Undo2, Redo2, FileJson, Home, Command as CommandIcon, ArrowLeft } from 'lucide-react';
+import { Save, CheckCircle2, Download, Undo2, Redo2, FileJson, Home, Command as CommandIcon, ArrowLeft, AlertCircle } from 'lucide-react';
 import { exportToHTML, downloadHTML } from '@/lib/export/html-exporter';
 import { downloadJSON } from '@/lib/export/json-exporter';
 import { useKeyboardShortcuts, formatKeyCombo } from '@/lib/hooks/use-keyboard-shortcuts';
@@ -49,6 +49,7 @@ export function EditorLayout({ initialConfig, websiteId }: EditorLayoutProps) {
   const [activeMode, setActiveMode] = useState<'ai' | 'manual' | 'theme'>('ai');
   const [lastSaved, setLastSaved] = useState<Date>(new Date());
   const [isSaving, setIsSaving] = useState(false);
+  const [saveFailed, setSaveFailed] = useState(false);
 
   // React Query mutation for updating website
   const { mutate: updateWebsite, isPending: isUpdating } = useUpdateWebsite();
@@ -95,6 +96,7 @@ export function EditorLayout({ initialConfig, websiteId }: EditorLayoutProps) {
    */
   const handleSave = useCallback((configToSave: WebsiteConfig = config) => {
     setIsSaving(true);
+    setSaveFailed(false);
     updateWebsite(
       {
         id: websiteId,
@@ -104,10 +106,12 @@ export function EditorLayout({ initialConfig, websiteId }: EditorLayoutProps) {
         onSuccess: () => {
           setLastSaved(new Date());
           setIsSaving(false);
+          setSaveFailed(false);
         },
         onError: (error) => {
           console.error('Failed to save:', error);
           setIsSaving(false);
+          setSaveFailed(true);
         },
       }
     );
@@ -388,6 +392,11 @@ export function EditorLayout({ initialConfig, websiteId }: EditorLayoutProps) {
               <span className="text-sm text-muted-foreground flex items-center gap-2">
                 <Save className="h-4 w-4 animate-spin" />
                 Saving...
+              </span>
+            ) : saveFailed ? (
+              <span className="text-sm text-destructive flex items-center gap-2">
+                <AlertCircle className="h-4 w-4" />
+                Save failed - Retry?
               </span>
             ) : (
               <span className="text-sm text-muted-foreground flex items-center gap-2">

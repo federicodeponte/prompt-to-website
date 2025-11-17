@@ -21,9 +21,12 @@ import { Menu, User, LogOut, LayoutDashboard, Settings } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useAuth } from '@/components/auth/AuthProvider';
 import { toast } from 'sonner';
+import { useEffect } from 'react';
 
 export function Navigation() {
   const [open, setOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [showLoading, setShowLoading] = useState(false);
   const { user, loading, signOut } = useAuth();
   const router = useRouter();
 
@@ -39,6 +42,23 @@ export function Navigation() {
       });
     }
   };
+
+  // Close dropdown when auth state changes (prevents stale data display)
+  useEffect(() => {
+    setDropdownOpen(false);
+  }, [user]);
+
+  // Only show loading skeleton if loading takes > 200ms (prevents flash)
+  useEffect(() => {
+    if (loading) {
+      const timer = setTimeout(() => {
+        setShowLoading(true);
+      }, 200);
+      return () => clearTimeout(timer);
+    } else {
+      setShowLoading(false);
+    }
+  }, [loading]);
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60 shadow-sm">
@@ -107,7 +127,7 @@ export function Navigation() {
 
         {/* Desktop Right Side Actions */}
         <div className="hidden md:flex items-center space-x-4">
-          {loading ? (
+          {showLoading ? (
             // Loading skeleton
             <>
               <Skeleton className="h-9 w-20" />
@@ -122,7 +142,7 @@ export function Navigation() {
                   Dashboard
                 </Link>
               </Button>
-              <DropdownMenu>
+              <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
                 <DropdownMenuTrigger asChild>
                   <Button variant="outline" size="sm" className="gap-2">
                     <User className="h-4 w-4" />
@@ -214,7 +234,7 @@ export function Navigation() {
                 </Link>
               )}
               <div className="border-t pt-4 mt-4 space-y-2">
-                {loading ? (
+                {showLoading ? (
                   <>
                     <Skeleton className="h-10 w-full" />
                     <Skeleton className="h-10 w-full" />
@@ -230,9 +250,9 @@ export function Navigation() {
                     <Button
                       variant="outline"
                       className="w-full justify-start"
-                      onClick={() => {
-                        setOpen(false);
-                        handleSignOut();
+                      onClick={async () => {
+                        setOpen(false); // Close sheet immediately
+                        await handleSignOut();
                       }}
                     >
                       <LogOut className="mr-2 h-4 w-4" />
