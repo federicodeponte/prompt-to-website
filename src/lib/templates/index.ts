@@ -7,6 +7,10 @@ export { portfolioTemplate } from './portfolio';
 export { agencyTemplate } from './agency';
 export { ecommerceTemplate } from './ecommerce';
 export { blogTemplate } from './blog';
+export { restaurantTemplate } from './restaurant';
+export { eventTemplate } from './event';
+export { courseTemplate } from './course';
+export { appDownloadTemplate } from './app-download';
 
 import { WebsiteConfig } from '../types/website-config';
 import { saasLandingTemplate } from './saas-landing';
@@ -15,6 +19,10 @@ import { portfolioTemplate } from './portfolio';
 import { agencyTemplate } from './agency';
 import { ecommerceTemplate } from './ecommerce';
 import { blogTemplate } from './blog';
+import { restaurantTemplate } from './restaurant';
+import { eventTemplate } from './event';
+import { courseTemplate } from './course';
+import { appDownloadTemplate } from './app-download';
 
 /**
  * Template metadata for UI display
@@ -74,6 +82,34 @@ export const templates: TemplateMetadata[] = [
     description: 'Content-focused website for writers, developers, and creators. Includes newsletter and author showcase.',
     category: 'personal',
     config: blogTemplate,
+  },
+  {
+    id: 'restaurant',
+    name: 'Restaurant/Local Business',
+    description: 'Perfect for restaurants, cafes, and local businesses. Features menu, location, hours, and reviews.',
+    category: 'business',
+    config: restaurantTemplate,
+  },
+  {
+    id: 'event',
+    name: 'Event/Conference',
+    description: 'Event landing page with speakers, schedule, tickets, and venue information. Ideal for conferences and meetups.',
+    category: 'business',
+    config: eventTemplate,
+  },
+  {
+    id: 'course',
+    name: 'Online Course',
+    description: 'Education and course platform with curriculum, instructor info, pricing tiers, and student testimonials.',
+    category: 'personal',
+    config: courseTemplate,
+  },
+  {
+    id: 'app-download',
+    name: 'App Download Page',
+    description: 'Mobile app landing page with features, screenshots, user reviews, and download buttons for iOS/Android.',
+    category: 'product',
+    config: appDownloadTemplate,
   },
 ];
 
