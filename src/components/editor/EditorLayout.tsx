@@ -389,22 +389,25 @@ export function EditorLayout({ initialConfig, websiteId }: EditorLayoutProps) {
           </div>
           <div className="flex items-center gap-3">
             {/* Save status indicator */}
-            {isSaving || isUpdating ? (
-              <span className="text-sm text-muted-foreground flex items-center gap-2">
-                <Save className="h-4 w-4 animate-spin" />
-                Saving...
-              </span>
-            ) : saveFailed ? (
-              <span className="text-sm text-destructive flex items-center gap-2">
-                <AlertCircle className="h-4 w-4" />
-                Save failed - Retry?
-              </span>
-            ) : (
-              <span className="text-sm text-muted-foreground flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-green-500" />
-                Saved {lastSaved.toLocaleTimeString()}
-              </span>
-            )}
+            <div role="status" aria-live="polite" aria-atomic="true">
+              {isSaving || isUpdating ? (
+                <span className="text-sm text-muted-foreground flex items-center gap-2">
+                  <Save className="h-4 w-4 animate-spin" aria-hidden="true" />
+                  Saving...
+                </span>
+              ) : saveFailed ? (
+                <span className="text-sm text-destructive flex items-center gap-2">
+                  <AlertCircle className="h-4 w-4" aria-hidden="true" />
+                  Save failed - Retry?
+                </span>
+              ) : (
+                <span className="text-sm text-muted-foreground flex items-center gap-2">
+                  <CheckCircle2 className="h-4 w-4 text-green-500" aria-hidden="true" />
+                  <span className="sr-only">Changes saved at {lastSaved.toLocaleTimeString()}</span>
+                  <span aria-hidden="true">Saved {lastSaved.toLocaleTimeString()}</span>
+                </span>
+              )}
+            </div>
 
             {/* Undo/Redo buttons */}
             <div className="flex items-center gap-1 border-r pr-3">
@@ -534,7 +537,7 @@ export function EditorLayout({ initialConfig, websiteId }: EditorLayoutProps) {
         </Panel>
 
         {/* Resize handle */}
-        <PanelResizeHandle className="w-2 bg-border hover:bg-primary/20 transition-colors" />
+        <PanelResizeHandle className="w-2 bg-border hover:bg-primary/20 focus:bg-primary/30 focus:outline-none focus:ring-2 focus:ring-primary transition-colors" />
 
         {/* Right pane: Live preview */}
         <Panel defaultSize={60} minSize={40}>

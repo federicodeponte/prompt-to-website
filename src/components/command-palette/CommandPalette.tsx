@@ -185,7 +185,7 @@ export function CommandPalette({ open, onClose, commands }: CommandPaletteProps)
       <DialogContent className="max-w-2xl p-0 overflow-hidden">
         {/* Search Input */}
         <div className="flex items-center border-b px-4 py-3">
-          <Search className="mr-2 h-4 w-4 shrink-0 opacity-50" />
+          <Search className="mr-2 h-4 w-4 shrink-0 opacity-50" aria-hidden="true" />
           <Input
             ref={inputRef}
             value={query}
@@ -193,16 +193,30 @@ export function CommandPalette({ open, onClose, commands }: CommandPaletteProps)
             onKeyDown={handleKeyDown}
             placeholder="Type a command or search..."
             className="border-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+            role="combobox"
+            aria-expanded={true}
+            aria-controls="command-list"
+            aria-autocomplete="list"
+            aria-label="Search commands"
+            aria-activedescendant={filteredCommands[selectedIndex]?.id}
           />
+        </div>
+
+        {/* Live region for result count */}
+        <div className="sr-only" role="status" aria-live="polite" aria-atomic="true">
+          {filteredCommands.length} command{filteredCommands.length !== 1 ? 's' : ''} available
         </div>
 
         {/* Commands List */}
         <div
+          id="command-list"
           ref={listRef}
           className="max-h-[400px] overflow-y-auto"
+          role="listbox"
+          aria-label="Available commands"
         >
           {filteredCommands.length === 0 ? (
-            <div className="py-12 text-center text-sm text-muted-foreground">
+            <div className="py-12 text-center text-sm text-muted-foreground" role="status" aria-live="polite">
               No commands found
             </div>
           ) : (
@@ -221,6 +235,9 @@ export function CommandPalette({ open, onClose, commands }: CommandPaletteProps)
                   return (
                     <button
                       key={command.id}
+                      id={command.id}
+                      role="option"
+                      aria-selected={isSelected}
                       data-selected={isSelected}
                       onClick={() => executeCommand(command)}
                       onMouseEnter={() => setSelectedIndex(globalIndex)}
@@ -232,7 +249,7 @@ export function CommandPalette({ open, onClose, commands }: CommandPaletteProps)
                     >
                       {/* Icon */}
                       {command.icon && (
-                        <command.icon className="h-4 w-4 shrink-0" />
+                        <command.icon className="h-4 w-4 shrink-0" aria-hidden="true" />
                       )}
 
                       {/* Label & Description */}

@@ -198,7 +198,7 @@ export function Navigation() {
                 Navigate to different sections of the site
               </SheetDescription>
             </SheetHeader>
-            <nav className="flex flex-col space-y-4 mt-8">
+            <nav className="flex flex-col space-y-4 mt-8" aria-label="Mobile navigation menu">
               <Link
                 href="/#templates"
                 onClick={() => setOpen(false)}

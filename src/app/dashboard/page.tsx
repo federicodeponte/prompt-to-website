@@ -193,7 +193,7 @@ export default function DashboardPage() {
               size="lg"
               aria-label="Create a new website project"
             >
-              <Plus className="mr-2 h-4 w-4" />
+              <Plus className="mr-2 h-4 w-4" aria-hidden="true" />
               New Project
             </Button>
           </div>
@@ -234,7 +234,7 @@ export default function DashboardPage() {
                 onClick={() => router.push('/editor/demo')}
                 aria-label="Create your first website with AI assistance"
               >
-                <Sparkles className="mr-2 h-4 w-4" />
+                <Sparkles className="mr-2 h-4 w-4" aria-hidden="true" />
                 Create with AI
               </Button>
               <Button
@@ -244,7 +244,7 @@ export default function DashboardPage() {
                 onClick={() => router.push('/#templates')}
                 aria-label="Browse professional website templates"
               >
-                <Palette className="mr-2 h-4 w-4" />
+                <Palette className="mr-2 h-4 w-4" aria-hidden="true" />
                 Browse Templates
               </Button>
             </CardContent>
@@ -258,17 +258,7 @@ export default function DashboardPage() {
               return (
                 <Card
                   key={website.id}
-                  className="group flex flex-col hover:shadow-xl transition-all cursor-pointer focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2"
-                  onClick={() => router.push(`/editor/${website.id}`)}
-                  tabIndex={0}
-                  role="article"
-                  aria-label={`${website.label} project, ${blockCount} blocks, last updated ${format(new Date(website.updated_at), 'MMM d, yyyy')}`}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault();
-                      router.push(`/editor/${website.id}`);
-                    }
-                  }}
+                  className="group flex flex-col hover:shadow-lg transition-all focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2"
                 >
                   <CardHeader className="pb-4">
                     <div className="flex items-start justify-between">
@@ -284,37 +274,36 @@ export default function DashboardPage() {
                         </div>
                       </div>
                       <DropdownMenu>
-                        <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
+                        <DropdownMenuTrigger asChild>
                           <Button
                             variant="ghost"
                             size="icon"
-                            className="h-8 w-8 opacity-0 group-hover:opacity-100 focus:opacity-100 focus:ring-2 focus:ring-primary focus:ring-offset-1"
+                            className="h-8 w-8 opacity-0 group-hover:opacity-100 focus-visible:opacity-100 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1"
                             aria-label={`Actions for ${website.label}`}
                           >
-                            <MoreVertical className="h-4 w-4" />
-                            <span className="sr-only">Actions for {website.label}</span>
+                            <MoreVertical className="h-4 w-4" aria-hidden="true" />
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                          <DropdownMenuItem onClick={(e) => { e.stopPropagation(); router.push(`/editor/${website.id}`); }}>
-                            <ExternalLink className="mr-2 h-4 w-4" />
+                          <DropdownMenuItem onClick={() => router.push(`/editor/${website.id}`)}>
+                            <ExternalLink className="mr-2 h-4 w-4" aria-hidden="true" />
                             Open in Editor
                           </DropdownMenuItem>
-                          <DropdownMenuItem onClick={(e) => { e.stopPropagation(); handleDuplicate(website); }}>
-                            <Copy className="mr-2 h-4 w-4" />
+                          <DropdownMenuItem onClick={() => handleDuplicate(website)}>
+                            <Copy className="mr-2 h-4 w-4" aria-hidden="true" />
                             Duplicate
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
-                          <DropdownMenuItem onClick={(e) => { e.stopPropagation(); handleExport(website); }}>
-                            <Share2 className="mr-2 h-4 w-4" />
+                          <DropdownMenuItem onClick={() => handleExport(website)}>
+                            <Share2 className="mr-2 h-4 w-4" aria-hidden="true" />
                             Export & Share
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
                           <DropdownMenuItem
                             className="text-destructive focus:text-destructive"
-                            onClick={(e) => { e.stopPropagation(); handleDelete(website); }}
+                            onClick={() => handleDelete(website)}
                           >
-                            <Trash2 className="mr-2 h-4 w-4" />
+                            <Trash2 className="mr-2 h-4 w-4" aria-hidden="true" />
                             Delete
                           </DropdownMenuItem>
                         </DropdownMenuContent>
@@ -336,11 +325,11 @@ export default function DashboardPage() {
                       {/* Metadata */}
                       <div className="flex items-center justify-between text-xs text-muted-foreground">
                         <div className="flex items-center gap-1">
-                          <Code className="h-3 w-3" />
+                          <Code className="h-3 w-3" aria-hidden="true" />
                           <span>{blockCount} blocks</span>
                         </div>
                         <div className="flex items-center gap-1">
-                          <Calendar className="h-3 w-3" />
+                          <Calendar className="h-3 w-3" aria-hidden="true" />
                           <span>{format(new Date(website.updated_at), 'MMM d, yyyy')}</span>
                         </div>
                       </div>
@@ -351,7 +340,7 @@ export default function DashboardPage() {
                     <Button
                       className="w-full"
                       variant="outline"
-                      onClick={(e) => { e.stopPropagation(); router.push(`/editor/${website.id}`); }}
+                      onClick={() => router.push(`/editor/${website.id}`)}
                       aria-label={`Open ${website.label} in editor`}
                     >
                       Open Project
