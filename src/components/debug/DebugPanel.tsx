@@ -103,8 +103,10 @@ function DebugPanelContent({
           onClick={() => setIsOpen(true)}
           className="gap-2 shadow-lg"
           variant="outline"
+          aria-label="Open debug panel (development only)"
+          aria-expanded={false}
         >
-          <Bug className="h-4 w-4" />
+          <Bug className="h-4 w-4" aria-hidden="true" />
           Debug Panel
         </Button>
       </div>
@@ -117,7 +119,7 @@ function DebugPanelContent({
         {/* Header */}
         <div className="flex items-center justify-between border-b bg-muted/50 px-4 py-2">
           <div className="flex items-center gap-2">
-            <Bug className="h-4 w-4" />
+            <Bug className="h-4 w-4" aria-hidden="true" />
             <h3 className="text-sm font-semibold">Debug Panel</h3>
             <span className="text-xs text-muted-foreground">(Development Only)</span>
           </div>
@@ -125,13 +127,14 @@ function DebugPanelContent({
             variant="ghost"
             size="sm"
             onClick={() => setIsOpen(false)}
+            aria-label="Close debug panel"
           >
-            <X className="h-4 w-4" />
+            <X className="h-4 w-4" aria-hidden="true" />
           </Button>
         </div>
 
         {/* Tabs */}
-        <div className="flex border-b bg-muted/30">
+        <div className="flex border-b bg-muted/30" role="tablist" aria-label="Debug panel sections">
           <TabButton
             active={activeTab === 'config'}
             onClick={() => setActiveTab('config')}
@@ -366,6 +369,8 @@ function TabButton({
 }) {
   return (
     <button
+      role="tab"
+      aria-selected={active}
       onClick={onClick}
       disabled={disabled}
       className={cn(
@@ -375,10 +380,10 @@ function TabButton({
         disabled && 'opacity-50 cursor-not-allowed'
       )}
     >
-      {icon}
+      <span aria-hidden="true">{icon}</span>
       {children}
       {badge !== undefined && badge > 0 && (
-        <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
+        <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center" aria-label={`${badge} errors`}>
           {badge}
         </span>
       )}

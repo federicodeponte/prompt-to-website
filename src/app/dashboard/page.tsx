@@ -3,7 +3,7 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useWebsites, useDeleteWebsite, useCreateWebsite } from '@/lib/hooks/use-websites';
 import { useAuth } from '@/components/auth/AuthProvider';
@@ -53,6 +53,7 @@ export default function DashboardPage() {
   const { data: websites, isLoading } = useWebsites();
   const { mutate: deleteWebsite, isPending: isDeleting } = useDeleteWebsite();
   const { mutate: createWebsite, isPending: isCreating } = useCreateWebsite();
+  const newProjectButtonRef = useRef<HTMLButtonElement>(null);
 
   // Auth guard - redirect to login if not authenticated
   useEffect(() => {
@@ -106,6 +107,11 @@ export default function DashboardPage() {
         });
         setDeleteDialogOpen(false);
         setWebsiteToDelete(null);
+
+        // Move focus to "New Project" button after deletion
+        setTimeout(() => {
+          newProjectButtonRef.current?.focus();
+        }, 100);
       },
       onError: (error) => {
         toast.error('Failed to delete project', {
@@ -189,6 +195,7 @@ export default function DashboardPage() {
               </p>
             </div>
             <Button
+              ref={newProjectButtonRef}
               onClick={() => router.push('/editor/demo')}
               size="lg"
               aria-label="Create a new website project"
@@ -203,9 +210,10 @@ export default function DashboardPage() {
       {/* Content */}
       <div className="container mx-auto px-6 py-8">
         {isLoading ? (
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3" aria-busy="true" aria-label="Loading projects">
+            <div className="sr-only" role="status" aria-live="polite">Loading your projects...</div>
             {Array.from({ length: 6 }).map((_, i) => (
-              <Card key={i} className="flex flex-col">
+              <Card key={i} className="flex flex-col" aria-hidden="true">
                 <CardHeader>
                   <Skeleton className="h-6 w-3/4" />
                   <Skeleton className="h-4 w-1/2 mt-2" />

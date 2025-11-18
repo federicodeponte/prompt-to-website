@@ -15,6 +15,16 @@ import { ThemeModePanel } from './ThemeModePanel';
 import { PreviewPane } from './PreviewPane';
 import { useUpdateWebsite } from '@/lib/hooks/use-websites';
 import { Save, CheckCircle2, Download, Undo2, Redo2, FileJson, Home, Command as CommandIcon, ArrowLeft, AlertCircle } from 'lucide-react';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { exportToHTML, downloadHTML } from '@/lib/export/html-exporter';
 import { downloadJSON } from '@/lib/export/json-exporter';
 import { useKeyboardShortcuts, formatKeyCombo } from '@/lib/hooks/use-keyboard-shortcuts';
@@ -50,6 +60,7 @@ export function EditorLayout({ initialConfig, websiteId }: EditorLayoutProps) {
   const [lastSaved, setLastSaved] = useState<Date>(new Date());
   const [isSaving, setIsSaving] = useState(false);
   const [saveFailed, setSaveFailed] = useState(false);
+  const [showUnsavedDialog, setShowUnsavedDialog] = useState(false);
 
   // React Query mutation for updating website
   const { mutate: updateWebsite, isPending: isUpdating } = useUpdateWebsite();
@@ -362,13 +373,7 @@ export function EditorLayout({ initialConfig, websiteId }: EditorLayoutProps) {
               size="sm"
               onClick={() => {
                 if (hasUnsavedChanges) {
-                  if (window.confirm('You have unsaved changes. Do you want to save before leaving?')) {
-                    handleManualSave();
-                    // Wait for save to complete
-                    setTimeout(() => router.push('/dashboard'), 1000);
-                  } else {
-                    router.push('/dashboard');
-                  }
+                  setShowUnsavedDialog(true);
                 } else {
                   router.push('/dashboard');
                 }
@@ -376,7 +381,7 @@ export function EditorLayout({ initialConfig, websiteId }: EditorLayoutProps) {
               className="gap-2"
               aria-label="Return to dashboard"
             >
-              <ArrowLeft className="h-4 w-4" />
+              <ArrowLeft className="h-4 w-4" aria-hidden="true" />
               <span className="hidden sm:inline">Dashboard</span>
             </Button>
             <div className="border-l h-8" />
@@ -416,20 +421,20 @@ export function EditorLayout({ initialConfig, websiteId }: EditorLayoutProps) {
                 disabled={!canUndo}
                 variant="ghost"
                 size="sm"
-                title="Undo (Cmd+Z)"
-                aria-label="Undo last change"
+                title={`Undo (${formatKeyCombo('mod+z')})`}
+                aria-label={canUndo ? "Undo last change" : "Nothing to undo"}
               >
-                <Undo2 className="h-4 w-4" />
+                <Undo2 className="h-4 w-4" aria-hidden="true" />
               </Button>
               <Button
                 onClick={redo}
                 disabled={!canRedo}
                 variant="ghost"
                 size="sm"
-                title="Redo (Cmd+Shift+Z)"
-                aria-label="Redo last undone change"
+                title={`Redo (${formatKeyCombo('mod+shift+z')})`}
+                aria-label={canRedo ? "Redo last undone change" : "Nothing to redo"}
               >
-                <Redo2 className="h-4 w-4" />
+                <Redo2 className="h-4 w-4" aria-hidden="true" />
               </Button>
             </div>
 
@@ -547,6 +552,32 @@ export function EditorLayout({ initialConfig, websiteId }: EditorLayoutProps) {
 
       {/* Development-only debug panel */}
       <DebugPanel config={config} />
+
+      {/* Unsaved Changes Dialog */}
+      <AlertDialog open={showUnsavedDialog} onOpenChange={setShowUnsavedDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Unsaved Changes</AlertDialogTitle>
+            <AlertDialogDescription>
+              You have unsaved changes. Do you want to save before leaving?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => router.push('/dashboard')}>
+              Leave Without Saving
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                handleManualSave();
+                setTimeout(() => router.push('/dashboard'), 1000);
+                setShowUnsavedDialog(false);
+              }}
+            >
+              Save and Leave
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
       </div>
     </>
   );
