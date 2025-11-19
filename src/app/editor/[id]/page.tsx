@@ -39,5 +39,5 @@ export default function EditorPage() {
   }
 
   // Render editor with actual website data
-  return <EditorLayout initialConfig={website.config} websiteId={id} />;
+  return <EditorLayout initialConfig={website.config} websiteId={id} websiteLabel={website.label} />;
 }

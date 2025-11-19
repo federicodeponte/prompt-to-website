@@ -19,6 +19,7 @@ export default function DemoEditorPage() {
     <EditorLayout
       initialConfig={demoTemplate.config}
       websiteId="demo"
+      websiteLabel="Demo Website"
     />
   );
 }

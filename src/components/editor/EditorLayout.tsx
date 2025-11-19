@@ -15,7 +15,16 @@ import { ManualModePanel } from './ManualModePanel';
 import { ThemeModePanel } from './ThemeModePanel';
 import { PreviewPane } from './PreviewPane';
 import { useUpdateWebsite } from '@/lib/hooks/use-websites';
-import { Save, CheckCircle2, Download, Undo2, Redo2, FileJson, Home, Command as CommandIcon, ArrowLeft, AlertCircle } from 'lucide-react';
+import { Save, CheckCircle2, Download, Undo2, Redo2, FileJson, Home, Command as CommandIcon, ArrowLeft, AlertCircle, Check, X, Pencil } from 'lucide-react';
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from '@/components/ui/breadcrumb';
+import { Input } from '@/components/ui/input';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -35,6 +44,7 @@ import { DebugPanel } from '@/components/debug';
 interface EditorLayoutProps {
   initialConfig: WebsiteConfig;
   websiteId: string;
+  websiteLabel: string;
 }
 
 /**
@@ -50,7 +60,7 @@ interface EditorLayoutProps {
  * - Open/Closed: Easy to add new editing modes via tabs
  * - Composition: Child components handle specific functionality
  */
-export function EditorLayout({ initialConfig, websiteId }: EditorLayoutProps) {
+export function EditorLayout({ initialConfig, websiteId, websiteLabel }: EditorLayoutProps) {
   // Normalize config to ensure blocks is always an array (defensive programming)
   const normalizedConfig: WebsiteConfig = {
     ...initialConfig,
@@ -64,11 +74,16 @@ export function EditorLayout({ initialConfig, websiteId }: EditorLayoutProps) {
   const [showUnsavedDialog, setShowUnsavedDialog] = useState(false);
   const [mobileView, setMobileView] = useState<'edit' | 'preview'>('edit');
 
+  // Inline rename state
+  const [isEditingName, setIsEditingName] = useState(false);
+  const [editedName, setEditedName] = useState(websiteLabel);
+  const [isRenamePending, setIsRenamePending] = useState(false);
+
   // Mobile detection
   const isMobile = useIsMobile();
 
   // React Query mutation for updating website
-  const { mutate: updateWebsite, isPending: isUpdating } = useUpdateWebsite();
+  const { mutate: updateWebsite, mutateAsync: updateWebsiteAsync, isPending: isUpdating } = useUpdateWebsite();
 
   // Debounce timer ref
   const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -348,6 +363,51 @@ export function EditorLayout({ initialConfig, websiteId }: EditorLayoutProps) {
   ]);
 
   /**
+   * Handle inline rename
+   */
+  const handleStartRename = () => {
+    setEditedName(websiteLabel);
+    setIsEditingName(true);
+  };
+
+  const handleSaveRename = async () => {
+    const trimmedName = editedName.trim();
+    if (!trimmedName || trimmedName === websiteLabel) {
+      setIsEditingName(false);
+      setEditedName(websiteLabel);
+      return;
+    }
+
+    setIsRenamePending(true);
+    try {
+      await updateWebsiteAsync({ id: websiteId, label: trimmedName });
+      setIsEditingName(false);
+      // Note: Label will update when parent rerenders from React Query cache
+    } catch (error) {
+      console.error('Rename failed:', error);
+      setEditedName(websiteLabel);
+      setIsEditingName(false);
+    } finally {
+      setIsRenamePending(false);
+    }
+  };
+
+  const handleCancelRename = () => {
+    setEditedName(websiteLabel);
+    setIsEditingName(false);
+  };
+
+  const handleRenameKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleSaveRename();
+    } else if (e.key === 'Escape') {
+      e.preventDefault();
+      handleCancelRename();
+    }
+  };
+
+  /**
    * Cleanup timeout on unmount
    */
   useEffect(() => {
@@ -371,31 +431,61 @@ export function EditorLayout({ initialConfig, websiteId }: EditorLayoutProps) {
         {/* Header */}
         <header className="border-b bg-background px-4 md:px-6 py-3 md:py-4" role="banner" aria-label="Editor toolbar">
         <div className="flex items-center justify-between gap-2">
-          <div className="flex items-center gap-2 md:gap-4 min-w-0">
-            {/* Back to Dashboard button */}
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => {
-                if (hasUnsavedChanges) {
-                  setShowUnsavedDialog(true);
-                } else {
-                  router.push('/dashboard');
-                }
-              }}
-              className="gap-1 md:gap-2 shrink-0"
-              aria-label="Return to dashboard"
-            >
-              <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-              <span className="hidden sm:inline">Dashboard</span>
-            </Button>
-            <div className="border-l h-6 md:h-8 hidden sm:block" />
-            <div className="min-w-0">
-              <h1 className="text-lg md:text-2xl font-bold truncate">Website Editor</h1>
-              <p className="text-xs md:text-sm text-muted-foreground hidden sm:block truncate">
-                ID: {websiteId}
-              </p>
-            </div>
+          <div className="flex items-center gap-2 md:gap-4 min-w-0 flex-1">
+            {/* Breadcrumbs with inline rename */}
+            <Breadcrumb>
+              <BreadcrumbList>
+                <BreadcrumbItem>
+                  <BreadcrumbLink href="/">Home</BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                  <BreadcrumbLink href="/dashboard">Dashboard</BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                  {isEditingName ? (
+                    <div className="flex items-center gap-1">
+                      <Input
+                        value={editedName}
+                        onChange={(e) => setEditedName(e.target.value)}
+                        onKeyDown={handleRenameKeyDown}
+                        onBlur={handleSaveRename}
+                        disabled={isRenamePending}
+                        className="h-6 px-2 text-sm w-40 md:w-60"
+                        autoFocus
+                        aria-label="Edit project name"
+                      />
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        className="h-6 w-6"
+                        onClick={handleSaveRename}
+                        disabled={isRenamePending}
+                        aria-label="Save name"
+                      >
+                        <Check className="h-3 w-3" />
+                      </Button>
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        className="h-6 w-6"
+                        onClick={handleCancelRename}
+                        disabled={isRenamePending}
+                        aria-label="Cancel rename"
+                      >
+                        <X className="h-3 w-3" />
+                      </Button>
+                    </div>
+                  ) : (
+                    <BreadcrumbPage className="flex items-center gap-1 group cursor-pointer" onClick={handleStartRename}>
+                      <span className="max-w-[120px] md:max-w-[200px] truncate">{websiteLabel}</span>
+                      <Pencil className="h-3 w-3 opacity-0 group-hover:opacity-50 transition-opacity" aria-hidden="true" />
+                    </BreadcrumbPage>
+                  )}
+                </BreadcrumbItem>
+              </BreadcrumbList>
+            </Breadcrumb>
           </div>
           <div className="flex items-center gap-1 md:gap-3 overflow-x-auto">
             {/* Save status indicator - Hidden on smallest mobile */}
