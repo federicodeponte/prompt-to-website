@@ -179,6 +179,7 @@ export const indexedDBStorage = {
         label,
         config,
         prompt_history: [],
+        is_favorite: false,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
       };

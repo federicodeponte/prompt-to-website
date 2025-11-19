@@ -5,7 +5,7 @@
 
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
-import { useWebsites, useDeleteWebsite, useCreateWebsite } from '@/lib/hooks/use-websites';
+import { useWebsites, useDeleteWebsite, useCreateWebsite, useUpdateWebsite } from '@/lib/hooks/use-websites';
 import { useAuth } from '@/components/auth/AuthProvider';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -65,6 +65,7 @@ export default function DashboardPage() {
   const { data: websites, isLoading } = useWebsites();
   const { mutate: deleteWebsite, isPending: isDeleting } = useDeleteWebsite();
   const { mutate: createWebsite, isPending: isCreating } = useCreateWebsite();
+  const { mutate: updateWebsite } = useUpdateWebsite();
   const newProjectButtonRef = useRef<HTMLButtonElement>(null);
 
   // Auth guard - redirect to login if not authenticated
@@ -186,6 +187,33 @@ export default function DashboardPage() {
   };
 
   /**
+   * Toggle favorite status for a project
+   */
+  const handleToggleFavorite = (website: Website) => {
+    updateWebsite(
+      {
+        id: website.id,
+        is_favorite: !website.is_favorite,
+      },
+      {
+        onSuccess: () => {
+          toast.success(
+            website.is_favorite ? 'Removed from favorites' : 'Added to favorites',
+            {
+              description: `"${website.label}" ${website.is_favorite ? 'is no longer a favorite' : 'is now a favorite'}`,
+            }
+          );
+        },
+        onError: (error) => {
+          toast.error('Failed to update favorite', {
+            description: error instanceof Error ? error.message : 'Please try again.',
+          });
+        },
+      }
+    );
+  };
+
+  /**
    * Filter, search, and sort websites
    */
   const filteredAndSortedWebsites = useMemo(() => {
@@ -210,6 +238,12 @@ export default function DashboardPage() {
 
     // Apply sorting
     const sorted = [...filtered].sort((a, b) => {
+      // Favorites always come first
+      if (a.is_favorite !== b.is_favorite) {
+        return a.is_favorite ? -1 : 1;
+      }
+
+      // Then apply selected sort order
       switch (sortBy) {
         case 'name':
           return a.label.localeCompare(b.label);
@@ -455,7 +489,27 @@ export default function DashboardPage() {
                       <div className="flex items-center gap-2 flex-1 min-w-0">
                         <span className="text-2xl flex-shrink-0">{templateInfo.icon}</span>
                         <div className="flex-1 min-w-0">
-                          <CardTitle className="text-lg truncate">{website.label}</CardTitle>
+                          <div className="flex items-center gap-2">
+                            <CardTitle className="text-lg truncate">{website.label}</CardTitle>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-6 w-6 flex-shrink-0"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleToggleFavorite(website);
+                              }}
+                              aria-label={website.is_favorite ? 'Remove from favorites' : 'Add to favorites'}
+                            >
+                              <Star
+                                className={`h-4 w-4 ${
+                                  website.is_favorite
+                                    ? 'fill-yellow-400 text-yellow-400'
+                                    : 'text-muted-foreground hover:text-yellow-400'
+                                }`}
+                              />
+                            </Button>
+                          </div>
                           <CardDescription className="flex items-center gap-2 mt-1">
                             <Badge variant="secondary" className={templateInfo.color}>
                               {website.config.template}

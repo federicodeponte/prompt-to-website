@@ -86,6 +86,7 @@ async function updateWebsite(data: {
   label?: string;
   config?: WebsiteConfig;
   prompt_history?: string[];
+  is_favorite?: boolean;
 }): Promise<Website> {
   const supabase = createClient();
 

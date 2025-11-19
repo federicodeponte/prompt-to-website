@@ -103,6 +103,7 @@ export interface Website {
   label: string;
   config: WebsiteConfig;
   prompt_history?: string[];
+  is_favorite: boolean;
   created_at: string;
   updated_at: string;
 }
