@@ -27,16 +27,16 @@ export default function Home() {
 
       <main className="flex-1">
         {/* Hero Section - PREMIUM SPACING */}
-        <section className="border-b bg-gradient-to-b from-background via-background to-muted/20 px-6 py-24 sm:py-32">
+        <section className="border-b bg-gradient-to-b from-background via-background to-muted/20 px-4 sm:px-6 py-16 sm:py-24 lg:py-32">
           <div className="container mx-auto max-w-5xl text-center">
-            <Badge variant="secondary" className="mb-8 animate-in fade-in slide-in-from-top-4 duration-700" style={{ animationFillMode: 'backwards' }}>
+            <Badge variant="secondary" className="mb-6 sm:mb-8 animate-in fade-in slide-in-from-top-4 duration-700" style={{ animationFillMode: 'backwards' }}>
               <Sparkles className="mr-1.5 h-3.5 w-3.5 animate-pulse" />
               AI-Powered Website Builder
             </Badge>
 
             {/* STRONGER TYPOGRAPHY */}
             <motion.h1
-              className="mb-8 text-6xl font-extrabold tracking-tight sm:text-7xl lg:text-8xl"
+              className="mb-6 sm:mb-8 text-4xl font-extrabold tracking-tight sm:text-6xl lg:text-8xl"
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.1 }}
@@ -74,19 +74,19 @@ export default function Home() {
               </motion.span>
             </motion.h1>
 
-            <p className="mx-auto mb-12 max-w-2xl text-xl leading-relaxed text-muted-foreground sm:text-2xl animate-in fade-in slide-in-from-bottom-4 duration-700" style={{ animationDelay: '200ms', animationFillMode: 'backwards' }}>
+            <p className="mx-auto mb-8 sm:mb-12 max-w-2xl text-lg leading-relaxed text-muted-foreground sm:text-xl lg:text-2xl animate-in fade-in slide-in-from-bottom-4 duration-700" style={{ animationDelay: '200ms', animationFillMode: 'backwards' }}>
               Choose a template, describe your vision to AI, and watch your website come to life.
               No coding required.
             </p>
 
-            <div className="flex flex-col items-center justify-center gap-4 sm:flex-row animate-in fade-in zoom-in-95 duration-700" style={{ animationDelay: '300ms', animationFillMode: 'backwards' }}>
-              <Button size="lg" className="h-12 px-8 text-base shadow-lg transition-all hover:shadow-xl hover:scale-105" asChild>
+            <div className="flex flex-col items-stretch justify-center gap-3 sm:gap-4 sm:flex-row sm:items-center w-full sm:w-auto max-w-md sm:max-w-none animate-in fade-in zoom-in-95 duration-700" style={{ animationDelay: '300ms', animationFillMode: 'backwards' }}>
+              <Button size="lg" className="h-12 px-8 text-base shadow-lg transition-all hover:shadow-xl hover:scale-105 w-full sm:w-auto" asChild>
                 <a href="#templates">
                   Get Started Free
                   <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
                 </a>
               </Button>
-              <Button size="lg" variant="outline" className="h-12 px-8 text-base transition-all hover:scale-105" asChild>
+              <Button size="lg" variant="outline" className="h-12 px-8 text-base transition-all hover:scale-105 w-full sm:w-auto" asChild>
                 <Link href="/editor/demo">
                   Try Demo
                 </Link>
