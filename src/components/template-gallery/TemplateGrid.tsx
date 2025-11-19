@@ -4,6 +4,7 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -99,50 +100,59 @@ export function TemplateGrid({
             </CardHeader>
 
             <CardContent className="flex-1">
-              {/* Premium preview with category-specific glassmorphism */}
-              <div
-                className={`aspect-video overflow-hidden rounded-xl border-2 shadow-inner backdrop-blur-sm ${
-                  template.category === 'business'
-                    ? 'bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-blue-950/30 dark:via-indigo-950/30 dark:to-purple-950/30 border-blue-200 dark:border-blue-800'
-                    : template.category === 'product'
-                    ? 'bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 dark:from-green-950/30 dark:via-emerald-950/30 dark:to-teal-950/30 border-green-200 dark:border-green-800'
-                    : 'bg-gradient-to-br from-orange-50 via-pink-50 to-rose-50 dark:from-orange-950/30 dark:via-pink-950/30 dark:to-rose-950/30 border-orange-200 dark:border-orange-800'
-                }`}
-              >
-                <div className="flex h-full flex-col gap-3 p-4">
-                  {/* Simulated browser chrome */}
-                  <div className="flex items-center gap-2">
-                    <div className="h-2 w-2 rounded-full bg-red-400/80 dark:bg-red-500/60" />
-                    <div className="h-2 w-2 rounded-full bg-yellow-400/80 dark:bg-yellow-500/60" />
-                    <div className="h-2 w-2 rounded-full bg-green-400/80 dark:bg-green-500/60" />
-                    <div className="ml-auto h-3 w-20 rounded bg-background/40 backdrop-blur-sm" />
-                  </div>
-
-                  {/* Simulated hero section */}
-                  <div className={`h-12 rounded-lg ring-1 ${
+              {/* Template preview screenshot */}
+              {template.previewImage ? (
+                <motion.div
+                  className="aspect-video overflow-hidden rounded-xl border-2 border-border bg-muted shadow-inner relative group-hover:shadow-2xl transition-shadow"
+                  whileHover={{ scale: 1.02, transition: { duration: 0.2 } }}
+                >
+                  <Image
+                    src={template.previewImage}
+                    alt={`${template.name} preview`}
+                    fill
+                    className="object-cover object-top"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  />
+                </motion.div>
+              ) : (
+                // Fallback to simulated preview if image not available
+                <div
+                  className={`aspect-video overflow-hidden rounded-xl border-2 shadow-inner backdrop-blur-sm ${
                     template.category === 'business'
-                      ? 'bg-gradient-to-r from-blue-200/40 to-indigo-200/40 dark:from-blue-800/40 dark:to-indigo-800/40 ring-blue-300/50 dark:ring-blue-700/50'
+                      ? 'bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-blue-950/30 dark:via-indigo-950/30 dark:to-purple-950/30 border-blue-200 dark:border-blue-800'
                       : template.category === 'product'
-                      ? 'bg-gradient-to-r from-green-200/40 to-emerald-200/40 dark:from-green-800/40 dark:to-emerald-800/40 ring-green-300/50 dark:ring-green-700/50'
-                      : 'bg-gradient-to-r from-orange-200/40 to-pink-200/40 dark:from-orange-800/40 dark:to-pink-800/40 ring-orange-300/50 dark:ring-orange-700/50'
-                  }`} />
-
-                  {/* Simulated feature blocks */}
-                  <div className="flex flex-1 gap-3">
-                    <div className="flex-1 rounded-lg bg-background/30 backdrop-blur-sm ring-1 ring-border/50" />
-                    <div className="flex-1 rounded-lg bg-background/20 backdrop-blur-sm ring-1 ring-border/50" />
+                      ? 'bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 dark:from-green-950/30 dark:via-emerald-950/30 dark:to-teal-950/30 border-green-200 dark:border-green-800'
+                      : 'bg-gradient-to-br from-orange-50 via-pink-50 to-rose-50 dark:from-orange-950/30 dark:via-pink-950/30 dark:to-rose-950/30 border-orange-200 dark:border-orange-800'
+                  }`}
+                >
+                  <div className="flex h-full flex-col gap-3 p-4">
+                    <div className="flex items-center gap-2">
+                      <div className="h-2 w-2 rounded-full bg-red-400/80 dark:bg-red-500/60" />
+                      <div className="h-2 w-2 rounded-full bg-yellow-400/80 dark:bg-yellow-500/60" />
+                      <div className="h-2 w-2 rounded-full bg-green-400/80 dark:bg-green-500/60" />
+                      <div className="ml-auto h-3 w-20 rounded bg-background/40 backdrop-blur-sm" />
+                    </div>
+                    <div className={`h-12 rounded-lg ring-1 ${
+                      template.category === 'business'
+                        ? 'bg-gradient-to-r from-blue-200/40 to-indigo-200/40 dark:from-blue-800/40 dark:to-indigo-800/40 ring-blue-300/50 dark:ring-blue-700/50'
+                        : template.category === 'product'
+                        ? 'bg-gradient-to-r from-green-200/40 to-emerald-200/40 dark:from-green-800/40 dark:to-emerald-800/40 ring-green-300/50 dark:ring-green-700/50'
+                        : 'bg-gradient-to-r from-orange-200/40 to-pink-200/40 dark:from-orange-800/40 dark:to-pink-800/40 ring-orange-300/50 dark:ring-orange-700/50'
+                    }`} />
+                    <div className="flex flex-1 gap-3">
+                      <div className="flex-1 rounded-lg bg-background/30 backdrop-blur-sm ring-1 ring-border/50" />
+                      <div className="flex-1 rounded-lg bg-background/20 backdrop-blur-sm ring-1 ring-border/50" />
+                    </div>
+                    <div className={`h-10 rounded-lg ${
+                      template.category === 'business'
+                        ? 'bg-gradient-to-r from-blue-300/30 to-blue-200/20 dark:from-blue-700/30 dark:to-blue-800/20'
+                        : template.category === 'product'
+                        ? 'bg-gradient-to-r from-green-300/30 to-green-200/20 dark:from-green-700/30 dark:to-green-800/20'
+                        : 'bg-gradient-to-r from-orange-300/30 to-orange-200/20 dark:from-orange-700/30 dark:to-orange-800/20'
+                    }`} />
                   </div>
-
-                  {/* Simulated CTA */}
-                  <div className={`h-10 rounded-lg ${
-                    template.category === 'business'
-                      ? 'bg-gradient-to-r from-blue-300/30 to-blue-200/20 dark:from-blue-700/30 dark:to-blue-800/20'
-                      : template.category === 'product'
-                      ? 'bg-gradient-to-r from-green-300/30 to-green-200/20 dark:from-green-700/30 dark:to-green-800/20'
-                      : 'bg-gradient-to-r from-orange-300/30 to-orange-200/20 dark:from-orange-700/30 dark:to-orange-800/20'
-                  }`} />
                 </div>
-              </div>
+              )}
 
               {/* Template details with badge */}
               <div className="mt-4 flex items-center justify-between text-sm">
@@ -197,26 +207,36 @@ export function TemplateGrid({
                     <DialogDescription>{template.description}</DialogDescription>
                   </DialogHeader>
                   <div className="space-y-4">
-                    {/* Preview with glassmorphism */}
-                    <div className="aspect-video overflow-hidden rounded-xl border-2 bg-gradient-to-br from-muted via-background to-muted/50 shadow-inner backdrop-blur-sm">
-                      <div className="flex h-full flex-col gap-3 p-4">
-                        {/* macOS window dots */}
-                        <div className="flex items-center gap-2">
-                          <div className="h-2 w-2 rounded-full bg-destructive/60" />
-                          <div className="h-2 w-2 rounded-full bg-yellow-400/60" />
-                          <div className="h-2 w-2 rounded-full bg-green-400/60" />
-                          <div className="ml-auto h-3 w-20 rounded bg-primary/10" />
-                        </div>
-
-                        {/* Simulated content blocks */}
-                        <div className="h-12 rounded-lg bg-gradient-to-r from-primary/20 to-secondary/20 ring-1 ring-primary/20" />
-                        <div className="flex flex-1 gap-3">
-                          <div className="flex-1 rounded-lg bg-accent/30 ring-1 ring-border" />
-                          <div className="flex-1 rounded-lg bg-muted ring-1 ring-border" />
-                        </div>
-                        <div className="h-10 rounded-lg bg-gradient-to-r from-primary/15 to-primary/5" />
+                    {/* Preview image */}
+                    {template.previewImage ? (
+                      <div className="aspect-video overflow-hidden rounded-xl border-2 border-border bg-muted shadow-inner relative">
+                        <Image
+                          src={template.previewImage}
+                          alt={`${template.name} full preview`}
+                          fill
+                          className="object-cover object-top"
+                          sizes="(max-width: 768px) 100vw, 800px"
+                        />
                       </div>
-                    </div>
+                    ) : (
+                      // Fallback to simulated preview
+                      <div className="aspect-video overflow-hidden rounded-xl border-2 bg-gradient-to-br from-muted via-background to-muted/50 shadow-inner backdrop-blur-sm">
+                        <div className="flex h-full flex-col gap-3 p-4">
+                          <div className="flex items-center gap-2">
+                            <div className="h-2 w-2 rounded-full bg-destructive/60" />
+                            <div className="h-2 w-2 rounded-full bg-yellow-400/60" />
+                            <div className="h-2 w-2 rounded-full bg-green-400/60" />
+                            <div className="ml-auto h-3 w-20 rounded bg-primary/10" />
+                          </div>
+                          <div className="h-12 rounded-lg bg-gradient-to-r from-primary/20 to-secondary/20 ring-1 ring-primary/20" />
+                          <div className="flex flex-1 gap-3">
+                            <div className="flex-1 rounded-lg bg-accent/30 ring-1 ring-border" />
+                            <div className="flex-1 rounded-lg bg-muted ring-1 ring-border" />
+                          </div>
+                          <div className="h-10 rounded-lg bg-gradient-to-r from-primary/15 to-primary/5" />
+                        </div>
+                      </div>
+                    )}
 
                     {/* Template details */}
                     <div className="grid gap-4 sm:grid-cols-2">

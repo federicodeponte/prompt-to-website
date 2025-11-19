@@ -46,6 +46,7 @@ export const templates: TemplateMetadata[] = [
     name: 'SaaS Landing Page',
     description: 'Perfect for software as a service products. Includes pricing, features, and testimonials.',
     category: 'business',
+    previewImage: '/templates/saas-landing.webp',
     config: saasLandingTemplate,
   },
   {
@@ -53,6 +54,7 @@ export const templates: TemplateMetadata[] = [
     name: 'Digital Agency',
     description: 'Professional services showcase with team, portfolio, and client testimonials. Ideal for agencies and consultants.',
     category: 'business',
+    previewImage: '/templates/agency.webp',
     config: agencyTemplate,
   },
   {
@@ -60,6 +62,7 @@ export const templates: TemplateMetadata[] = [
     name: 'Product Landing Page',
     description: 'Showcase a specific product with features, stats, FAQ, and compelling CTAs.',
     category: 'product',
+    previewImage: '/templates/product-landing.webp',
     config: productLandingTemplate,
   },
   {
@@ -67,6 +70,7 @@ export const templates: TemplateMetadata[] = [
     name: 'E-commerce Product',
     description: 'Conversion-optimized product page with pricing tiers, customer reviews, and detailed features.',
     category: 'product',
+    previewImage: '/templates/ecommerce.webp',
     config: ecommerceTemplate,
   },
   {
@@ -74,6 +78,7 @@ export const templates: TemplateMetadata[] = [
     name: 'Portfolio',
     description: 'Personal portfolio to showcase your work, skills, and client testimonials.',
     category: 'personal',
+    previewImage: '/templates/portfolio.webp',
     config: portfolioTemplate,
   },
   {
@@ -81,6 +86,7 @@ export const templates: TemplateMetadata[] = [
     name: 'Blog & Content',
     description: 'Content-focused website for writers, developers, and creators. Includes newsletter and author showcase.',
     category: 'personal',
+    previewImage: '/templates/blog.webp',
     config: blogTemplate,
   },
   {
@@ -88,6 +94,7 @@ export const templates: TemplateMetadata[] = [
     name: 'Restaurant/Local Business',
     description: 'Perfect for restaurants, cafes, and local businesses. Features menu, location, hours, and reviews.',
     category: 'business',
+    previewImage: '/templates/restaurant.webp',
     config: restaurantTemplate,
   },
   {
@@ -95,6 +102,7 @@ export const templates: TemplateMetadata[] = [
     name: 'Event/Conference',
     description: 'Event landing page with speakers, schedule, tickets, and venue information. Ideal for conferences and meetups.',
     category: 'business',
+    previewImage: '/templates/event.webp',
     config: eventTemplate,
   },
   {
@@ -102,6 +110,7 @@ export const templates: TemplateMetadata[] = [
     name: 'Online Course',
     description: 'Education and course platform with curriculum, instructor info, pricing tiers, and student testimonials.',
     category: 'personal',
+    previewImage: '/templates/course.webp',
     config: courseTemplate,
   },
   {
@@ -109,6 +118,7 @@ export const templates: TemplateMetadata[] = [
     name: 'App Download Page',
     description: 'Mobile app landing page with features, screenshots, user reviews, and download buttons for iOS/Android.',
     category: 'product',
+    previewImage: '/templates/app-download.webp',
     config: appDownloadTemplate,
   },
 ];
