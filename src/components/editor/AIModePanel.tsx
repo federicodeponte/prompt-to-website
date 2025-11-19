@@ -14,6 +14,7 @@ import { generateId } from '@/lib/utils/id-generator';
 import { useGenerateWebsite, useEditWebsiteWithAI } from '@/lib/hooks/use-websites';
 import { APIError } from '@/lib/types/api-responses';
 import { toast } from 'sonner';
+import { analytics } from '@/lib/analytics/events';
 
 export interface Message {
   id: string;
@@ -169,6 +170,10 @@ export function AIModePanel({ config, onConfigUpdate }: AIModePanelProps) {
 
     // Decide whether to edit or generate
     if (hasExistingWebsite) {
+      // Track AI edit started
+      const startTime = performance.now();
+      analytics.aiEdit.started(promptText.length);
+
       // Edit existing website
       editWebsite(
         {
@@ -177,6 +182,10 @@ export function AIModePanel({ config, onConfigUpdate }: AIModePanelProps) {
         },
         {
           onSuccess: (data) => {
+            // Track AI edit success
+            const duration = performance.now() - startTime;
+            analytics.aiEdit.success(Math.round(duration));
+
             // Update config with AI-edited version
             onConfigUpdate(data.config);
 
@@ -190,11 +199,18 @@ export function AIModePanel({ config, onConfigUpdate }: AIModePanelProps) {
             setMessages((prev) => [...prev, assistantMessage]);
           },
           onError: (error) => {
+            // Track AI edit error
+            const errorType = error instanceof APIError ? error.title : 'Unknown error';
+            analytics.aiEdit.error(errorType);
             handleAIError(error, 'editing');
           },
         }
       );
     } else {
+      // Track AI generation started
+      const startTime = performance.now();
+      analytics.aiGeneration.started(config.template, promptText.length);
+
       // Generate new website
       generateWebsite(
         {
@@ -203,20 +219,27 @@ export function AIModePanel({ config, onConfigUpdate }: AIModePanelProps) {
         },
         {
           onSuccess: (data) => {
+            // Track AI generation success
+            const duration = performance.now() - startTime;
+            const blockCount = data.config.blocks?.length || 0;
+            analytics.aiGeneration.success(data.config.template, Math.round(duration), blockCount);
+
             // Update config with AI-generated version
             onConfigUpdate(data.config);
 
             // Add success message
-            const blocksCount = data.config.blocks?.length || 0;
             const assistantMessage: Message = {
               id: generateId(),
               role: 'assistant',
-              content: `🎉 I've generated a ${data.config.template} website with ${blocksCount} blocks based on your request. Check the preview on the right!`,
+              content: `🎉 I've generated a ${data.config.template} website with ${blockCount} blocks based on your request. Check the preview on the right!`,
               timestamp: new Date(),
             };
             setMessages((prev) => [...prev, assistantMessage]);
           },
           onError: (error) => {
+            // Track AI generation error
+            const errorType = error instanceof APIError ? error.title : 'Unknown error';
+            analytics.aiGeneration.error(errorType, config.template);
             handleAIError(error, 'generating');
           },
         }

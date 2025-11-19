@@ -13,6 +13,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from 'sonner';
 import { Sparkles, Loader2 } from 'lucide-react';
+import { analytics } from '@/lib/analytics/events';
 
 export default function SignupPage() {
   const router = useRouter();
@@ -37,12 +38,16 @@ export default function SignupPage() {
     }
 
     setLoading(true);
+    analytics.auth.signupStarted('email');
 
     try {
       await signUp(email, password);
+      analytics.auth.signupSuccess('email');
       toast.success('Account created! Check your email to confirm your account.');
       router.push('/login');
     } catch (error) {
+      const errorType = error instanceof Error ? error.message : 'Unknown error';
+      analytics.auth.signupError(errorType, 'email');
       toast.error(error instanceof Error ? error.message : 'Failed to sign up');
     } finally {
       setLoading(false);
@@ -51,10 +56,15 @@ export default function SignupPage() {
 
   const handleGoogleSignIn = async () => {
     setGoogleLoading(true);
+    analytics.auth.signupStarted('google');
+
     try {
       await signInWithGoogle();
+      analytics.auth.signupSuccess('google');
       // OAuth will redirect automatically
     } catch (error) {
+      const errorType = error instanceof Error ? error.message : 'Unknown error';
+      analytics.auth.signupError(errorType, 'google');
       toast.error(error instanceof Error ? error.message : 'Failed to sign up with Google');
       setGoogleLoading(false);
     }

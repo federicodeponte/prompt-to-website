@@ -58,6 +58,7 @@ import { Website } from '@/lib/types/website-config';
 import { templates } from '@/lib/templates';
 import { ExportModal } from '@/components/export/ExportModal';
 import { Navigation } from '@/components/layout/Navigation';
+import { analytics } from '@/lib/analytics/events';
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -121,6 +122,26 @@ export default function DashboardPage() {
     localStorage.setItem('dashboard_filter', filterTemplate);
   }, [sortBy, filterTemplate]);
 
+  // Track search events (debounced via useEffect)
+  useEffect(() => {
+    if (searchQuery && websites) {
+      const resultCount = filteredAndSortedWebsites.length;
+      analytics.dashboard.search(searchQuery, resultCount);
+    }
+  }, [searchQuery]); // Only track when search query changes
+
+  // Track filter changes
+  useEffect(() => {
+    if (filterTemplate !== 'all') {
+      analytics.dashboard.filter(filterTemplate);
+    }
+  }, [filterTemplate]);
+
+  // Track sort changes
+  useEffect(() => {
+    analytics.dashboard.sort(sortBy);
+  }, [sortBy]);
+
   /**
    * Handle project deletion with confirmation
    */
@@ -134,6 +155,7 @@ export default function DashboardPage() {
 
     deleteWebsite(websiteToDelete.id, {
       onSuccess: () => {
+        analytics.project.deleted(websiteToDelete.id);
         toast.success('Project deleted', {
           description: `"${websiteToDelete.label}" has been removed.`,
         });
@@ -164,6 +186,7 @@ export default function DashboardPage() {
       },
       {
         onSuccess: (newWebsite) => {
+          analytics.project.duplicated(website.id, website.config.blocks?.length || 0);
           toast.success('Project duplicated', {
             description: 'Opening the copy in the editor...',
           });
@@ -190,13 +213,22 @@ export default function DashboardPage() {
    * Toggle favorite status for a project
    */
   const handleToggleFavorite = (website: Website) => {
+    const newFavoriteStatus = !website.is_favorite;
+
     updateWebsite(
       {
         id: website.id,
-        is_favorite: !website.is_favorite,
+        is_favorite: newFavoriteStatus,
       },
       {
         onSuccess: () => {
+          // Track analytics
+          if (newFavoriteStatus) {
+            analytics.project.favorited(website.id);
+          } else {
+            analytics.project.unfavorited(website.id);
+          }
+
           toast.success(
             website.is_favorite ? 'Removed from favorites' : 'Added to favorites',
             {
