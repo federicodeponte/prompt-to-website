@@ -9,6 +9,7 @@ import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { WebsiteConfig } from '@/lib/types/website-config';
+import { useIsMobile } from '@/lib/hooks/use-media-query';
 import { AIModePanel } from './AIModePanel';
 import { ManualModePanel } from './ManualModePanel';
 import { ThemeModePanel } from './ThemeModePanel';
@@ -61,6 +62,10 @@ export function EditorLayout({ initialConfig, websiteId }: EditorLayoutProps) {
   const [isSaving, setIsSaving] = useState(false);
   const [saveFailed, setSaveFailed] = useState(false);
   const [showUnsavedDialog, setShowUnsavedDialog] = useState(false);
+  const [mobileView, setMobileView] = useState<'edit' | 'preview'>('edit');
+
+  // Mobile detection
+  const isMobile = useIsMobile();
 
   // React Query mutation for updating website
   const { mutate: updateWebsite, isPending: isUpdating } = useUpdateWebsite();
@@ -364,9 +369,9 @@ export function EditorLayout({ initialConfig, websiteId }: EditorLayoutProps) {
 
       <div className="flex h-screen flex-col">
         {/* Header */}
-        <header className="border-b bg-background px-6 py-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
+        <header className="border-b bg-background px-4 md:px-6 py-3 md:py-4">
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2 md:gap-4 min-w-0">
             {/* Back to Dashboard button */}
             <Button
               variant="ghost"
@@ -378,44 +383,44 @@ export function EditorLayout({ initialConfig, websiteId }: EditorLayoutProps) {
                   router.push('/dashboard');
                 }
               }}
-              className="gap-2"
+              className="gap-1 md:gap-2 shrink-0"
               aria-label="Return to dashboard"
             >
               <ArrowLeft className="h-4 w-4" aria-hidden="true" />
               <span className="hidden sm:inline">Dashboard</span>
             </Button>
-            <div className="border-l h-8" />
-            <div>
-              <h1 className="text-2xl font-bold">Website Editor</h1>
-              <p className="text-sm text-muted-foreground">
+            <div className="border-l h-6 md:h-8 hidden sm:block" />
+            <div className="min-w-0">
+              <h1 className="text-lg md:text-2xl font-bold truncate">Website Editor</h1>
+              <p className="text-xs md:text-sm text-muted-foreground hidden sm:block truncate">
                 ID: {websiteId}
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-3">
-            {/* Save status indicator */}
-            <div role="status" aria-live="polite" aria-atomic="true">
+          <div className="flex items-center gap-1 md:gap-3 overflow-x-auto">
+            {/* Save status indicator - Hidden on smallest mobile */}
+            <div role="status" aria-live="polite" aria-atomic="true" className="hidden xs:block">
               {isSaving || isUpdating ? (
-                <span className="text-sm text-muted-foreground flex items-center gap-2">
-                  <Save className="h-4 w-4 animate-spin" aria-hidden="true" />
-                  Saving...
+                <span className="text-xs md:text-sm text-muted-foreground flex items-center gap-1 md:gap-2">
+                  <Save className="h-3 md:h-4 w-3 md:w-4 animate-spin" aria-hidden="true" />
+                  <span className="hidden sm:inline">Saving...</span>
                 </span>
               ) : saveFailed ? (
-                <span className="text-sm text-destructive flex items-center gap-2">
-                  <AlertCircle className="h-4 w-4" aria-hidden="true" />
-                  Save failed - Retry?
+                <span className="text-xs md:text-sm text-destructive flex items-center gap-1 md:gap-2">
+                  <AlertCircle className="h-3 md:h-4 w-3 md:w-4" aria-hidden="true" />
+                  <span className="hidden sm:inline">Save failed</span>
                 </span>
               ) : (
-                <span className="text-sm text-muted-foreground flex items-center gap-2">
-                  <CheckCircle2 className="h-4 w-4 text-green-500" aria-hidden="true" />
+                <span className="text-xs md:text-sm text-muted-foreground flex items-center gap-1 md:gap-2">
+                  <CheckCircle2 className="h-3 md:h-4 w-3 md:w-4 text-green-500" aria-hidden="true" />
                   <span className="sr-only">Changes saved at {lastSaved.toLocaleTimeString()}</span>
-                  <span aria-hidden="true">Saved {lastSaved.toLocaleTimeString()}</span>
+                  <span aria-hidden="true" className="hidden sm:inline">Saved</span>
                 </span>
               )}
             </div>
 
-            {/* Undo/Redo buttons */}
-            <div className="flex items-center gap-1 border-r pr-3">
+            {/* Undo/Redo buttons - Hidden on mobile */}
+            <div className="hidden md:flex items-center gap-1 border-r pr-3">
               <Button
                 onClick={undo}
                 disabled={!canUndo}
@@ -446,19 +451,21 @@ export function EditorLayout({ initialConfig, websiteId }: EditorLayoutProps) {
               size="sm"
               title="Save (Cmd+S)"
               aria-label="Save current changes manually"
+              className="shrink-0"
             >
-              <Save className="mr-2 h-4 w-4" />
-              Save
+              <Save className="h-4 w-4 md:mr-2" aria-hidden="true" />
+              <span className="hidden md:inline">Save</span>
             </Button>
 
-            {/* Export buttons */}
+            {/* Export buttons - Hidden on mobile, use command palette instead */}
             <Button
               onClick={handleExportHTML}
               variant="outline"
               size="sm"
               aria-label="Export website as standalone HTML file"
+              className="hidden lg:flex shrink-0"
             >
-              <Download className="mr-2 h-4 w-4" />
+              <Download className="mr-2 h-4 w-4" aria-hidden="true" />
               Export HTML
             </Button>
             <Button
@@ -466,8 +473,9 @@ export function EditorLayout({ initialConfig, websiteId }: EditorLayoutProps) {
               variant="outline"
               size="sm"
               aria-label="Export website configuration as JSON file"
+              className="hidden xl:flex shrink-0"
             >
-              <FileJson className="mr-2 h-4 w-4" />
+              <FileJson className="mr-2 h-4 w-4" aria-hidden="true" />
               Export JSON
             </Button>
 
@@ -478,77 +486,112 @@ export function EditorLayout({ initialConfig, websiteId }: EditorLayoutProps) {
               size="sm"
               title={`Open command palette (${formatKeyCombo('mod+k')})`}
               aria-label="Open command palette for quick actions"
+              className="shrink-0"
             >
-              <CommandIcon className="mr-2 h-4 w-4" />
-              Commands
+              <CommandIcon className="h-4 w-4 md:mr-2" aria-hidden="true" />
+              <span className="hidden md:inline">Commands</span>
             </Button>
           </div>
         </div>
       </header>
 
-      {/* Split-pane layout */}
-      <PanelGroup direction="horizontal" className="flex-1">
-        {/* Left pane: Editing modes */}
-        <Panel defaultSize={40} minSize={30} maxSize={60}>
-          <div className="h-full overflow-hidden border-r bg-background">
-            <Tabs
-              value={activeMode}
-              onValueChange={(value) => setActiveMode(value as 'ai' | 'manual' | 'theme')}
-              className="flex h-full flex-col"
-            >
-              {/* Mode selector tabs */}
-              <div className="border-b px-4 pt-4">
-                <TabsList className="w-full grid grid-cols-3">
-                  <TabsTrigger value="ai">
-                    AI Mode
-                  </TabsTrigger>
-                  <TabsTrigger value="manual">
-                    Manual Mode
-                  </TabsTrigger>
-                  <TabsTrigger value="theme">
-                    Theme
-                  </TabsTrigger>
-                </TabsList>
+      {/* Split-pane layout - Desktop vs Mobile */}
+      {isMobile ? (
+        /* Mobile: Tabbed Edit/Preview */
+        <div className="flex-1 flex flex-col">
+          {/* Mobile View Tabs */}
+          <Tabs value={mobileView} onValueChange={(v) => setMobileView(v as 'edit' | 'preview')} className="flex-1 flex flex-col">
+            <div className="border-b px-4 py-2 bg-background">
+              <TabsList className="w-full grid grid-cols-2">
+                <TabsTrigger value="edit">Edit</TabsTrigger>
+                <TabsTrigger value="preview">Preview</TabsTrigger>
+              </TabsList>
+            </div>
+
+            {/* Edit View */}
+            <TabsContent value="edit" className="flex-1 m-0 overflow-hidden">
+              <div className="h-full overflow-hidden bg-background">
+                <Tabs
+                  value={activeMode}
+                  onValueChange={(value) => setActiveMode(value as 'ai' | 'manual' | 'theme')}
+                  className="flex h-full flex-col"
+                >
+                  {/* Mode selector tabs */}
+                  <div className="border-b px-2 pt-2">
+                    <TabsList className="w-full grid grid-cols-3 h-auto">
+                      <TabsTrigger value="ai" className="text-xs py-2">AI</TabsTrigger>
+                      <TabsTrigger value="manual" className="text-xs py-2">Manual</TabsTrigger>
+                      <TabsTrigger value="theme" className="text-xs py-2">Theme</TabsTrigger>
+                    </TabsList>
+                  </div>
+
+                  {/* Tab content */}
+                  <div className="flex-1 overflow-hidden">
+                    <TabsContent value="ai" className="h-full m-0 p-0">
+                      <AIModePanel config={config} onConfigUpdate={handleConfigUpdate} />
+                    </TabsContent>
+                    <TabsContent value="manual" className="h-full m-0 p-0">
+                      <ManualModePanel config={config} onConfigUpdate={handleConfigUpdate} />
+                    </TabsContent>
+                    <TabsContent value="theme" className="h-full m-0 p-0">
+                      <ThemeModePanel config={config} onConfigUpdate={handleConfigUpdate} />
+                    </TabsContent>
+                  </div>
+                </Tabs>
               </div>
+            </TabsContent>
 
-              {/* Tab content */}
-              <div className="flex-1 overflow-hidden">
-                <TabsContent value="ai" className="h-full m-0 p-0">
-                  {/* AI Mode Panel - Chat interface */}
-                  <AIModePanel
-                    config={config}
-                    onConfigUpdate={handleConfigUpdate}
-                  />
-                </TabsContent>
+            {/* Preview View */}
+            <TabsContent value="preview" className="flex-1 m-0 overflow-hidden">
+              <PreviewPane config={config} />
+            </TabsContent>
+          </Tabs>
+        </div>
+      ) : (
+        /* Desktop: Split Pane */
+        <PanelGroup direction="horizontal" className="flex-1">
+          {/* Left pane: Editing modes */}
+          <Panel defaultSize={40} minSize={30} maxSize={60}>
+            <div className="h-full overflow-hidden border-r bg-background">
+              <Tabs
+                value={activeMode}
+                onValueChange={(value) => setActiveMode(value as 'ai' | 'manual' | 'theme')}
+                className="flex h-full flex-col"
+              >
+                {/* Mode selector tabs */}
+                <div className="border-b px-4 pt-4">
+                  <TabsList className="w-full grid grid-cols-3">
+                    <TabsTrigger value="ai">AI Mode</TabsTrigger>
+                    <TabsTrigger value="manual">Manual Mode</TabsTrigger>
+                    <TabsTrigger value="theme">Theme</TabsTrigger>
+                  </TabsList>
+                </div>
 
-                <TabsContent value="manual" className="h-full m-0 p-0">
-                  {/* Manual Mode Panel - Form editor */}
-                  <ManualModePanel
-                    config={config}
-                    onConfigUpdate={handleConfigUpdate}
-                  />
-                </TabsContent>
+                {/* Tab content */}
+                <div className="flex-1 overflow-hidden">
+                  <TabsContent value="ai" className="h-full m-0 p-0">
+                    <AIModePanel config={config} onConfigUpdate={handleConfigUpdate} />
+                  </TabsContent>
+                  <TabsContent value="manual" className="h-full m-0 p-0">
+                    <ManualModePanel config={config} onConfigUpdate={handleConfigUpdate} />
+                  </TabsContent>
+                  <TabsContent value="theme" className="h-full m-0 p-0">
+                    <ThemeModePanel config={config} onConfigUpdate={handleConfigUpdate} />
+                  </TabsContent>
+                </div>
+              </Tabs>
+            </div>
+          </Panel>
 
-                <TabsContent value="theme" className="h-full m-0 p-0">
-                  {/* Theme Mode Panel - Theme customization */}
-                  <ThemeModePanel
-                    config={config}
-                    onConfigUpdate={handleConfigUpdate}
-                  />
-                </TabsContent>
-              </div>
-            </Tabs>
-          </div>
-        </Panel>
+          {/* Resize handle */}
+          <PanelResizeHandle className="w-2 bg-border hover:bg-primary/20 focus:bg-primary/30 focus:outline-none focus:ring-2 focus:ring-primary transition-colors" />
 
-        {/* Resize handle */}
-        <PanelResizeHandle className="w-2 bg-border hover:bg-primary/20 focus:bg-primary/30 focus:outline-none focus:ring-2 focus:ring-primary transition-colors" />
-
-        {/* Right pane: Live preview */}
-        <Panel defaultSize={60} minSize={40}>
-          <PreviewPane config={config} />
-        </Panel>
-      </PanelGroup>
+          {/* Right pane: Live preview */}
+          <Panel defaultSize={60} minSize={40}>
+            <PreviewPane config={config} />
+          </Panel>
+        </PanelGroup>
+      )}
 
       {/* Development-only debug panel */}
       <DebugPanel config={config} />
