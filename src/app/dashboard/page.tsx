@@ -122,25 +122,6 @@ export default function DashboardPage() {
     localStorage.setItem('dashboard_filter', filterTemplate);
   }, [sortBy, filterTemplate]);
 
-  // Track search events (debounced via useEffect)
-  useEffect(() => {
-    if (searchQuery && websites) {
-      const resultCount = filteredAndSortedWebsites.length;
-      analytics.dashboard.search(searchQuery, resultCount);
-    }
-  }, [searchQuery]); // Only track when search query changes
-
-  // Track filter changes
-  useEffect(() => {
-    if (filterTemplate !== 'all') {
-      analytics.dashboard.filter(filterTemplate);
-    }
-  }, [filterTemplate]);
-
-  // Track sort changes
-  useEffect(() => {
-    analytics.dashboard.sort(sortBy);
-  }, [sortBy]);
 
   /**
    * Handle project deletion with confirmation
@@ -361,7 +342,18 @@ export default function DashboardPage() {
                   <Input
                     placeholder="Search projects..."
                     value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onChange={(e) => {
+                      const newValue = e.target.value;
+                      setSearchQuery(newValue);
+
+                      // Track search analytics when user types
+                      if (newValue && websites) {
+                        const resultCount = websites.filter(w =>
+                          w.label.toLowerCase().includes(newValue.toLowerCase())
+                        ).length;
+                        analytics.dashboard.search(newValue, resultCount);
+                      }
+                    }}
                     className="pl-9 pr-9"
                     aria-label="Search projects by name"
                   />
@@ -379,7 +371,14 @@ export default function DashboardPage() {
                 </div>
 
                 {/* Sort */}
-                <Select value={sortBy} onValueChange={(value) => setSortBy(value as typeof sortBy)}>
+                <Select
+                  value={sortBy}
+                  onValueChange={(value) => {
+                    const newSortBy = value as typeof sortBy;
+                    setSortBy(newSortBy);
+                    analytics.dashboard.sort(newSortBy);
+                  }}
+                >
                   <SelectTrigger className="w-full sm:w-[180px]" aria-label="Sort projects by">
                     <SelectValue />
                   </SelectTrigger>
@@ -391,7 +390,13 @@ export default function DashboardPage() {
                 </Select>
 
                 {/* Filter */}
-                <Select value={filterTemplate} onValueChange={setFilterTemplate}>
+                <Select
+                  value={filterTemplate}
+                  onValueChange={(value) => {
+                    setFilterTemplate(value);
+                    analytics.dashboard.filter(value);
+                  }}
+                >
                   <SelectTrigger className="w-full sm:w-[180px]" aria-label="Filter by template type">
                     <SelectValue placeholder="All Templates" />
                   </SelectTrigger>

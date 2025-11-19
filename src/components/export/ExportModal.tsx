@@ -20,11 +20,13 @@ import { FileJson, Code, Share2, QrCode, Copy, Download, Check } from 'lucide-re
 import { toast } from 'sonner';
 import {
   exportAsJSON,
+  exportAsHTML,
   downloadHTML,
   generateShareableLink,
   copyToClipboard,
   generateQRCodeURL,
 } from '@/lib/utils/export-utils';
+import { analytics } from '@/lib/analytics/events';
 
 interface ExportModalProps {
   website: Website;
@@ -65,7 +67,13 @@ export function ExportModal({ website, open, onOpenChange }: ExportModalProps) {
    * Handle JSON export
    */
   const handleExportJSON = () => {
+    const jsonString = JSON.stringify(website.config, null, 2);
+    const fileSizeKb = Math.round(new Blob([jsonString]).size / 1024);
+
+    analytics.export.json(website.id, fileSizeKb);
+
     exportAsJSON(website);
+
     toast.success('JSON downloaded', {
       description: `${website.label}.json has been saved`,
     });
@@ -75,7 +83,13 @@ export function ExportModal({ website, open, onOpenChange }: ExportModalProps) {
    * Handle HTML export
    */
   const handleExportHTML = () => {
+    const htmlString = exportAsHTML(website.config);
+    const fileSizeKb = Math.round(new Blob([htmlString]).size / 1024);
+
+    analytics.export.html(website.id, fileSizeKb);
+
     downloadHTML(website);
+
     toast.success('HTML downloaded', {
       description: `${website.label}.html has been saved`,
     });

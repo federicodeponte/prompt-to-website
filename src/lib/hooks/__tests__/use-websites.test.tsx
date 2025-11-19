@@ -69,6 +69,7 @@ const mockWebsite: Website = {
   id: '123',
   label: 'Test Website',
   user_id: 'user-1',
+  is_favorite: false,
   config: {
     version: '1.0',
     template: 'saas-landing',

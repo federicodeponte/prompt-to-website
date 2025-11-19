@@ -39,6 +39,7 @@ import { exportToHTML, downloadHTML } from '@/lib/export/html-exporter';
 import { downloadJSON } from '@/lib/export/json-exporter';
 import { useKeyboardShortcuts, formatKeyCombo } from '@/lib/hooks/use-keyboard-shortcuts';
 import { DebugPanel } from '@/components/debug';
+import { analytics } from '@/lib/analytics/events';
 
 // Lazy load heavy components for better initial load performance
 const AIModePanel = lazy(() => import('./AIModePanel').then(mod => ({ default: mod.AIModePanel })));
@@ -131,6 +132,11 @@ export function EditorLayout({ initialConfig, websiteId, websiteLabel }: EditorL
   // Command Palette state
   const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
   const router = useRouter();
+
+  // Track editor opened analytics
+  useEffect(() => {
+    analytics.editor.opened(websiteId, config.blocks?.length || 0);
+  }, []); // Only track once on mount
 
   const setConfig = (newConfig: WebsiteConfig) => {
     setConfigInternal(newConfig);
