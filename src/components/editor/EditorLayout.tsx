@@ -420,7 +420,7 @@ export function EditorLayout({ initialConfig, websiteId }: EditorLayoutProps) {
             </div>
 
             {/* Undo/Redo buttons - Hidden on mobile */}
-            <div className="hidden md:flex items-center gap-1 border-r pr-3">
+            <div className="hidden md:flex items-center gap-1 border-r pr-3" role="group" aria-label="History controls">
               <Button
                 onClick={undo}
                 disabled={!canUndo}

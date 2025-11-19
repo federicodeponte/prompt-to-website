@@ -309,16 +309,21 @@ export function AIModePanel({ config, onConfigUpdate }: AIModePanelProps) {
 
       {/* Input area */}
       <div className="border-t p-4">
+        <label htmlFor="ai-prompt-input" className="sr-only">
+          AI prompt: Describe your website or request changes
+        </label>
         <div className="flex gap-2">
           <Input
+            id="ai-prompt-input"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyPress={handleKeyPress}
             placeholder="Describe your website... (e.g., 'Create a SaaS landing page for a project management tool')"
             disabled={isPending}
             className="flex-1"
+            aria-label="AI prompt input"
           />
-          <Button onClick={handleSend} disabled={isPending || !input.trim()}>
+          <Button onClick={handleSend} disabled={isPending || !input.trim()} aria-label={isPending ? "Processing request" : "Send AI request"}>
             {isPending
               ? hasExistingWebsite
                 ? 'Editing...'
@@ -326,7 +331,7 @@ export function AIModePanel({ config, onConfigUpdate }: AIModePanelProps) {
               : 'Send'}
           </Button>
         </div>
-        <p className="mt-2 text-xs text-muted-foreground">
+        <p className="mt-2 text-xs text-muted-foreground" id="ai-prompt-hint">
           Press Enter to send, Shift+Enter for new line
         </p>
       </div>
