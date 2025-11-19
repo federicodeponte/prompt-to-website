@@ -3,14 +3,13 @@
 
 'use client';
 
-import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo, lazy, Suspense } from 'react';
 import { useRouter } from 'next/navigation';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { WebsiteConfig } from '@/lib/types/website-config';
 import { useIsMobile } from '@/lib/hooks/use-media-query';
-import { AIModePanel } from './AIModePanel';
 import { ManualModePanel } from './ManualModePanel';
 import { ThemeModePanel } from './ThemeModePanel';
 import { PreviewPane } from './PreviewPane';
@@ -35,11 +34,41 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
+import { Skeleton } from '@/components/ui/skeleton';
 import { exportToHTML, downloadHTML } from '@/lib/export/html-exporter';
 import { downloadJSON } from '@/lib/export/json-exporter';
 import { useKeyboardShortcuts, formatKeyCombo } from '@/lib/hooks/use-keyboard-shortcuts';
-import { CommandPalette, type Command } from '@/components/command-palette/CommandPalette';
 import { DebugPanel } from '@/components/debug';
+
+// Lazy load heavy components for better initial load performance
+const AIModePanel = lazy(() => import('./AIModePanel').then(mod => ({ default: mod.AIModePanel })));
+const CommandPalette = lazy(() => import('@/components/command-palette/CommandPalette').then(mod => ({ default: mod.CommandPalette })));
+
+// Import Command type separately (types are not included in lazy load)
+type Command = {
+  id: string;
+  label: string;
+  description?: string;
+  icon?: React.ComponentType<{ className?: string }>;
+  shortcut?: string;
+  category?: string;
+  action: () => void;
+  enabled?: boolean;
+};
+
+// Loading fallback for lazy-loaded components
+const AIModePanelSkeleton = () => (
+  <div className="p-6 space-y-4">
+    <Skeleton className="h-8 w-48" />
+    <Skeleton className="h-4 w-full" />
+    <Skeleton className="h-4 w-3/4" />
+    <div className="space-y-2 mt-8">
+      <Skeleton className="h-20 w-full" />
+      <Skeleton className="h-20 w-full" />
+      <Skeleton className="h-20 w-full" />
+    </div>
+  </div>
+);
 
 interface EditorLayoutProps {
   initialConfig: WebsiteConfig;
@@ -421,11 +450,13 @@ export function EditorLayout({ initialConfig, websiteId, websiteLabel }: EditorL
   return (
     <>
       {/* Command Palette */}
-      <CommandPalette
-        open={commandPaletteOpen}
-        onClose={() => setCommandPaletteOpen(false)}
-        commands={commands}
-      />
+      <Suspense fallback={null}>
+        <CommandPalette
+          open={commandPaletteOpen}
+          onClose={() => setCommandPaletteOpen(false)}
+          commands={commands}
+        />
+      </Suspense>
 
       <div className="flex h-screen flex-col">
         {/* Header */}
@@ -618,7 +649,9 @@ export function EditorLayout({ initialConfig, websiteId, websiteLabel }: EditorL
                   {/* Tab content */}
                   <div className="flex-1 overflow-hidden">
                     <TabsContent value="ai" className="h-full m-0 p-0">
-                      <AIModePanel config={config} onConfigUpdate={handleConfigUpdate} />
+                      <Suspense fallback={<AIModePanelSkeleton />}>
+                        <AIModePanel config={config} onConfigUpdate={handleConfigUpdate} />
+                      </Suspense>
                     </TabsContent>
                     <TabsContent value="manual" className="h-full m-0 p-0">
                       <ManualModePanel config={config} onConfigUpdate={handleConfigUpdate} />
@@ -660,7 +693,9 @@ export function EditorLayout({ initialConfig, websiteId, websiteLabel }: EditorL
                 {/* Tab content */}
                 <div className="flex-1 overflow-hidden">
                   <TabsContent value="ai" className="h-full m-0 p-0">
-                    <AIModePanel config={config} onConfigUpdate={handleConfigUpdate} />
+                    <Suspense fallback={<AIModePanelSkeleton />}>
+                      <AIModePanel config={config} onConfigUpdate={handleConfigUpdate} />
+                    </Suspense>
                   </TabsContent>
                   <TabsContent value="manual" className="h-full m-0 p-0">
                     <ManualModePanel config={config} onConfigUpdate={handleConfigUpdate} />
