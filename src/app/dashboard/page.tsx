@@ -227,7 +227,7 @@ export default function DashboardPage() {
         ) : !websites || websites.length === 0 ? (
           <Card className="max-w-2xl mx-auto">
             <CardHeader className="text-center pb-4">
-              <div className="mx-auto w-16 h-16 rounded-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center mb-4">
+              <div className="mx-auto w-16 h-16 rounded-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center mb-4" aria-hidden="true">
                 <Sparkles className="w-8 h-8 text-primary" />
               </div>
               <CardTitle className="text-2xl">No Projects Yet</CardTitle>

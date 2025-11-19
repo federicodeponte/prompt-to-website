@@ -190,8 +190,7 @@ export function Navigation() {
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger asChild className="md:hidden">
             <Button variant="ghost" size="icon" aria-label="Open mobile navigation menu">
-              <Menu className="h-5 w-5" />
-              <span className="sr-only">Toggle menu</span>
+              <Menu className="h-5 w-5" aria-hidden="true" />
             </Button>
           </SheetTrigger>
           <SheetContent side="right" className="w-[300px] sm:w-[400px]">

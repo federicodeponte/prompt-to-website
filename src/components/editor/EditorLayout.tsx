@@ -369,7 +369,7 @@ export function EditorLayout({ initialConfig, websiteId }: EditorLayoutProps) {
 
       <div className="flex h-screen flex-col">
         {/* Header */}
-        <header className="border-b bg-background px-4 md:px-6 py-3 md:py-4">
+        <header className="border-b bg-background px-4 md:px-6 py-3 md:py-4" role="banner" aria-label="Editor toolbar">
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-2 md:gap-4 min-w-0">
             {/* Back to Dashboard button */}

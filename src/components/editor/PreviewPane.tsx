@@ -79,7 +79,7 @@ export function PreviewPane({ config }: PreviewPaneProps) {
   }, [viewport]);
 
   return (
-    <div className="flex h-full flex-col bg-muted">
+    <div className="flex h-full flex-col bg-muted" role="region" aria-label="Website preview">
       {/* Preview header */}
       <div className="flex items-center justify-between border-b bg-background px-4 py-3">
         <div className="flex items-center gap-2">
@@ -91,7 +91,7 @@ export function PreviewPane({ config }: PreviewPaneProps) {
 
         <div className="flex items-center gap-2">
           {/* Viewport controls */}
-          <div className="flex rounded-md border">
+          <div className="flex rounded-md border" role="group" aria-label="Preview viewport size">
             <Button
               variant="ghost"
               size="sm"
@@ -100,8 +100,10 @@ export function PreviewPane({ config }: PreviewPaneProps) {
                 viewport === 'desktop' && 'bg-muted'
               )}
               onClick={() => setViewport('desktop')}
+              aria-label="Desktop view"
+              aria-pressed={viewport === 'desktop'}
             >
-              <Monitor className="h-4 w-4" />
+              <Monitor className="h-4 w-4" aria-hidden="true" />
             </Button>
             <Button
               variant="ghost"
@@ -111,8 +113,10 @@ export function PreviewPane({ config }: PreviewPaneProps) {
                 viewport === 'tablet' && 'bg-muted'
               )}
               onClick={() => setViewport('tablet')}
+              aria-label="Tablet view"
+              aria-pressed={viewport === 'tablet'}
             >
-              <Tablet className="h-4 w-4" />
+              <Tablet className="h-4 w-4" aria-hidden="true" />
             </Button>
             <Button
               variant="ghost"
@@ -122,8 +126,10 @@ export function PreviewPane({ config }: PreviewPaneProps) {
                 viewport === 'mobile' && 'bg-muted'
               )}
               onClick={() => setViewport('mobile')}
+              aria-label="Mobile view"
+              aria-pressed={viewport === 'mobile'}
             >
-              <Smartphone className="h-4 w-4" />
+              <Smartphone className="h-4 w-4" aria-hidden="true" />
             </Button>
           </div>
 
@@ -132,8 +138,9 @@ export function PreviewPane({ config }: PreviewPaneProps) {
             variant="outline"
             size="sm"
             onClick={handleRefresh}
+            aria-label="Refresh preview"
           >
-            <RefreshCw className="h-4 w-4" />
+            <RefreshCw className="h-4 w-4" aria-hidden="true" />
           </Button>
         </div>
       </div>
