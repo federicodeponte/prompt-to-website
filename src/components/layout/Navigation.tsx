@@ -81,7 +81,7 @@ export function Navigation() {
           <motion.div whileHover={{ y: -2 }} whileTap={{ scale: 0.95 }}>
             <Link
               href="/#templates"
-              className="relative transition-colors hover:text-foreground text-foreground/60 group"
+              className="relative transition-colors hover:text-foreground text-foreground/60 focus-visible:text-foreground focus-visible:outline-none group"
             >
               Templates
               <motion.span
@@ -90,12 +90,13 @@ export function Navigation() {
                 whileHover={{ width: '100%' }}
                 transition={{ duration: 0.2 }}
               />
+              <span className="absolute -bottom-1 left-0 h-0.5 bg-primary transition-all w-0 group-focus-visible:w-full" />
             </Link>
           </motion.div>
           <motion.div whileHover={{ y: -2 }} whileTap={{ scale: 0.95 }}>
             <Link
               href="/#features"
-              className="relative transition-colors hover:text-foreground text-foreground/60 group"
+              className="relative transition-colors hover:text-foreground text-foreground/60 focus-visible:text-foreground focus-visible:outline-none group"
             >
               Features
               <motion.span
@@ -104,12 +105,13 @@ export function Navigation() {
                 whileHover={{ width: '100%' }}
                 transition={{ duration: 0.2 }}
               />
+              <span className="absolute -bottom-1 left-0 h-0.5 bg-primary transition-all w-0 group-focus-visible:w-full" />
             </Link>
           </motion.div>
           <motion.div whileHover={{ y: -2 }} whileTap={{ scale: 0.95 }}>
             <Link
               href="/#pricing"
-              className="relative transition-colors hover:text-foreground text-foreground/60 group"
+              className="relative transition-colors hover:text-foreground text-foreground/60 focus-visible:text-foreground focus-visible:outline-none group"
             >
               Pricing
               <motion.span
@@ -118,6 +120,7 @@ export function Navigation() {
                 whileHover={{ width: '100%' }}
                 transition={{ duration: 0.2 }}
               />
+              <span className="absolute -bottom-1 left-0 h-0.5 bg-primary transition-all w-0 group-focus-visible:w-full" />
             </Link>
           </motion.div>
         </div>
@@ -204,7 +207,7 @@ export function Navigation() {
                 onClick={() => setOpen(false)}
                 className="flex items-center space-x-2 rounded-lg px-4 py-3 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground"
               >
-                <span>📋</span>
+                <span aria-hidden="true">📋</span>
                 <span>Templates</span>
               </Link>
               <Link
@@ -212,7 +215,7 @@ export function Navigation() {
                 onClick={() => setOpen(false)}
                 className="flex items-center space-x-2 rounded-lg px-4 py-3 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground"
               >
-                <span>✨</span>
+                <span aria-hidden="true">✨</span>
                 <span>Features</span>
               </Link>
               <Link
@@ -220,7 +223,7 @@ export function Navigation() {
                 onClick={() => setOpen(false)}
                 className="flex items-center space-x-2 rounded-lg px-4 py-3 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground"
               >
-                <span>💰</span>
+                <span aria-hidden="true">💰</span>
                 <span>Pricing</span>
               </Link>
               {user && (

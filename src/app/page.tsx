@@ -30,7 +30,7 @@ export default function Home() {
         <section className="border-b bg-gradient-to-b from-background via-background to-muted/20 px-4 sm:px-6 py-16 sm:py-24 lg:py-32">
           <div className="container mx-auto max-w-5xl text-center">
             <Badge variant="secondary" className="mb-6 sm:mb-8 animate-in fade-in slide-in-from-top-4 duration-700" style={{ animationFillMode: 'backwards' }}>
-              <Sparkles className="mr-1.5 h-3.5 w-3.5 animate-pulse" />
+              <Sparkles className="mr-1.5 h-3.5 w-3.5 animate-pulse" aria-hidden="true" />
               AI-Powered Website Builder
             </Badge>
 
