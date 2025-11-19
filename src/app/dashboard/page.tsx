@@ -3,7 +3,7 @@
 
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { useWebsites, useDeleteWebsite, useCreateWebsite } from '@/lib/hooks/use-websites';
 import { useAuth } from '@/components/auth/AuthProvider';
@@ -39,7 +39,19 @@ import {
   Palette,
   Calendar,
   Share2,
+  Search,
+  X,
+  SlidersHorizontal,
+  Star,
 } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
 import { Website } from '@/lib/types/website-config';
@@ -88,6 +100,25 @@ export default function DashboardPage() {
   const [websiteToDelete, setWebsiteToDelete] = useState<Website | null>(null);
   const [exportModalOpen, setExportModalOpen] = useState(false);
   const [websiteToExport, setWebsiteToExport] = useState<Website | null>(null);
+
+  // Search, sort, and filter state
+  const [searchQuery, setSearchQuery] = useState('');
+  const [sortBy, setSortBy] = useState<'updated' | 'created' | 'name'>('updated');
+  const [filterTemplate, setFilterTemplate] = useState<string>('all');
+
+  // Load preferences from localStorage
+  useEffect(() => {
+    const savedSort = localStorage.getItem('dashboard_sort');
+    const savedFilter = localStorage.getItem('dashboard_filter');
+    if (savedSort) setSortBy(savedSort as 'updated' | 'created' | 'name');
+    if (savedFilter) setFilterTemplate(savedFilter);
+  }, []);
+
+  // Save preferences to localStorage
+  useEffect(() => {
+    localStorage.setItem('dashboard_sort', sortBy);
+    localStorage.setItem('dashboard_filter', filterTemplate);
+  }, [sortBy, filterTemplate]);
 
   /**
    * Handle project deletion with confirmation
@@ -155,6 +186,54 @@ export default function DashboardPage() {
   };
 
   /**
+   * Filter, search, and sort websites
+   */
+  const filteredAndSortedWebsites = useMemo(() => {
+    if (!websites) return [];
+
+    let filtered = websites;
+
+    // Apply search filter
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      filtered = filtered.filter((website) =>
+        website.label.toLowerCase().includes(query)
+      );
+    }
+
+    // Apply template filter
+    if (filterTemplate !== 'all') {
+      filtered = filtered.filter((website) =>
+        website.config.template === filterTemplate
+      );
+    }
+
+    // Apply sorting
+    const sorted = [...filtered].sort((a, b) => {
+      switch (sortBy) {
+        case 'name':
+          return a.label.localeCompare(b.label);
+        case 'created':
+          return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+        case 'updated':
+        default:
+          return new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime();
+      }
+    });
+
+    return sorted;
+  }, [websites, searchQuery, filterTemplate, sortBy]);
+
+  /**
+   * Get unique templates from websites for filter dropdown
+   */
+  const availableTemplates = useMemo(() => {
+    if (!websites) return [];
+    const templateSet = new Set(websites.map((w) => w.config.template));
+    return Array.from(templateSet).sort();
+  }, [websites]);
+
+  /**
    * Get template category icon and color
    */
   const getTemplateInfo = (templateType: string) => {
@@ -187,17 +266,86 @@ export default function DashboardPage() {
       {/* Page Header */}
       <div className="border-b bg-background/80 backdrop-blur-xl">
         <div className="container mx-auto px-6 py-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold tracking-tight">My Projects</h1>
-              <p className="text-muted-foreground mt-1">
-                Manage your website configurations and export them for deployment
-              </p>
+          <div className="flex flex-col gap-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <h1 className="text-3xl font-bold tracking-tight">My Projects</h1>
+                <p className="text-muted-foreground mt-1">
+                  Manage your website configurations and export them for deployment
+                </p>
+              </div>
+              <Button
+                ref={newProjectButtonRef}
+                onClick={() => router.push('/editor/demo')}
+                size="lg"
+                className="hidden sm:flex"
+                aria-label="Create a new website project"
+              >
+                <Plus className="mr-2 h-4 w-4" aria-hidden="true" />
+                New Project
+              </Button>
             </div>
+
+            {/* Search, Sort, Filter */}
+            {websites && websites.length > 0 && (
+              <div className="flex flex-col sm:flex-row gap-3">
+                {/* Search */}
+                <div className="relative flex-1">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" aria-hidden="true" />
+                  <Input
+                    placeholder="Search projects..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="pl-9 pr-9"
+                    aria-label="Search projects by name"
+                  />
+                  {searchQuery && (
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7"
+                      onClick={() => setSearchQuery('')}
+                      aria-label="Clear search"
+                    >
+                      <X className="h-3 w-3" />
+                    </Button>
+                  )}
+                </div>
+
+                {/* Sort */}
+                <Select value={sortBy} onValueChange={(value) => setSortBy(value as typeof sortBy)}>
+                  <SelectTrigger className="w-full sm:w-[180px]" aria-label="Sort projects by">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="updated">Last Modified</SelectItem>
+                    <SelectItem value="created">Date Created</SelectItem>
+                    <SelectItem value="name">Name A-Z</SelectItem>
+                  </SelectContent>
+                </Select>
+
+                {/* Filter */}
+                <Select value={filterTemplate} onValueChange={setFilterTemplate}>
+                  <SelectTrigger className="w-full sm:w-[180px]" aria-label="Filter by template type">
+                    <SelectValue placeholder="All Templates" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Templates</SelectItem>
+                    {availableTemplates.map((template) => (
+                      <SelectItem key={template} value={template}>
+                        {template}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
+
+            {/* Mobile New Project button */}
             <Button
-              ref={newProjectButtonRef}
               onClick={() => router.push('/editor/demo')}
               size="lg"
+              className="sm:hidden w-full"
               aria-label="Create a new website project"
             >
               <Plus className="mr-2 h-4 w-4" aria-hidden="true" />
@@ -258,8 +406,42 @@ export default function DashboardPage() {
             </CardContent>
           </Card>
         ) : (
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {websites.map((website) => {
+          <>
+            {/* Result count */}
+            {(searchQuery || filterTemplate !== 'all') && (
+              <div className="mb-4 text-sm text-muted-foreground">
+                Showing {filteredAndSortedWebsites.length} of {websites.length} project{websites.length !== 1 ? 's' : ''}
+                {searchQuery && ` matching "${searchQuery}"`}
+              </div>
+            )}
+
+            {/* No results message */}
+            {filteredAndSortedWebsites.length === 0 ? (
+              <Card className="max-w-2xl mx-auto">
+                <CardHeader className="text-center">
+                  <CardTitle>No projects found</CardTitle>
+                  <CardDescription>
+                    {searchQuery
+                      ? `No projects match "${searchQuery}". Try a different search term.`
+                      : 'No projects match the selected filters.'}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      setSearchQuery('');
+                      setFilterTemplate('all');
+                    }}
+                    className="w-full"
+                  >
+                    Clear Filters
+                  </Button>
+                </CardContent>
+              </Card>
+            ) : (
+              <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                {filteredAndSortedWebsites.map((website) => {
               const templateInfo = getTemplateInfo(website.config.template);
               const blockCount = website.config.blocks?.length || 0;
 
@@ -357,7 +539,9 @@ export default function DashboardPage() {
                 </Card>
               );
             })}
-          </div>
+              </div>
+            )}
+          </>
         )}
       </div>
 
