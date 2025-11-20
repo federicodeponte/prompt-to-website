@@ -19,17 +19,22 @@ This guide walks you through deploying the Prompt to Website application to prod
    - **Region**: Choose closest to your users
 4. Wait for the project to be created (~2 minutes)
 
-## Step 2: Run Database Migration
+## Step 2: Run Database Migrations
+
+**⚠️ IMPORTANT:** You need to run BOTH migrations in order:
+1. `20241117000001_create_websites_table.sql` - Creates the websites table
+2. `20241119000001_add_is_favorite_column.sql` - Adds favorites feature
 
 ### Option A: Using Supabase Dashboard (Recommended)
 
 1. Go to your Supabase project dashboard
 2. Navigate to **SQL Editor**
-3. Copy the contents of `supabase/migrations/20241117000001_create_websites_table.sql`
-4. Paste into the SQL Editor
-5. Click **Run** to execute the migration
+3. **First migration:** Copy the contents of `supabase/migrations/20241117000001_create_websites_table.sql`
+4. Paste into the SQL Editor and click **Run**
+5. **Second migration:** Copy the contents of `supabase/migrations/20241119000001_add_is_favorite_column.sql`
+6. Paste into the SQL Editor and click **Run**
 
-### Option B: Using Supabase CLI
+### Option B: Using Supabase CLI (Easier)
 
 ```bash
 # Login to Supabase
@@ -38,9 +43,17 @@ supabase login
 # Link your local project to the remote project
 supabase link --project-ref your-project-ref
 
-# Push the migration
+# Push ALL migrations at once
 supabase db push
 ```
+
+**Verification:**
+After running migrations, verify the `websites` table has these columns:
+- `id`, `user_id`, `label`, `config`, `created_at`, `updated_at`
+- `is_favorite` (BOOLEAN, added in second migration)
+- `prompt_history` (TEXT[])
+
+If `is_favorite` is missing, the favorites feature will not work in production!
 
 ## Step 3: Get Supabase Credentials
 
@@ -162,6 +175,23 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbG...
 - Ensure migration ran successfully
 - Check RLS policies are enabled on `websites` table
 - Verify user is authenticated before accessing data
+
+### Favorites feature not working
+**Symptom:** Clicking the star icon to favorite a project causes errors
+**Cause:** The `is_favorite` column migration wasn't applied to production
+
+**Fix:**
+1. Go to Supabase SQL Editor
+2. Run the migration: `supabase/migrations/20241119000001_add_is_favorite_column.sql`
+3. OR use CLI: `supabase db push --linked`
+
+**Verification:** Query the table to check the column exists:
+```sql
+SELECT column_name, data_type
+FROM information_schema.columns
+WHERE table_name = 'websites';
+```
+You should see `is_favorite` with type `boolean`
 
 ## Local Development Setup
 

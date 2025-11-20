@@ -13,6 +13,7 @@ import { useIsMobile } from '@/lib/hooks/use-media-query';
 import { ManualModePanel } from './ManualModePanel';
 import { ThemeModePanel } from './ThemeModePanel';
 import { PreviewPane } from './PreviewPane';
+import { ErrorBoundary } from '@/components/error/ErrorBoundary';
 import { useUpdateWebsite } from '@/lib/hooks/use-websites';
 import { Save, CheckCircle2, Download, Undo2, Redo2, FileJson, Home, Command as CommandIcon, ArrowLeft, AlertCircle, Check, X, Pencil } from 'lucide-react';
 import {
@@ -456,13 +457,15 @@ export function EditorLayout({ initialConfig, websiteId, websiteLabel }: EditorL
   return (
     <>
       {/* Command Palette */}
-      <Suspense fallback={null}>
-        <CommandPalette
-          open={commandPaletteOpen}
-          onClose={() => setCommandPaletteOpen(false)}
-          commands={commands}
-        />
-      </Suspense>
+      <ErrorBoundary>
+        <Suspense fallback={null}>
+          <CommandPalette
+            open={commandPaletteOpen}
+            onClose={() => setCommandPaletteOpen(false)}
+            commands={commands}
+          />
+        </Suspense>
+      </ErrorBoundary>
 
       <div className="flex h-screen flex-col">
         {/* Header */}
@@ -655,9 +658,11 @@ export function EditorLayout({ initialConfig, websiteId, websiteLabel }: EditorL
                   {/* Tab content */}
                   <div className="flex-1 overflow-hidden">
                     <TabsContent value="ai" className="h-full m-0 p-0">
-                      <Suspense fallback={<AIModePanelSkeleton />}>
-                        <AIModePanel config={config} onConfigUpdate={handleConfigUpdate} />
-                      </Suspense>
+                      <ErrorBoundary>
+                        <Suspense fallback={<AIModePanelSkeleton />}>
+                          <AIModePanel config={config} onConfigUpdate={handleConfigUpdate} />
+                        </Suspense>
+                      </ErrorBoundary>
                     </TabsContent>
                     <TabsContent value="manual" className="h-full m-0 p-0">
                       <ManualModePanel config={config} onConfigUpdate={handleConfigUpdate} />
@@ -699,9 +704,11 @@ export function EditorLayout({ initialConfig, websiteId, websiteLabel }: EditorL
                 {/* Tab content */}
                 <div className="flex-1 overflow-hidden">
                   <TabsContent value="ai" className="h-full m-0 p-0">
-                    <Suspense fallback={<AIModePanelSkeleton />}>
-                      <AIModePanel config={config} onConfigUpdate={handleConfigUpdate} />
-                    </Suspense>
+                    <ErrorBoundary>
+                      <Suspense fallback={<AIModePanelSkeleton />}>
+                        <AIModePanel config={config} onConfigUpdate={handleConfigUpdate} />
+                      </Suspense>
+                    </ErrorBoundary>
                   </TabsContent>
                   <TabsContent value="manual" className="h-full m-0 p-0">
                     <ManualModePanel config={config} onConfigUpdate={handleConfigUpdate} />

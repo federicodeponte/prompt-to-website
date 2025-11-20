@@ -66,7 +66,7 @@ export default function DashboardPage() {
   const { data: websites, isLoading } = useWebsites();
   const { mutate: deleteWebsite, isPending: isDeleting } = useDeleteWebsite();
   const { mutate: createWebsite, isPending: isCreating } = useCreateWebsite();
-  const { mutate: updateWebsite } = useUpdateWebsite();
+  const { mutate: updateWebsite, isPending: isUpdating } = useUpdateWebsite();
   const newProjectButtonRef = useRef<HTMLButtonElement>(null);
 
   // Auth guard - redirect to login if not authenticated
@@ -536,6 +536,7 @@ export default function DashboardPage() {
                                 e.stopPropagation();
                                 handleToggleFavorite(website);
                               }}
+                              disabled={isUpdating}
                               aria-label={website.is_favorite ? 'Remove from favorites' : 'Add to favorites'}
                             >
                               <Star
@@ -570,9 +571,9 @@ export default function DashboardPage() {
                             <ExternalLink className="mr-2 h-4 w-4" aria-hidden="true" />
                             Open in Editor
                           </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => handleDuplicate(website)}>
+                          <DropdownMenuItem onClick={() => handleDuplicate(website)} disabled={isCreating}>
                             <Copy className="mr-2 h-4 w-4" aria-hidden="true" />
-                            Duplicate
+                            {isCreating ? 'Duplicating...' : 'Duplicate'}
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
                           <DropdownMenuItem onClick={() => handleExport(website)}>
