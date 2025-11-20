@@ -41,7 +41,6 @@ import {
   Share2,
   Search,
   X,
-  SlidersHorizontal,
   Star,
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
