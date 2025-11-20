@@ -3,11 +3,12 @@
 
 'use client';
 
+import { Suspense } from 'react';
 import { WebsiteRenderer } from '@/components/renderer';
 import { templates } from '@/lib/templates';
 import { useSearchParams } from 'next/navigation';
 
-export default function TemplatePreviewPage() {
+function TemplatePreviewContent() {
   const searchParams = useSearchParams();
   const templateId = searchParams.get('template') || 'saas-landing';
 
@@ -23,4 +24,12 @@ export default function TemplatePreviewPage() {
   }
 
   return <WebsiteRenderer config={template.config} />;
+}
+
+export default function TemplatePreviewPage() {
+  return (
+    <Suspense fallback={<div className="flex min-h-screen items-center justify-center">Loading...</div>}>
+      <TemplatePreviewContent />
+    </Suspense>
+  );
 }
