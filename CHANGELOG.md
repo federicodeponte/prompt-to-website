@@ -53,11 +53,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fallback to simulated previews if images unavailable
 - 10/10 templates with professional previews
 
+#### Post-Audit Polish
+- Error boundaries for lazy-loaded components (AIModePanel, CommandPalette)
+- Loading states for mutations (favorite, duplicate actions)
+- Production database migration documentation
+- Troubleshooting guide for deployment issues
+
 #### Infrastructure
 - Database migration for is_favorite column with index
 - TypeScript types updated for all new features
 - Comprehensive test coverage updates
 - Build optimizations and error fixes
+- DEPLOYMENT.md enhanced with migration verification
 
 ### Fixed
 - Export analytics tracking (JSON, HTML file sizes now recorded)
@@ -65,6 +72,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Dashboard analytics dependencies (inline handlers avoid race conditions)
 - Test mock data updated with is_favorite field
 - Preview-template page Suspense boundary for useSearchParams()
+- Favorite button double-click prevention
+- Duplicate action loading state
 
 ### Performance
 - Template previews: 96% smaller than target (2KB vs 50KB)
