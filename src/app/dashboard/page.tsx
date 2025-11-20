@@ -69,12 +69,90 @@ export default function DashboardPage() {
   const { mutate: updateWebsite, isPending: isUpdating } = useUpdateWebsite();
   const newProjectButtonRef = useRef<HTMLButtonElement>(null);
 
+  // All state hooks must be called before any conditional returns
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [websiteToDelete, setWebsiteToDelete] = useState<Website | null>(null);
+  const [exportModalOpen, setExportModalOpen] = useState(false);
+  const [websiteToExport, setWebsiteToExport] = useState<Website | null>(null);
+
+  // Search, sort, and filter state (with lazy initialization from localStorage)
+  const [searchQuery, setSearchQuery] = useState('');
+  const [sortBy, setSortBy] = useState<'updated' | 'created' | 'name'>(() => {
+    if (typeof window === 'undefined') return 'updated';
+    const saved = localStorage.getItem('dashboard_sort');
+    return (saved as 'updated' | 'created' | 'name') || 'updated';
+  });
+  const [filterTemplate, setFilterTemplate] = useState<string>(() => {
+    if (typeof window === 'undefined') return 'all';
+    return localStorage.getItem('dashboard_filter') || 'all';
+  });
+
   // Auth guard - redirect to login if not authenticated
   useEffect(() => {
     if (!authLoading && !user) {
       router.push('/login');
     }
   }, [user, authLoading, router]);
+
+  // Save preferences to localStorage when they change
+  useEffect(() => {
+    localStorage.setItem('dashboard_sort', sortBy);
+    localStorage.setItem('dashboard_filter', filterTemplate);
+  }, [sortBy, filterTemplate]);
+
+  /**
+   * Filter, search, and sort websites
+   */
+  const filteredAndSortedWebsites = useMemo(() => {
+    if (!websites) return [];
+
+    let filtered = websites;
+
+    // Apply search filter
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      filtered = filtered.filter((website) =>
+        website.label.toLowerCase().includes(query)
+      );
+    }
+
+    // Apply template filter
+    if (filterTemplate !== 'all') {
+      filtered = filtered.filter((website) =>
+        website.config.template === filterTemplate
+      );
+    }
+
+    // Apply sorting
+    const sorted = [...filtered].sort((a, b) => {
+      // Favorites always come first
+      if (a.is_favorite !== b.is_favorite) {
+        return a.is_favorite ? -1 : 1;
+      }
+
+      // Then apply selected sort order
+      switch (sortBy) {
+        case 'name':
+          return a.label.localeCompare(b.label);
+        case 'created':
+          return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+        case 'updated':
+        default:
+          return new Date(b.updated_at).getTime() - new Date(a.created_at).getTime();
+      }
+    });
+
+    return sorted;
+  }, [websites, searchQuery, filterTemplate, sortBy]);
+
+  /**
+   * Get unique templates from websites for filter dropdown
+   */
+  const availableTemplates = useMemo(() => {
+    if (!websites) return [];
+    const templateSet = new Set(websites.map((w) => w.config.template));
+    return Array.from(templateSet).sort();
+  }, [websites]);
 
   // Show loading while checking auth
   if (authLoading) {
@@ -97,31 +175,6 @@ export default function DashboardPage() {
   if (!user) {
     return null;
   }
-
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [websiteToDelete, setWebsiteToDelete] = useState<Website | null>(null);
-  const [exportModalOpen, setExportModalOpen] = useState(false);
-  const [websiteToExport, setWebsiteToExport] = useState<Website | null>(null);
-
-  // Search, sort, and filter state
-  const [searchQuery, setSearchQuery] = useState('');
-  const [sortBy, setSortBy] = useState<'updated' | 'created' | 'name'>('updated');
-  const [filterTemplate, setFilterTemplate] = useState<string>('all');
-
-  // Load preferences from localStorage
-  useEffect(() => {
-    const savedSort = localStorage.getItem('dashboard_sort');
-    const savedFilter = localStorage.getItem('dashboard_filter');
-    if (savedSort) setSortBy(savedSort as 'updated' | 'created' | 'name');
-    if (savedFilter) setFilterTemplate(savedFilter);
-  }, []);
-
-  // Save preferences to localStorage
-  useEffect(() => {
-    localStorage.setItem('dashboard_sort', sortBy);
-    localStorage.setItem('dashboard_filter', filterTemplate);
-  }, [sortBy, filterTemplate]);
-
 
   /**
    * Handle project deletion with confirmation
@@ -225,60 +278,6 @@ export default function DashboardPage() {
       }
     );
   };
-
-  /**
-   * Filter, search, and sort websites
-   */
-  const filteredAndSortedWebsites = useMemo(() => {
-    if (!websites) return [];
-
-    let filtered = websites;
-
-    // Apply search filter
-    if (searchQuery.trim()) {
-      const query = searchQuery.toLowerCase();
-      filtered = filtered.filter((website) =>
-        website.label.toLowerCase().includes(query)
-      );
-    }
-
-    // Apply template filter
-    if (filterTemplate !== 'all') {
-      filtered = filtered.filter((website) =>
-        website.config.template === filterTemplate
-      );
-    }
-
-    // Apply sorting
-    const sorted = [...filtered].sort((a, b) => {
-      // Favorites always come first
-      if (a.is_favorite !== b.is_favorite) {
-        return a.is_favorite ? -1 : 1;
-      }
-
-      // Then apply selected sort order
-      switch (sortBy) {
-        case 'name':
-          return a.label.localeCompare(b.label);
-        case 'created':
-          return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
-        case 'updated':
-        default:
-          return new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime();
-      }
-    });
-
-    return sorted;
-  }, [websites, searchQuery, filterTemplate, sortBy]);
-
-  /**
-   * Get unique templates from websites for filter dropdown
-   */
-  const availableTemplates = useMemo(() => {
-    if (!websites) return [];
-    const templateSet = new Set(websites.map((w) => w.config.template));
-    return Array.from(templateSet).sort();
-  }, [websites]);
 
   /**
    * Get template category icon and color
