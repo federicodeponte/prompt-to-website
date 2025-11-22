@@ -1,5 +1,5 @@
-// ABOUTME: Agency/Consulting landing page template
-// ABOUTME: Professional services showcase with team, portfolio, and contact
+// ABOUTME: Professional 11-block agency/consulting landing page template
+// ABOUTME: Full-service digital agency showcase with comprehensive features
 
 import { defaultTheme } from '../theme/defaults';
 import { WebsiteConfig } from '../types/website-config';
@@ -30,15 +30,40 @@ export const agencyTemplate: WebsiteConfig = {
       },
     },
     {
+      id: 'logo-cloud-1',
+      type: 'logo-cloud',
+      content: {
+        variant: 'grid',
+        heading: 'Trusted by Leading Brands',
+        subheading: 'We partner with companies that value excellence',
+        columns: 5,
+        logos: [
+          { name: 'TechCorp', image: 'https://via.placeholder.com/150x50/4F46E5/FFFFFF?text=TechCorp' },
+          { name: 'DataLabs', image: 'https://via.placeholder.com/150x50/7C3AED/FFFFFF?text=DataLabs' },
+          { name: 'CloudSync', image: 'https://via.placeholder.com/150x50/2563EB/FFFFFF?text=CloudSync' },
+          { name: 'InnovateCo', image: 'https://via.placeholder.com/150x50/0891B2/FFFFFF?text=InnovateCo' },
+          { name: 'GrowthHub', image: 'https://via.placeholder.com/150x50/059669/FFFFFF?text=GrowthHub' },
+          { name: 'StartupXYZ', image: 'https://via.placeholder.com/150x50/DC2626/FFFFFF?text=StartupXYZ' },
+          { name: 'DigitalFlow', image: 'https://via.placeholder.com/150x50/EA580C/FFFFFF?text=DigitalFlow' },
+          { name: 'MediaCraft', image: 'https://via.placeholder.com/150x50/CA8A04/FFFFFF?text=MediaCraft' },
+          { name: 'BrandWorks', image: 'https://via.placeholder.com/150x50/16A34A/FFFFFF?text=BrandWorks' },
+          { name: 'FutureNow', image: 'https://via.placeholder.com/150x50/8B5CF6/FFFFFF?text=FutureNow' },
+        ],
+      },
+    },
+    {
       id: 'stats-1',
       type: 'stats',
       content: {
-        variant: 'bar',
+        variant: 'grid',
+        heading: 'Proven Track Record',
+        subheading: 'Numbers that speak for themselves',
+        columns: 4,
         stats: [
-          { value: '200', suffix: '+', label: 'Projects Completed' },
-          { value: '50', suffix: '+', label: 'Happy Clients' },
-          { value: '15', suffix: '+', label: 'Team Members' },
-          { value: '98', suffix: '%', label: 'Client Satisfaction' },
+          { value: '200', suffix: '+', label: 'Projects Completed', description: 'Across diverse industries' },
+          { value: '50', suffix: '+', label: 'Happy Clients', description: 'Long-term partnerships' },
+          { value: '15', suffix: '+', label: 'Team Members', description: 'Creative experts' },
+          { value: '98', suffix: '%', label: 'Client Satisfaction', description: 'Measured annually' },
         ],
       },
     },
@@ -48,15 +73,33 @@ export const agencyTemplate: WebsiteConfig = {
       content: {
         variant: 'grid',
         heading: 'Our Services',
-        subheading: 'Full-service digital agency',
+        subheading: 'Full-service digital agency capabilities',
         columns: 3,
         features: [
-          { icon: '🎨', title: 'Brand Strategy', description: 'Build a powerful brand that resonates with your audience' },
-          { icon: '💻', title: 'Web Development', description: 'Custom websites and applications built for scale' },
-          { icon: '📱', title: 'Mobile Apps', description: 'Native and cross-platform mobile experiences' },
-          { icon: '🚀', title: 'Digital Marketing', description: 'Data-driven campaigns that deliver results' },
-          { icon: '📊', title: 'Analytics & SEO', description: 'Optimize your online presence and visibility' },
-          { icon: '🎬', title: 'Content Creation', description: 'Engaging content that tells your story' },
+          { icon: '🎨', title: 'Brand Strategy', description: 'Build a powerful brand identity that resonates with your target audience and stands out in the market' },
+          { icon: '💻', title: 'Web Development', description: 'Custom websites and web applications built with modern technologies for performance and scale' },
+          { icon: '📱', title: 'Mobile Apps', description: 'Native iOS and Android apps, plus cross-platform solutions with React Native and Flutter' },
+          { icon: '🚀', title: 'Digital Marketing', description: 'Data-driven campaigns across SEO, PPC, social media, and content marketing that deliver measurable ROI' },
+          { icon: '📊', title: 'Analytics & SEO', description: 'Comprehensive analytics setup and SEO optimization to improve visibility and conversion rates' },
+          { icon: '🎬', title: 'Content Creation', description: 'Engaging video, photography, copywriting, and design that tells your brand story authentically' },
+        ],
+      },
+    },
+    {
+      id: 'video-1',
+      type: 'video',
+      content: {
+        variant: 'split',
+        heading: 'See How We Work',
+        description: 'Our collaborative process combines strategy, creativity, and technology to deliver exceptional results. From discovery to launch, we partner with you every step of the way.',
+        videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+        videoPosition: 'right' as const,
+        features: [
+          'Discovery & research phase',
+          'Strategic planning & roadmap',
+          'Iterative design & development',
+          'Testing & quality assurance',
+          'Launch & ongoing support',
         ],
       },
     },
@@ -69,10 +112,10 @@ export const agencyTemplate: WebsiteConfig = {
         subheading: 'Passionate experts dedicated to your success',
         columns: 4,
         members: [
-          { name: 'Sarah Johnson', role: 'Creative Director', bio: '15 years experience in brand strategy and design' },
-          { name: 'Michael Chen', role: 'Lead Developer', bio: 'Full-stack expert specializing in modern web technologies' },
-          { name: 'Emma Williams', role: 'Marketing Lead', bio: 'Data-driven marketer with proven track record' },
-          { name: 'David Brown', role: 'UX Designer', bio: 'User-centered design advocate and researcher' },
+          { name: 'Sarah Johnson', role: 'Creative Director', bio: '15 years experience in brand strategy and design, previously at IDEO and Pentagram' },
+          { name: 'Michael Chen', role: 'Lead Developer', bio: 'Full-stack expert specializing in React, Node.js, and cloud architecture with 10+ years experience' },
+          { name: 'Emma Williams', role: 'Marketing Lead', bio: 'Data-driven marketer with proven track record growing startups to 7-figure revenue' },
+          { name: 'David Brown', role: 'UX Designer', bio: 'User-centered design advocate with background in psychology and human-computer interaction' },
         ],
       },
     },
@@ -82,29 +125,81 @@ export const agencyTemplate: WebsiteConfig = {
       content: {
         variant: 'cards',
         heading: 'What Our Clients Say',
-        subheading: 'Trusted by leading companies',
+        subheading: 'Trusted by leading companies worldwide',
         columns: 3,
         testimonials: [
           {
-            quote: 'CreativeStudio transformed our brand and helped us reach new markets. Their strategic approach is unmatched.',
+            quote: 'CreativeStudio transformed our brand and helped us reach new markets. Their strategic approach and attention to detail is unmatched in the industry.',
             author: 'Jennifer Lee',
             role: 'CEO',
             company: 'TechCorp Inc',
             rating: 5,
           },
           {
-            quote: 'The team delivered beyond our expectations. Professional, creative, and always on time.',
+            quote: 'The team delivered beyond our expectations. Professional, creative, and always on time. They truly became an extension of our team.',
             author: 'Mark Rodriguez',
             role: 'Marketing Director',
             company: 'GrowthLabs',
             rating: 5,
           },
           {
-            quote: 'Working with CreativeStudio was a game-changer for our digital presence. Highly recommended!',
+            quote: 'Working with CreativeStudio was a game-changer for our digital presence. Revenue increased 200% in the first year. Highly recommended!',
             author: 'Alex Thompson',
             role: 'Founder',
             company: 'StartupXYZ',
             rating: 5,
+          },
+        ],
+      },
+    },
+    {
+      id: 'process-1',
+      type: 'process',
+      content: {
+        variant: 'steps',
+        heading: 'Our Process',
+        subheading: 'A proven methodology for delivering exceptional results',
+        steps: [
+          { icon: '🔍', title: 'Discovery', description: 'Deep dive into your business, goals, audience, and competitive landscape' },
+          { icon: '🎯', title: 'Strategy', description: 'Define clear objectives, roadmap, and success metrics aligned with your vision' },
+          { icon: '✏️', title: 'Design', description: 'Create stunning, user-centric designs that bring your brand to life' },
+          { icon: '⚙️', title: 'Development', description: 'Build robust, scalable solutions using cutting-edge technologies' },
+          { icon: '🚀', title: 'Launch', description: 'Deploy with confidence and comprehensive testing for a smooth launch' },
+          { icon: '📈', title: 'Optimize', description: 'Continuous improvement based on data and user feedback' },
+        ],
+      },
+    },
+    {
+      id: 'faq-1',
+      type: 'faq',
+      content: {
+        variant: 'accordion',
+        heading: 'Frequently Asked Questions',
+        subheading: 'Everything you need to know about working with us',
+        faqs: [
+          {
+            question: 'What types of projects do you work on?',
+            answer: 'We specialize in web development, mobile apps, branding, and digital marketing for startups, scale-ups, and established businesses across all industries.',
+          },
+          {
+            question: 'How long does a typical project take?',
+            answer: 'Project timelines vary based on scope and complexity. A typical website takes 8-12 weeks, while mobile apps range from 12-20 weeks. We provide detailed timelines during our discovery phase.',
+          },
+          {
+            question: 'What is your pricing structure?',
+            answer: 'We offer both project-based and retainer pricing. After understanding your needs, we provide a detailed proposal with transparent pricing and deliverables.',
+          },
+          {
+            question: 'Do you offer ongoing support after launch?',
+            answer: 'Yes! We provide maintenance packages and ongoing support to ensure your digital products continue to perform optimally and evolve with your business.',
+          },
+          {
+            question: 'How involved will I need to be in the process?',
+            answer: 'We value collaboration and transparency. You\'ll have regular check-ins, milestone reviews, and access to our project management tools, but we handle the heavy lifting.',
+          },
+          {
+            question: 'Can you work with our existing team?',
+            answer: 'Absolutely! We\'re experienced in collaborating with internal teams, developers, and other agencies to deliver cohesive, high-quality results.',
           },
         ],
       },
@@ -115,9 +210,9 @@ export const agencyTemplate: WebsiteConfig = {
       content: {
         variant: 'simple',
         heading: 'Ready to Start Your Project?',
-        description: "Let's create something amazing together. Get in touch for a free consultation.",
+        description: "Let's create something amazing together. Get in touch for a free consultation and discover how we can help transform your business.",
         ctaPrimary: { text: 'Start a Project', link: '#contact' },
-        ctaSecondary: { text: 'View Pricing', link: '#pricing' },
+        ctaSecondary: { text: 'View Our Work', link: '#portfolio' },
       },
     },
     {
@@ -126,7 +221,7 @@ export const agencyTemplate: WebsiteConfig = {
       content: {
         variant: 'simple',
         heading: 'Get In Touch',
-        description: 'Have a project in mind? We\'d love to hear from you.',
+        description: 'Have a project in mind? We\'d love to hear from you. Fill out the form below or reach out directly.',
         email: 'hello@creativestudio.com',
         phone: '+1 (555) 123-4567',
         address: '123 Creative Ave, San Francisco, CA 94102',

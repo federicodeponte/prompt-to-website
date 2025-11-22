@@ -1,5 +1,5 @@
-// ABOUTME: Blog/Content website template
-// ABOUTME: Content-focused design with newsletter signup and author showcase
+// ABOUTME: Professional 11-block blog/content website template
+// ABOUTME: Comprehensive content platform with newsletter and writer showcase
 
 import { defaultTheme } from '../theme/defaults';
 import { WebsiteConfig } from '../types/website-config';
@@ -18,27 +18,37 @@ export const blogTemplate: WebsiteConfig = {
       id: 'hero-1',
       type: 'hero',
       content: {
-        variant: 'centered',
+        variant: 'gradient',
         heading: 'Insights for Modern Developers',
         subheading: 'Weekly articles about web development, AI, and technology trends',
+        description: 'Join 500,000+ developers staying ahead of the curve with in-depth tutorials, guides, and industry insights.',
         ctaPrimary: { text: 'Read Latest Articles', link: '#articles' },
-        ctaSecondary: { text: 'Subscribe', link: '#newsletter' },
+        features: [
+          'Expert-written tutorials',
+          'Weekly newsletter',
+          'Code examples included',
+          'Beginner to advanced',
+        ],
       },
     },
     {
-      id: 'features-1',
-      type: 'features',
+      id: 'logo-cloud-1',
+      type: 'logo-cloud',
       content: {
-        variant: 'list',
-        heading: 'What We Cover',
-        subheading: 'In-depth content on topics that matter',
-        features: [
-          { icon: '⚛️', title: 'Web Development', description: 'React, Next.js, TypeScript, and modern frontend frameworks' },
-          { icon: '🤖', title: 'Artificial Intelligence', description: 'Machine learning, LLMs, and AI integration tutorials' },
-          { icon: '☁️', title: 'Cloud & DevOps', description: 'AWS, Docker, Kubernetes, and deployment best practices' },
-          { icon: '📱', title: 'Mobile Development', description: 'React Native, Flutter, and cross-platform solutions' },
-          { icon: '🔒', title: 'Security', description: 'Web security, authentication, and best practices' },
-          { icon: '⚡', title: 'Performance', description: 'Optimization techniques and performance monitoring' },
+        variant: 'grid',
+        heading: 'Read by Developers At',
+        columns: 5,
+        logos: [
+          { name: 'Google', image: 'https://via.placeholder.com/150x50/4285F4/FFFFFF?text=Google' },
+          { name: 'Microsoft', image: 'https://via.placeholder.com/150x50/00A4EF/FFFFFF?text=Microsoft' },
+          { name: 'Amazon', image: 'https://via.placeholder.com/150x50/FF9900/FFFFFF?text=Amazon' },
+          { name: 'Meta', image: 'https://via.placeholder.com/150x50/0668E1/FFFFFF?text=Meta' },
+          { name: 'Netflix', image: 'https://via.placeholder.com/150x50/E50914/FFFFFF?text=Netflix' },
+          { name: 'Spotify', image: 'https://via.placeholder.com/150x50/1DB954/FFFFFF?text=Spotify' },
+          { name: 'Airbnb', image: 'https://via.placeholder.com/150x50/FF5A5F/FFFFFF?text=Airbnb' },
+          { name: 'Uber', image: 'https://via.placeholder.com/150x50/000000/FFFFFF?text=Uber' },
+          { name: 'Stripe', image: 'https://via.placeholder.com/150x50/635BFF/FFFFFF?text=Stripe' },
+          { name: 'Shopify', image: 'https://via.placeholder.com/150x50/96BF48/FFFFFF?text=Shopify' },
         ],
       },
     },
@@ -48,12 +58,31 @@ export const blogTemplate: WebsiteConfig = {
       content: {
         variant: 'grid',
         heading: 'Our Community',
+        subheading: 'Growing together with developers worldwide',
         columns: 4,
         stats: [
-          { value: '500K', suffix: '+', label: 'Monthly Readers' },
-          { value: '200', suffix: '+', label: 'Articles Published' },
-          { value: '50K', suffix: '+', label: 'Newsletter Subscribers' },
-          { value: '95', suffix: '%', label: 'Reader Satisfaction' },
+          { value: '500K', suffix: '+', label: 'Monthly Readers', description: 'Active community' },
+          { value: '200', suffix: '+', label: 'Articles Published', description: 'In-depth content' },
+          { value: '50K', suffix: '+', label: 'Newsletter Subscribers', description: 'Weekly insights' },
+          { value: '95', suffix: '%', label: 'Reader Satisfaction', description: 'Based on surveys' },
+        ],
+      },
+    },
+    {
+      id: 'features-1',
+      type: 'features',
+      content: {
+        variant: 'grid',
+        heading: 'What We Cover',
+        subheading: 'In-depth content on topics that matter to developers',
+        columns: 3,
+        features: [
+          { icon: '⚛️', title: 'Web Development', description: 'React, Next.js, TypeScript, Vue, and modern frontend frameworks with practical examples and best practices' },
+          { icon: '🤖', title: 'Artificial Intelligence', description: 'Machine learning, LLMs, AI integration tutorials, and hands-on guides for building intelligent applications' },
+          { icon: '☁️', title: 'Cloud & DevOps', description: 'AWS, Docker, Kubernetes, CI/CD pipelines, and deployment best practices for scalable applications' },
+          { icon: '📱', title: 'Mobile Development', description: 'React Native, Flutter, Swift, and Kotlin tutorials for building cross-platform mobile applications' },
+          { icon: '🔒', title: 'Security', description: 'Web security, authentication, authorization, and best practices for building secure applications' },
+          { icon: '⚡', title: 'Performance', description: 'Optimization techniques, performance monitoring, and strategies for building lightning-fast applications' },
         ],
       },
     },
@@ -66,9 +95,28 @@ export const blogTemplate: WebsiteConfig = {
         subheading: 'Experienced developers sharing their knowledge',
         columns: 3,
         members: [
-          { name: 'Jessica Park', role: 'Senior Frontend Developer', bio: 'React and TypeScript expert with 10 years experience at top tech companies' },
-          { name: 'Marcus Johnson', role: 'Full Stack Engineer', bio: 'Specializes in Next.js, Node.js, and cloud architecture' },
-          { name: 'Aisha Rahman', role: 'AI/ML Engineer', bio: 'PhD in Computer Science, focusing on practical AI applications' },
+          { name: 'Jessica Park', role: 'Senior Frontend Developer', bio: 'React and TypeScript expert with 10 years experience at top tech companies. Previously at Google and Airbnb.' },
+          { name: 'Marcus Johnson', role: 'Full Stack Engineer', bio: 'Specializes in Next.js, Node.js, and cloud architecture. Building scalable applications since 2012.' },
+          { name: 'Aisha Rahman', role: 'AI/ML Engineer', bio: 'PhD in Computer Science, focusing on practical AI applications. Research background at Stanford and MIT.' },
+        ],
+      },
+    },
+    {
+      id: 'gallery-1',
+      type: 'gallery',
+      content: {
+        variant: 'grid',
+        heading: 'Popular Articles',
+        subheading: 'Most-read tutorials and guides',
+        columns: 3,
+        lightbox: false,
+        images: [
+          { image: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800', alt: 'React Tutorial', title: 'Building Modern React Apps', description: '50,000 reads', category: 'Web Dev' },
+          { image: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800', alt: 'AI Guide', title: 'Introduction to LLMs', description: '42,000 reads', category: 'AI' },
+          { image: 'https://images.unsplash.com/photo-1667372393119-3d4c48d07fc9?w=800', alt: 'Cloud Tutorial', title: 'AWS for Beginners', description: '38,000 reads', category: 'Cloud' },
+          { image: 'https://images.unsplash.com/photo-1618761714954-0b8cd0026356?w=800', alt: 'Mobile Dev', title: 'React Native Essentials', description: '35,000 reads', category: 'Mobile' },
+          { image: 'https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?w=800', alt: 'Security Guide', title: 'Web Security Best Practices', description: '33,000 reads', category: 'Security' },
+          { image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800', alt: 'Performance', title: 'Optimizing Web Performance', description: '30,000 reads', category: 'Performance' },
         ],
       },
     },
@@ -111,7 +159,7 @@ export const blogTemplate: WebsiteConfig = {
       content: {
         variant: 'simple',
         heading: 'Subscribe to Our Newsletter',
-        description: 'Get weekly insights delivered to your inbox. Join 50,000+ developers staying ahead of the curve.',
+        description: 'Get weekly insights delivered to your inbox. Join 50,000+ developers staying ahead of the curve with curated content, exclusive tips, and early access to new articles.',
         placeholder: 'Enter your email',
         ctaText: 'Subscribe',
       },
@@ -127,7 +175,7 @@ export const blogTemplate: WebsiteConfig = {
         faqs: [
           {
             question: 'How often do you publish new content?',
-            answer: 'We publish 2-3 new in-depth articles every week, covering the latest in web development, AI, and technology trends.',
+            answer: 'We publish 2-3 new in-depth articles every week, covering the latest in web development, AI, and technology trends. All articles include code examples and practical guidance.',
           },
           {
             question: 'Is the content suitable for beginners?',
@@ -135,11 +183,19 @@ export const blogTemplate: WebsiteConfig = {
           },
           {
             question: 'Can I contribute to the blog?',
-            answer: 'Yes! We welcome guest posts from experienced developers. Check our "Write for Us" page for submission guidelines.',
+            answer: 'Yes! We welcome guest posts from experienced developers. Check our "Write for Us" page for submission guidelines and editorial standards.',
           },
           {
             question: 'Is there a newsletter?',
-            answer: 'Yes! Subscribe to our weekly newsletter to get curated content, exclusive tips, and early access to new articles delivered to your inbox.',
+            answer: 'Yes! Subscribe to our weekly newsletter to get curated content, exclusive tips, and early access to new articles delivered to your inbox every Wednesday.',
+          },
+          {
+            question: 'Do you offer courses or workshops?',
+            answer: 'While we focus on written content, we occasionally host live workshops and webinars. Newsletter subscribers get first access to these events.',
+          },
+          {
+            question: 'How can I support the blog?',
+            answer: 'Share articles with your network, engage with our content, and consider contributing as a guest author. We\'re reader-supported and ad-free.',
           },
         ],
       },
@@ -150,9 +206,9 @@ export const blogTemplate: WebsiteConfig = {
       content: {
         variant: 'simple',
         heading: 'Start Learning Today',
-        description: 'Join our community of developers and stay ahead with cutting-edge insights and practical tutorials.',
+        description: 'Join our community of developers and stay ahead with cutting-edge insights, practical tutorials, and industry best practices.',
         ctaPrimary: { text: 'Browse Articles', link: '#articles' },
-        ctaSecondary: { text: 'Subscribe', link: '#newsletter' },
+        ctaSecondary: { text: 'Subscribe to Newsletter', link: '#newsletter' },
       },
     },
     {
