@@ -4,11 +4,12 @@
 // ABOUTME: Shows deployment process with live logs and progress
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Loader2, Rocket, CheckCircle2, ExternalLink, Code2 } from 'lucide-react';
+import { Loader2, Rocket, CheckCircle2, ExternalLink, Code2, ArrowLeft, Eye } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
 export default function VercelDeployDemoPage() {
@@ -19,6 +20,7 @@ export default function VercelDeployDemoPage() {
   const [error, setError] = useState<string | null>(null);
   const [filesGenerated, setFilesGenerated] = useState<number>(0);
   const [duration, setDuration] = useState<number>(0);
+  const [showCodePreview, setShowCodePreview] = useState(false);
 
   const handleDeploy = async () => {
     setIsDeploying(true);
@@ -110,9 +112,31 @@ export default function VercelDeployDemoPage() {
     }
   };
 
+  // Sample generated code for preview
+  const sampleGeneratedCode = `// Generated Next.js App Router page
+import Hero0 from '@/components/Hero0'
+import Features1 from '@/components/Features1'
+
+export default function Home() {
+  return (
+    <main className="min-h-screen">
+      <Hero0 />
+      <Features1 />
+    </main>
+  )
+}`;
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-12 px-4">
       <div className="container mx-auto max-w-4xl">
+        {/* Back to Demos Link */}
+        <div className="mb-6">
+          <Link href="/demo" className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 transition">
+            <ArrowLeft className="h-4 w-4" />
+            <span>Back to All Demos</span>
+          </Link>
+        </div>
+
         {/* Header */}
         <div className="text-center mb-12">
           <div className="inline-flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-sm mb-4">
@@ -236,8 +260,44 @@ export default function VercelDeployDemoPage() {
                 </AlertDescription>
               </Alert>
             )}
+
+            {/* Code Preview Toggle */}
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setShowCodePreview(!showCodePreview)}
+              >
+                <Eye className="h-4 w-4 mr-2" />
+                {showCodePreview ? 'Hide' : 'Preview'} Generated Code
+              </Button>
+            </div>
           </CardContent>
         </Card>
+
+        {/* Code Preview Card */}
+        {showCodePreview && (
+          <Card className="shadow-xl bg-gray-900 text-gray-100 mt-6">
+            <CardHeader>
+              <CardTitle className="text-white flex items-center gap-2">
+                <Code2 className="h-5 w-5" />
+                Generated Code Sample (app/page.tsx)
+              </CardTitle>
+              <CardDescription className="text-gray-400">
+                Preview of the Next.js App Router code that will be generated
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <pre className="bg-gray-950 p-4 rounded-lg overflow-x-auto text-sm">
+                <code className="text-green-400">{sampleGeneratedCode}</code>
+              </pre>
+              <div className="mt-4 text-xs text-gray-400">
+                💡 The generator creates 12 files including: package.json, next.config.js,
+                tsconfig.json, Tailwind config, components, and more.
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Info Cards */}
         <div className="grid md:grid-cols-3 gap-6 mt-8">
