@@ -12,6 +12,12 @@ export async function GET(request: Request) {
 
   if (code) {
     const supabase = await createClient();
+
+    // If Supabase not configured, redirect to login
+    if (!supabase) {
+      return NextResponse.redirect(`${origin}/login`);
+    }
+
     const { error } = await supabase.auth.exchangeCodeForSession(code);
 
     if (!error) {

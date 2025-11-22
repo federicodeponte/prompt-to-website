@@ -38,6 +38,14 @@ export default function ResetPasswordPage() {
 
     try {
       const supabase = createClient();
+
+      // If Supabase not configured, show error
+      if (!supabase) {
+        toast.error('Authentication not configured');
+        setLoading(false);
+        return;
+      }
+
       const { error } = await supabase.auth.updateUser({
         password: password,
       });

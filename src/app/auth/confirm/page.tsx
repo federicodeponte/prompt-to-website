@@ -24,6 +24,13 @@ function ConfirmEmailContent() {
       try {
         const supabase = createClient();
 
+        // If Supabase not configured, show error
+        if (!supabase) {
+          setStatus('error');
+          setErrorMessage('Authentication not configured');
+          return;
+        }
+
         // Check if user has confirmed their email
         const { data: { session }, error } = await supabase.auth.getSession();
 

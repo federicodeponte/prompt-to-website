@@ -8,15 +8,24 @@ import { Database } from './database.types';
 /**
  * Create Supabase client for middleware
  * Refreshes auth tokens automatically
+ * Skips auth if Supabase credentials not configured (allows demo pages)
  */
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
     request,
   });
 
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+  // Skip auth if credentials not configured (allows demo pages to work)
+  if (!url || !key) {
+    return supabaseResponse;
+  }
+
   const supabase = createServerClient<Database>(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    url,
+    key,
     {
       cookies: {
         getAll() {

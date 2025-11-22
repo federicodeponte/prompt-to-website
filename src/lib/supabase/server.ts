@@ -8,13 +8,22 @@ import { Database } from './database.types';
 /**
  * Create a Supabase client for server-side operations
  * Handles cookies properly in Server Components and Route Handlers
+ * Returns null if Supabase credentials are not configured
  */
 export async function createClient() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+  // Return null if credentials not configured (allows demo pages to work)
+  if (!url || !key) {
+    return null;
+  }
+
   const cookieStore = await cookies();
 
   return createServerClient<Database>(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    url,
+    key,
     {
       cookies: {
         getAll() {

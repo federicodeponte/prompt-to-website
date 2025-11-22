@@ -7,10 +7,16 @@ import { Database } from './database.types';
 /**
  * Create a Supabase client for client-side operations
  * Automatically handles cookies and auth state
+ * Returns null if Supabase credentials are not configured
  */
 export function createClient() {
-  return createBrowserClient<Database>(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  );
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+  // Return null if credentials not configured (allows demo pages to work)
+  if (!url || !key) {
+    return null;
+  }
+
+  return createBrowserClient<Database>(url, key);
 }
