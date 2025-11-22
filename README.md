@@ -326,3 +326,4 @@ This project is open source and available under the MIT License.
 Built with ❤️ using Next.js, Supabase, and Gemini AI.
 
 🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
