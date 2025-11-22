@@ -50,6 +50,10 @@ export function createCollaborationSession(
   } = {}
 ): CollaborationSession {
   const supabase = createClient();
+  if (!supabase) {
+    throw new Error('Supabase not configured - real-time collaboration requires Supabase');
+  }
+
   const channel = supabase.channel(`room:${roomId}`, {
     config: {
       presence: {
