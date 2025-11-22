@@ -19,6 +19,7 @@ import {
  */
 async function fetchWebsites(): Promise<Website[]> {
   const supabase = createClient();
+  if (!supabase) throw new Error('Database not configured');
 
   const { data, error } = await supabase
     .from('websites')
@@ -37,6 +38,7 @@ async function fetchWebsites(): Promise<Website[]> {
  */
 async function fetchWebsite(id: string): Promise<Website> {
   const supabase = createClient();
+  if (!supabase) throw new Error('Database not configured');
 
   const { data, error } = await supabase
     .from('websites')
@@ -59,6 +61,7 @@ async function createWebsite(data: {
   config: WebsiteConfig;
 }): Promise<Website> {
   const supabase = createClient();
+  if (!supabase) throw new Error('Database not configured');
 
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) throw new Error('You must be logged in to create a website');
@@ -89,6 +92,7 @@ async function updateWebsite(data: {
   is_favorite?: boolean;
 }): Promise<Website> {
   const supabase = createClient();
+  if (!supabase) throw new Error('Database not configured');
 
   const { id, ...updates } = data;
 
@@ -111,6 +115,7 @@ async function updateWebsite(data: {
  */
 async function deleteWebsite(id: string): Promise<void> {
   const supabase = createClient();
+  if (!supabase) throw new Error('Database not configured');
 
   const { error } = await supabase
     .from('websites')
