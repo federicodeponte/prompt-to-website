@@ -15,6 +15,7 @@ export type AnalyticsEvent =
   | 'ai_edit_started'
   | 'ai_edit_success'
   | 'ai_edit_error'
+  | 'ai_content_generated'
 
   // Template Events
   | 'template_selected'
@@ -62,6 +63,11 @@ export interface EventProperties {
   prompt_length?: number;
   generation_time_ms?: number;
   error_type?: string;
+  industry?: string;
+  tone?: string;
+  duration?: number;
+  success?: boolean;
+  error?: string;
 
   // Template
   template_id?: string;
