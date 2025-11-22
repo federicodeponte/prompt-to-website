@@ -5,7 +5,7 @@ import { defineConfig, devices } from '@playwright/test';
  * Tests the complete user flows in a real browser environment
  */
 export default defineConfig({
-  testDir: './e2e',
+  testDir: './tests',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
