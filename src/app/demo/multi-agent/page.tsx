@@ -137,7 +137,14 @@ export default function MultiAgentDemoPage() {
   const [isRunning, setIsRunning] = useState(false);
   const [currentAgent, setCurrentAgent] = useState<string | null>(null);
   const [agentResults, setAgentResults] = useState<Record<string, AgentResult>>({});
-  const [finalOutput, setFinalOutput] = useState<any>(null);
+  const [finalOutput, setFinalOutput] = useState<{
+    agentInsights?: {
+      contentReasoning?: string;
+      designReasoning?: string;
+      seoReasoning?: string;
+    };
+    [key: string]: unknown;
+  } | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [duration, setDuration] = useState<number>(0);
 

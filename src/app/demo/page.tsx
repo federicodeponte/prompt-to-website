@@ -21,7 +21,7 @@ import {
 interface DemoFeature {
   title: string;
   description: string;
-  icon: any;
+  icon: React.ComponentType<{ className?: string }>;
   href: string;
   color: string;
   bgColor: string;

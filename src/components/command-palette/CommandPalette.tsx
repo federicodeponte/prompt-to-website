@@ -117,16 +117,17 @@ export function CommandPalette({ open, onClose, commands }: CommandPaletteProps)
   }, [filteredCommands]);
 
   // Reset selection when filtered commands change
-  // eslint-disable-next-line react-hooks/immutability
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setSelectedIndex(0);
   }, [filteredCommands.length]);
 
   // Focus input when opened
-  // eslint-disable-next-line react-hooks/immutability
   useEffect(() => {
     if (open) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setQuery('');
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setSelectedIndex(0);
       setTimeout(() => {
         inputRef.current?.focus();

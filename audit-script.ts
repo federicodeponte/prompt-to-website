@@ -147,9 +147,9 @@ async function runAudit() {
 
   let totalErrors = 0;
   let totalWarnings = 0;
-  let criticalIssues: string[] = [];
-  let minorIssues: string[] = [];
-  let workingFeatures: string[] = [];
+  const criticalIssues: string[] = [];
+  const minorIssues: string[] = [];
+  const workingFeatures: string[] = [];
 
   for (const [pageName, result] of Object.entries(results)) {
     console.log(`\n### ${pageName.toUpperCase()}`);

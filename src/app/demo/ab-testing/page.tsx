@@ -30,7 +30,6 @@ import {
   determineWinner,
   startTest,
   completeTest,
-  formatDuration,
   formatNumber,
   type ABTest,
   type TestVariant,
@@ -46,7 +45,7 @@ function MetricCard({
 }: {
   label: string;
   value: number;
-  icon: any;
+  icon: React.ComponentType<{ className?: string }>;
   change?: { value: number; isBetter: boolean };
   isPercentage?: boolean;
 }) {
@@ -204,7 +203,7 @@ function VariantCard({
 export default function ABTestingDemoPage() {
   const [testName, setTestName] = useState('Hero Headline Test');
   const [testDescription, setTestDescription] = useState('Compare different hero headlines for conversion optimization');
-  const [variants, setVariants] = useState<Omit<TestVariant, 'id' | 'createdAt'>[]>([
+  const [variants] = useState<Omit<TestVariant, 'id' | 'createdAt'>[]>([
     {
       name: 'Variant A - Original',
       description: 'Current headline focusing on speed',
