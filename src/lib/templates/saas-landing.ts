@@ -175,7 +175,7 @@ export const saasLandingTemplate: WebsiteConfig = {
         heading: 'Stay Updated',
         description: 'Get the latest product updates and tips delivered to your inbox.',
         placeholder: 'Enter your email',
-        buttonText: 'Subscribe',
+        ctaText: 'Subscribe',
       },
       settings: { spacing: 'normal', background: '#FFFFFF' },
     },

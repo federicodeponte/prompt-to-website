@@ -602,6 +602,7 @@ export function isNewsletterContent(content: unknown): content is NewsletterCont
     typeof content === 'object' &&
     content !== null &&
     'heading' in content &&
+    'description' in content &&
     'placeholder' in content &&
     'ctaText' in content
   );

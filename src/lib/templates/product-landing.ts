@@ -282,7 +282,7 @@ export const productLandingTemplate: WebsiteConfig = {
         heading: 'Productivity Tips & Updates',
         description: 'Get weekly tips, feature updates, and exclusive productivity insights delivered to your inbox.',
         placeholder: 'Enter your email',
-        buttonText: 'Subscribe',
+        ctaText: 'Subscribe',
       },
       settings: { spacing: 'normal', background: '#FFFFFF' },
     },
