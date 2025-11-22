@@ -278,6 +278,36 @@ export default function MultiAgentDemoPage() {
                 </>
               )}
             </Button>
+
+            {/* Progress Indicator */}
+            {isRunning && (
+              <Alert className="bg-blue-50 border-blue-200">
+                <AlertDescription className="text-blue-900">
+                  <div className="space-y-3">
+                    <div className="font-medium">Multi-Agent Orchestration in Progress</div>
+                    <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-2">
+                        <Sparkles className="h-4 w-4 text-purple-600 animate-pulse" />
+                        <span className="text-sm">Content Writer</span>
+                      </div>
+                      <span className="text-gray-400">→</span>
+                      <div className="flex items-center gap-2">
+                        <Palette className="h-4 w-4 text-blue-600 animate-pulse animation-delay-1000" />
+                        <span className="text-sm">Design Expert</span>
+                      </div>
+                      <span className="text-gray-400">→</span>
+                      <div className="flex items-center gap-2">
+                        <Search className="h-4 w-4 text-green-600 animate-pulse animation-delay-2000" />
+                        <span className="text-sm">SEO Specialist</span>
+                      </div>
+                    </div>
+                    <div className="text-xs text-gray-600">
+                      Expected time: ~30-35 seconds for all 3 agents
+                    </div>
+                  </div>
+                </AlertDescription>
+              </Alert>
+            )}
           </CardContent>
         </Card>
 
