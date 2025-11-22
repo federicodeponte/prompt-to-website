@@ -114,8 +114,9 @@ test.describe('Demo Pages Audit', () => {
       path: 'tests/screenshots/multi-agent-viewport.png'
     });
 
-    // Scroll to agent cards
-    await page.locator('text=Content Writer').first().scrollIntoViewIfNeeded();
+    // Scroll to agent cards section
+    const contentWriterCard = page.locator('div').filter({ hasText: /^Content Writer$/ }).first();
+    await contentWriterCard.scrollIntoViewIfNeeded();
     await page.screenshot({
       path: 'tests/screenshots/multi-agent-cards.png'
     });
@@ -226,8 +227,9 @@ test.describe('Demo Pages Audit', () => {
       path: 'tests/screenshots/ab-testing-results-viewport.png'
     });
 
-    // Scroll to variant cards
-    await page.locator('text=Variant A - Original').first().scrollIntoViewIfNeeded();
+    // Scroll to variant cards section
+    const variantCard = page.locator('div').filter({ hasText: /^Variant A - Original$/ }).first();
+    await variantCard.scrollIntoViewIfNeeded();
     await page.screenshot({
       path: 'tests/screenshots/ab-testing-variants.png'
     });
